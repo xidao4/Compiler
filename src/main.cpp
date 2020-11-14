@@ -4,7 +4,7 @@ using namespace std;
 int main(int argc,char* argv[]){
 	char data[100];
 	ifstream infile;
-	infile.open("hello.txt",ios::in);
+	infile.open("/root/Lab/src/hello.txt",ios::in);
 	if(!infile.is_open()){
 		cout<<"can't open the file!"<<endl;
 		return 0;
