@@ -16,7 +16,7 @@ type		"int"|"float"
 %%
 {ws}			{}
 "if"			{return 2;}
-"else"			{printf("ELSE %s at Line %d.\n",yytext,yylineno);}
+"else"			{return 3;}
 "struct"	{printf("STRUCT %s at Line %d.\n",yytext,yylineno);}
 "return"	{printf("RETURN %s at Line %d.\n",yytext,yylineno);}
 "while"		{printf("WHILE %s at Line %d.\n",yytext,yylineno);}
@@ -43,7 +43,7 @@ type		"int"|"float"
 "."		{printf("DOT %s at Line %d.\n",yytext,yylineno);}
 "!"		{printf("NOT %s at Line %d.\n",yytext,yylineno);}
 
-.			{printf("Error type A at Line %d: Mysterious character: \"%s\".\n",yylineno,yytext);return 100;}
+.			{return 100;}
 
 %%
 
