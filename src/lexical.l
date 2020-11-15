@@ -43,6 +43,18 @@ type		"int"|"float"
 "||"		{return 26;}
 "."		{return 27;}
 "!"		{return 28;}
+"//"		{     
+			char c=input();
+			while(c!='\n') c=input();
+		}
+"/*"		{
+			char c=input();
+			while(1){
+				char d=input();
+				if(c=='*'&&d=='/') break;
+				c=d;
+			}
+		}
 .		{return 100;}
 
 %%
