@@ -52,6 +52,9 @@ int main(int argc,char** argv){
 		}
 	}
 	int no;
+	string tokens[]={"","","IF","ELSE","STRUCT","RETURN","WHILE","TYPE","ID",
+		"","","RELOP","PLUS","ASSIGNOP","SEMI","LP","RP","LB","RB",
+		"LC","RC","COMMA","MINUS","STAR","DIV","AND","OR","DOT","NOT"};
 	//while(yylex()!=0);
 	while(true){
 		no=yylex();
@@ -60,14 +63,6 @@ int main(int argc,char** argv){
 		string msg;
 		switch(no){
 			case 1://ws
-				break;
-			case 2:	//if
-				msg="IF "+token+" at Line "+to_string(yylineno)+".\n";
-				corrOut+=msg;
-				break;
-			case 3://else
-				msg="ELSE "+token+" at Line "+to_string(yylineno)+".\n";
-				corrOut+=msg;
 				break;
 			case 9://integer
 				msg="INT "+getNum(yytext)+" at Line "+to_string(yylineno)+".\n";
@@ -83,10 +78,11 @@ int main(int argc,char** argv){
 				errOut+=msg;
 				break;
 			default:
-				cout<<"token代号错误～"<<endl;
+				msg=tokens[no]+" "+token+" at Line "+to_string(yylineno)+".\n";
+				corrOut+=msg;
 		}
 	}
-	if(wrongFlag) cerr<<errOut<<endl;
-	else cerr<<corrOut<<endl;
+	if(wrongFlag) cerr<<errOut;
+	else cerr<<corrOut;
 	return 0;
 }

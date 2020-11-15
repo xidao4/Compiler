@@ -13,37 +13,37 @@ float		(0|([1-9]{digit}*))\.{digit}+|({digit}*\.{digit}+|{digit}+\.)[eE][+-]?{di
 id		({letter})({letter}|{digit})*
 relop		">"|"<"|">="|"<="|"=="|"!="
 type		"int"|"float"
-%%
-{ws}			{}
-"if"			{return 2;}
-"else"			{return 3;}
-"struct"	{printf("STRUCT %s at Line %d.\n",yytext,yylineno);}
-"return"	{printf("RETURN %s at Line %d.\n",yytext,yylineno);}
-"while"		{printf("WHILE %s at Line %d.\n",yytext,yylineno);}
-{type}			{printf("TYPE %s at Line %d.\n",yytext,yylineno);}
-{id}			{printf("ID %s at Line %d.\n",yytext,yylineno);}
-{integer}		{return 9;}  
-{float}		{return 10;}  
-{relop}			{printf("RELOP %s at Line %d.\n",yytext,yylineno);}
-"+"			{printf("PLUS %s at Line %d.\n",yytext,yylineno);}
-"="			{printf("ASSIGNOP %s at Line %d.\n",yytext,yylineno);}
-";"			{printf("SEMI %s at Line %d.\n",yytext,yylineno);}
-"("		{printf("LP %s at Line %d.\n",yytext,yylineno);}
-")"		{printf("RP %s at Line %d.\n",yytext,yylineno);}
-"["		{printf("LB %s at Line %d.\n",yytext,yylineno);}
-"]"		{printf("RB %s at Line %d.\n",yytext,yylineno);}
-"{"		{printf("LC %s at Line %d.\n",yytext,yylineno);}
-"}"		{printf("RC %s at Line %d.\n",yytext,yylineno);}
-","		{printf("COMMA %s at Line %d.\n",yytext,yylineno);}
-"-"		{printf("MINUS %s at Line %d.\n",yytext,yylineno);}
-"*"		{printf("STAR %s at Line %d.\n",yytext,yylineno);}
-"/"		{printf("DIV %s at Line %d.\n",yytext,yylineno);}
-"&&"		{printf("AND %s at Line %d.\n",yytext,yylineno);}
-"||"		{printf("OR %s at Line %d.\n",yytext,yylineno);}
-"."		{printf("DOT %s at Line %d.\n",yytext,yylineno);}
-"!"		{printf("NOT %s at Line %d.\n",yytext,yylineno);}
 
-.			{return 100;}
+%%
+{ws}		{}
+"if"		{return 2;}
+"else"		{return 3;}
+"struct"	{return 4;}
+"return"	{return 5;}
+"while"		{return 6;}
+{type}		{return 7;}
+{id}		{return 8;}
+{integer}	{return 9;}  
+{float}		{return 10;}  
+{relop}		{return 11;}
+"+"		{return 12;}
+"="		{return 13;}
+";"		{return 14;}
+"("		{return 15;}
+")"		{return 16;}
+"["		{return 17;}
+"]"		{return 18;}
+"{"		{return 19;}
+"}"		{return 20;}
+","		{return 21;}
+"-"		{return 22;}
+"*"		{return 23;}
+"/"		{return 24;}
+"&&"		{return 25;}
+"||"		{return 26;}
+"."		{return 27;}
+"!"		{return 28;}
+.		{return 100;}
 
 %%
 
