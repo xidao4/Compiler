@@ -70,7 +70,8 @@ int main(int argc,char** argv){
 				corrOut+=msg;
 				break;
 			case 10://float
-				msg="FLOAT "+getFloat(yytext)+" at Line "+to_string(yylineno)+".\n";
+				//msg="FLOAT "+getFloat(yytext)+" at Line "+to_string(yylineno)+".\n";
+				msg="FLOAT "+to_string(atof(yytext))+" at Line "+to_string(yylineno)+".\n";
 				corrOut+=msg;
 				break;
 			case 100://err
