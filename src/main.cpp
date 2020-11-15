@@ -74,7 +74,7 @@ int main(int argc,char** argv){
 				corrOut+=msg;
 				break;
 			case 100://err
-				msg="Error type A at Line "+to_string(yylineno)+": Mysterious character:\""+token+"\".\n";
+				msg="Error type A at Line "+to_string(yylineno)+": Mysterious character \""+token+"\".\n";
 				wrongFlag=true;
 				errOut+=msg;
 				break;
