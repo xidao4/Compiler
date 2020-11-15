@@ -7,7 +7,7 @@ ws		[ \t\n\r]+
 digit		[0-9]
 sixteenBit	[0-9a-fA-F]
 eightBit	[0-7]
-letter		[a-zA-Z]			
+letter		[_a-zA-Z]			
 integer		0|[1-9]{digit}{0,32}|0[xX]{sixteenBit}+|0{eightBit}+
 float		(0|([1-9]{digit}*))\.{digit}+|({digit}*\.{digit}+|{digit}+\.)[eE][+-]?{digit}+
 id		({letter})({letter}|{digit})*
