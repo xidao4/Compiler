@@ -22,8 +22,14 @@ type		"int"|"float"
 "while"		{printf("WHILE %s at Line %d.\n",yytext,yylineno);}
 {type}			{printf("TYPE %s at Line %d.\n",yytext,yylineno);}
 {id}			{printf("ID %s at Line %d.\n",yytext,yylineno);}
-{integer}		{printf("INT %s at Line %d.\n",yytext,yylineno);}  
-{float}		{printf("FLOAT %s at Line %d.\n",yytext,yylineno);}  
+{integer}		{
+				printf("INT %s at Line %d.\n",yytext,yylineno);
+				return 9;
+			}  
+{float}		{
+			printf("FLOAT %s at Line %d.\n",yytext,yylineno);
+			return 10;
+		}  
 {relop}			{printf("RELOP %s at Line %d.\n",yytext,yylineno);}
 "+"			{printf("PLUS %s at Line %d.\n",yytext,yylineno);}
 "="			{printf("ASSIGNOP %s at Line %d.\n",yytext,yylineno);}
