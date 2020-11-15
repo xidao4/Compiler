@@ -15,21 +15,15 @@ relop		">"|"<"|">="|"<="|"=="|"!="
 type		"int"|"float"
 %%
 {ws}			{}
-"if"			{printf("IF %s at Line %d.\n",yytext,yylineno);}
+"if"			{return 2;}
 "else"			{printf("ELSE %s at Line %d.\n",yytext,yylineno);}
 "struct"	{printf("STRUCT %s at Line %d.\n",yytext,yylineno);}
 "return"	{printf("RETURN %s at Line %d.\n",yytext,yylineno);}
 "while"		{printf("WHILE %s at Line %d.\n",yytext,yylineno);}
 {type}			{printf("TYPE %s at Line %d.\n",yytext,yylineno);}
 {id}			{printf("ID %s at Line %d.\n",yytext,yylineno);}
-{integer}		{
-				printf("INT %s at Line %d.\n",yytext,yylineno);
-				return 9;
-			}  
-{float}		{
-			printf("FLOAT %s at Line %d.\n",yytext,yylineno);
-			return 10;
-		}  
+{integer}		{return 9;}  
+{float}		{return 10;}  
 {relop}			{printf("RELOP %s at Line %d.\n",yytext,yylineno);}
 "+"			{printf("PLUS %s at Line %d.\n",yytext,yylineno);}
 "="			{printf("ASSIGNOP %s at Line %d.\n",yytext,yylineno);}
@@ -49,7 +43,7 @@ type		"int"|"float"
 "."		{printf("DOT %s at Line %d.\n",yytext,yylineno);}
 "!"		{printf("NOT %s at Line %d.\n",yytext,yylineno);}
 
-.			{printf("Error type A at Line %d: Mysterious character: \"%s\".\n",yylineno,yytext);}
+.			{printf("Error type A at Line %d: Mysterious character: \"%s\".\n",yylineno,yytext);return 100;}
 
 %%
 
