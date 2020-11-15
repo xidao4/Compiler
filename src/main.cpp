@@ -13,7 +13,7 @@ string errOut="";
 string corrOut="";
 bool wrongFlag=false;
 string getNum(char* yytext){
-	int num=0;
+	unsigned int num=0;
 	if(*yytext=='0'&&(*(yytext+1)=='x'||*(yytext+1)=='X')){
 		for(int i=2;;i++){
 			char c=*(yytext+i);
@@ -47,7 +47,7 @@ string getFloat(char* yytext){
 int main(int argc,char** argv){
 	if(argc>1){
 //"/root/Lab/src/test0.cmm"
-		if(!(yyin=fopen(argv[1],"r"))){
+		if(!(yyin=fopen("/root/Lab/src/test0.cmm","r"))){
 			perror(argv[1]);
 			return 1;
 		}
