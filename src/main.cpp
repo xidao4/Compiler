@@ -40,7 +40,7 @@ string getNum(char* yytext){
 string getFloat(char* yytext){
 	string text=yytext;
 	stringstream ss(text);
-	float f;
+	double f;
 	ss>>f;
 	return to_string(f);
 }
