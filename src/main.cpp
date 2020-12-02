@@ -25,6 +25,7 @@ extern "C"{
 
 int yyerror(char* msg){
 	fprintf(stderr,"error: %s\n",msg);
+	return 1;
 }
 
 int main(){
