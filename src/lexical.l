@@ -1,5 +1,6 @@
 %{
 	#include "stdio.h"
+	#include "syntax.tab.h"
 %}
 %option yylineno
 
@@ -23,10 +24,14 @@ type		"int"|"float"
 "while"		{return 6;}
 {type}		{return 7;}
 {id}		{return 8;}
+{digit}*	{
+			yylval = atoi(yytext);
+			return INT;		
+		}
 {integer}	{return 9;}  
 {float}		{return 10;}  
 {relop}		{return 11;}
-"+"		{return 12;}
+"+"		{return ADD;}
 "="		{return 13;}
 ";"		{return 14;}
 "("		{return 15;}
@@ -36,24 +41,18 @@ type		"int"|"float"
 "{"		{return 19;}
 "}"		{return 20;}
 ","		{return 21;}
-"-"		{return 22;}
-"*"		{return 23;}
-"/"		{return 24;}
+"-"		{return SUB;}
+"*"		{return MUL;}
+"/"		{return DIV;}
 "&&"		{return 25;}
 "||"		{return 26;}
 "."		{return 27;}
 "!"		{return 28;}
 "//"		{     
-			char c=input();
-			while(c!='\n') c=input();
+			
 		}
 "/*"		{
-			char c=input();
-			while(1){
-				char d=input();
-				if(c=='*'&&d=='/') break;
-				c=d;
-			}
+			
 		}
 .		{return 100;}
 

@@ -2,13 +2,29 @@
 #include<string>
 #include<sstream>
 #include<iostream>
+#include "lex.yy.c"
+
 using namespace std;
+
 extern FILE* yyin;
 extern int yylineno;
 extern char* yytext;
+/*
 extern "C"{
 	int yylex();
 }
+*/
+
+/*
+yyerror(char* msg){
+	fprintf(stderr,"error: %s\n",msg);
+}
+*/
+int main(){
+	yyparse();
+}
+
+/*
 string errOut="";
 string corrOut="";
 bool wrongFlag=false;
@@ -44,15 +60,29 @@ string getFloat(char* yytext){
 	ss>>f;
 	return to_string(f);
 }
+*/
+
+
+
+
+
+
+
+/*
 int main(int argc,char** argv){
-	if(argc>1){
+	if(argc<=1) return 1;
+	FILE* F = fopen("/root/Lab/src/test0.cmm","r");
+	if(!f){
+		perror(argv[1]);
+		return 1;	
+	}
 //	"/root/Lab/src/test0.cmm"
 //	argv[1]
-		if(!(yyin=fopen("/root/Lab/src/test0.cmm","r"))){
-			perror(argv[1]);
-			return 1;
-		}
-	}
+	yyrestart(f);
+	yyparse();
+	return 0;
+
+	/*
 	int no;
 	string tokens[]={"","","IF","ELSE","STRUCT","RETURN","WHILE","TYPE","ID",
 		"","","RELOP","PLUS","ASSIGNOP","SEMI","LP","RP","LB","RB",
@@ -88,4 +118,6 @@ int main(int argc,char** argv){
 	if(wrongFlag) cerr<<errOut;
 	else cerr<<corrOut;
 	return 0;
+	
 }
+*/
