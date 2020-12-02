@@ -17,7 +17,7 @@ extern char* yytext;
 
 extern "C"{
 	int yyparse();
-	#include "lex.yy.c"
+	//#include "lex.yy.c"
 	//#include "syntax.tab.h"
 }
 
