@@ -22,11 +22,11 @@ extern "C"{
 }
 
 
-/*
-yyerror(char* msg){
+
+int yyerror(char* msg){
 	fprintf(stderr,"error: %s\n",msg);
 }
-*/
+
 int main(){
  	yyparse();
 }
