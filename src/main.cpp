@@ -7,7 +7,7 @@
 
 
 using namespace std;
-
+int yyparse();
 //extern int yyparse();
 /*
 extern FILE* yyin;
