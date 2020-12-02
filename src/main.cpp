@@ -3,7 +3,6 @@
 #include<sstream>
 #include<iostream>
 #include "lex.yy.c"
-#include "syntax.tab.h"
 
 
 using namespace std;
@@ -16,9 +15,10 @@ extern int yylineno;
 extern char* yytext;
 */
 
-// extern "C"{
-// 	int yylex();
-// }
+extern "C"{
+	//int yyparse();
+	#include "syntax.tab.h"
+}
 
 
 /*
@@ -27,7 +27,7 @@ yyerror(char* msg){
 }
 */
 int main(){
-	yyparse();
+ 	yyparse();
 }
 
 /*

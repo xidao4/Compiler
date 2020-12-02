@@ -25,6 +25,9 @@ Term : INT
 	;
 
 %%
+// int main(){
+// 	yyparse();
+// }
 
 
 
