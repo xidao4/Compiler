@@ -16,8 +16,8 @@ extern char* yytext;
 */
 
 extern "C"{
-	//int yyparse();
-	#include "syntax.tab.h"
+	int yyparse();
+	//#include "syntax.tab.h"
 }
 
 
