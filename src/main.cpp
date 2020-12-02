@@ -6,9 +6,11 @@
 
 using namespace std;
 
+/*
 extern FILE* yyin;
 extern int yylineno;
 extern char* yytext;
+*/
 /*
 extern "C"{
 	int yylex();
