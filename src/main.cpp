@@ -3,12 +3,13 @@
 #include<sstream>
 #include<iostream>
 #include "lex.yy.c"
-#include "syntax.tab.h"
+//#include "syntax.tab.h"
 
 
 using namespace std;
-int yyparse();
+//int yyparse();
 //extern int yyparse();
+
 /*
 extern FILE* yyin;
 extern int yylineno;
