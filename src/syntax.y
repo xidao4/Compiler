@@ -13,11 +13,9 @@
 	double type_double;
 }
 /* declared tokens */
-%token <tpye_int> INT
-%token <type_double> FLOAT
-%token SEMI COMMA ASSIGNOP RELOP PLUS MINUS STAR DIV AND OR DOT NOT TYPE LP RP LB RB LC RC STRUCT RETURN IF ELSE WHILE ID ERROR
-/* declared non-terminals */
+%token <type_double> SEMI COMMA ASSIGNOP RELOP PLUS MINUS STAR DIV AND OR DOT NOT TYPE LP RP LB RB LC RC STRUCT RETURN IF ELSE WHILE ID INT FLOAT ERROR
 %type <type_double> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier OptTag Tag VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args
+
 
 %%
 /*High-Level Definations*/
