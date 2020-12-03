@@ -25,11 +25,14 @@ type		"int"|"float"
 {type}		{return 7;}
 {id}		{return 8;}
 {digit}*	{
-			yylval = atoi(yytext);
-			return INT;		
-		}
+				yylval.type_int = atoi(yytext);
+				return INT;		
+			}
 {integer}	{return 9;}  
-{float}		{return 10;}  
+{float}		{
+				yylval.type_double=atof(yytext);
+				return FLOAT;
+			}  
 {relop}		{return 11;}
 "+"		{return ADD;}
 "="		{return 13;}

@@ -5,10 +5,19 @@
 	#include <stdio.h>
 %}
 
-/* declared tokens */
-%token INT
-%token ADD SUB MUL DIV
 
+/* declared types */
+%union{
+	int type_int;
+	//float type_float;
+	double type_double;
+}
+/* declared tokens */
+%token <tpye_int> INT
+%token <type_double> FLOAT
+%token ADD SUB MUL DIV
+/* declared non-terminals */
+%type <type_double> Exp Factor Term
 
 %%
 
@@ -24,6 +33,7 @@ Factor: Term
 	| Factor DIV Term { $$ = $1 / $3; }
 	;
 Term: INT
+	| FLOAT
 	;
 
 
