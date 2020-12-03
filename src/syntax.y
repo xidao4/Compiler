@@ -22,7 +22,7 @@
 %%
 
 Calc: /* empty */
-	| Exp { printf( "= %d\n", $1); }
+	| Exp { printf( "= %lf\n", $1); }
 	;
 Exp: Factor
 	| Exp ADD Factor { $$ = $1 + $3; }
