@@ -17,40 +17,39 @@ type		"int"|"float"
 
 %%
 {ws}		{}
-"if"		{return 2;}
-"else"		{return 3;}
-"struct"	{return 4;}
-"return"	{return 5;}
-"while"		{return 6;}
-{type}		{return 7;}
-{id}		{return 8;}
-{digit}*	{
-				yylval.type_int = atoi(yytext);
-				return INT;		
-			}
-{integer}	{return 9;}  
+"if"		{return IF;}
+"else"		{return ELSE;}
+"struct"	{return STRUCT;}
+"return"	{return RETURN;}
+"while"		{return WHILE;}
+{type}		{return TYPE;}
+{id}		{return ID;}
+
+{integer}	{
+				yylval.type_int = getNum(yytext);
+				return INT;	}  
 {float}		{
 				yylval.type_double=atof(yytext);
 				return FLOAT;
 			}  
-{relop}		{return 11;}
-"+"		{return ADD;}
-"="		{return 13;}
-";"		{return 14;}
-"("		{return 15;}
-")"		{return 16;}
-"["		{return 17;}
-"]"		{return 18;}
-"{"		{return 19;}
-"}"		{return 20;}
-","		{return 21;}
-"-"		{return SUB;}
-"*"		{return MUL;}
+{relop}		{return RELOP;}
+"+"		{return PLUS;}
+"="		{return ASSIGNOP;}
+";"		{return SEMI;}
+"("		{return LP;}
+")"		{return RP;}
+"["		{return LB;}
+"]"		{return RB;}
+"{"		{return LC;}
+"}"		{return RC;}
+","		{return COMMA;}
+"-"		{return MINUS;}
+"*"		{return STAR;}
 "/"		{return DIV;}
-"&&"		{return 25;}
-"||"		{return 26;}
-"."		{return 27;}
-"!"		{return 28;}
+"&&"		{return AND;}
+"||"		{return OR;}
+"."		{return DOT;}
+"!"		{return NOT;}
 "//"	{     
 			char c=input();
 			while(c!='\n') c=input();
@@ -68,4 +67,36 @@ type		"int"|"float"
 .		{return 100;}
 
 %%
+int getNum(char* yytext){
+	unsigned int num=0;
+	if(*yytext=='0'&&(*(yytext+1)=='x'||*(yytext+1)=='X')){
+		for(int i=2;;i++){
+			char c=*(yytext+i);
+			if(c=='\0') break;
+			num*=16;
+			int bit=(c>='a')?(c-'a'+10):((c>='A')?(c-'A'+10):(c-'0'));
+			num+=bit;
+		}	
+	}else if(*yytext=='0'){
+		for(int i=1;;i++){
+			if(*(yytext+i)=='\0') break;
+			num*=8;
+			num+=*(yytext+i)-'0';
+		}
+	}else{
+		for(int i=0;;i++){
+			if(*(yytext+i)=='\0') break;
+			num*=10;
+			num+=*(yytext+i)-'0';
+		}
+	}
+	return num;
+}
+// double getFloat(char* yytext){
+// 	string text=yytext;
+// 	stringstream ss(text);
+// 	double f;
+// 	ss>>f;
+// 	return f;
+// }
 

@@ -15,25 +15,103 @@
 /* declared tokens */
 %token <tpye_int> INT
 %token <type_double> FLOAT
-%token ADD SUB MUL DIV
+%token SEMI COMMA ASSIGNOP RELOP PLUS MINUS STAR DIV AND OR DOT NOT TYPE LP RP LB RB LC RC STRUCT RETURN IF ELSE WHILE ID ERROR
 /* declared non-terminals */
-%type <type_double> Exp Factor Term
+%type <type_double> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier OptTag Tag VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args
+
+
+
+
 
 %%
+Program: ExtDefList
+	;
+ExtDefList: ExtDef ExtDefList
+	|
+	;
+ExtDef:Specifier ExtDecList SEMI
+	|  Specifier SEMI
+	|  Specifier FunDec CompSt
+	;
+ExtDecList: VarDec
+	| VarDec error ExtDefList
+	;
 
-Calc: /* empty */
-	| Exp { printf( "= %lf\n", $1); }
+
+Specifier:TYPE 
+	|StructSpecifier 
 	;
-Exp: Factor
-	| Exp ADD Factor { $$ = $1 + $3; }
-	| Exp SUB Factor { $$ = $1 - $3; }
+StructSpecifier:STRUCT OptTag LC DefList RC 
+	|STRUCT Tag 
 	;
-Factor: Term
-	| Factor MUL Term { $$ = $1 * $3; }
-	| Factor DIV Term { $$ = $1 / $3; }
+OptTag:ID
+	|
 	;
-Term: INT
-	| FLOAT
+Tag:ID 
+	;
+
+
+VarDec:ID 
+	| VarDec LB INT RB 
+	;
+FunDec:ID LP VarList RP 
+	|ID LP RP 
+	;
+VarList:ParamDec COMMA VarList 
+	|ParamDec
+	;
+ParamDec:Specifier VarDec 
+	;
+
+
+CompSt:LC DefList StmtList RC 
+	;
+StmtList:Stmt StmtList
+	| 
+	;
+Stmt:Exp SEMI
+	|CompSt
+	|RETURN Exp SEMI 
+	|IF LP Exp RP Stmt 
+	|IF LP Exp RP Stmt ELSE Stmt 
+	|WHILE LP Exp RP Stmt 
+	;
+
+
+DefList:Def DefList
+	| 
+	;
+Def:Specifier DecList SEMI 
+	;
+DecList:Dec 
+	|Dec COMMA DecList 
+	;
+Dec:VarDec
+	|VarDec ASSIGNOP Exp 
+	;
+
+
+Exp:Exp ASSIGNOP Exp
+	|Exp AND Exp
+	|Exp OR Exp
+	|Exp RELOP Exp
+	|Exp PLUS Exp
+	|Exp MINUS Exp
+	|Exp STAR Exp
+	|Exp DIV Exp
+	|LP Exp RP
+	|MINUS Exp 
+	|NOT Exp 
+	|ID LP Args RP
+	|ID LP RP 
+	|Exp LB Exp RB
+	|Exp DOT ID 
+	|ID 
+	|INT
+	|FLOAT
+	;
+Args:Exp COMMA Args
+	|Exp 
 	;
 
 
