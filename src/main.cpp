@@ -22,11 +22,11 @@ extern "C"{
 
 int main(int argc,char** argv){
  	//yyparse();
-	 if(argc<=1) return 1;
-	 //"/home/root/Lab/src/test0.cmm"
-	 FILE* f=fopen("/home/root/Lab/src/test0.cmm","r");
+	 //if(argc<=1) return 1;
+	 //"/root/Lab/src/test0.cmm"
+	 FILE* f=fopen("/root/Lab/test0.cmm","r");
 	 if(!f){
-		 perror(argv[1]);
+		 perror("cannot open test0.cmm");
 		 return 1;
 	 }
 	 yyrestart(f);

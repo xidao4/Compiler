@@ -1,6 +1,6 @@
 %{
     void yyerror(const char* msg);
-    //int yyparse(void);
+    int yyparse(void);
     #include "lex.yy.c"
 	#include <stdio.h>
 %}
@@ -117,7 +117,6 @@ Args:Exp COMMA Args
 
 
 %%
-
 // void yyerror(const char* msg){
 // 	fprintf(stderr,"error: %s\n",msg);
 // }

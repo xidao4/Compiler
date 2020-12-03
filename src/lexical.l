@@ -4,14 +4,14 @@
 %}
 %option yylineno
 
-ws		[ \t\n\r]+
+ws			[ \t\n\r]+
 digit		[0-9]
 sixteenBit	[0-9a-fA-F]
 eightBit	[0-7]
 letter		[_a-zA-Z]			
 integer		0|[1-9]{digit}{0,32}|0[xX]{sixteenBit}+|0{eightBit}+
 float		(0|([1-9]{digit}*))\.{digit}+|({digit}*\.{digit}+|{digit}+\.)[eE][+-]?{digit}+
-id		({letter})({letter}|{digit})*
+id			({letter})({letter}|{digit})*
 relop		">"|"<"|">="|"<="|"=="|"!="
 type		"int"|"float"
 
@@ -24,9 +24,8 @@ type		"int"|"float"
 "while"		{return WHILE;}
 {type}		{return TYPE;}
 {id}		{return ID;}
-
 {integer}	{
-				yylval.type_int = getNum(yytext);
+				yylval.type_int = atoi(yytext);
 				return INT;	}  
 {float}		{
 				yylval.type_double=atof(yytext);
@@ -46,8 +45,8 @@ type		"int"|"float"
 "-"		{return MINUS;}
 "*"		{return STAR;}
 "/"		{return DIV;}
-"&&"		{return AND;}
-"||"		{return OR;}
+"&&"	{return AND;}
+"||"	{return OR;}
 "."		{return DOT;}
 "!"		{return NOT;}
 "//"	{     
