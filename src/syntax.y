@@ -1,5 +1,5 @@
 %{
-    void yyerror(const char* msg);
+    //void yyerror(const char* msg);
     //int yyparse(void);
     #include "lex.yy.c"
 	#include <stdio.h>

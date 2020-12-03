@@ -19,9 +19,6 @@ extern "C"{
 	//#include "syntax.tab.h"
 }
 
-void yyerror(const char* msg){
-	fprintf(stderr,"error: %s\n",msg);
-}
 
 int main(int argc,char** argv){
  	yyparse();
