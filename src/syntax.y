@@ -30,9 +30,9 @@ Term: INT
 
 %%
 
-void yyerror(const char* msg){
-	fprintf(stderr,"error: %s\n",msg);
-}
+// void yyerror(const char* msg){
+// 	fprintf(stderr,"error: %s\n",msg);
+// }
 
 // int main(){
 // 	yyparse();
