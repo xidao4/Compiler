@@ -28,9 +28,11 @@ Term: INT
 
 
 
-
-
 %%
+
+yyerror(char* msg){
+	fprintf(stderr,"error: %s\n",msg);
+}
 // int main(){
 // 	yyparse();
 // }
