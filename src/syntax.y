@@ -21,7 +21,7 @@
 
 %%
 /*High-Level Definations*/
-Program:|ExtDefList 
+Program:ExtDefList 
     ;
 ExtDefList:ExtDef ExtDefList
 	| 
