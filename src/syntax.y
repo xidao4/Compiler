@@ -30,7 +30,7 @@ Term: INT
 
 %%
 
-yyerror(char* msg){
+yyerror(const char* msg){
 	fprintf(stderr,"error: %s\n",msg);
 }
 // int main(){
