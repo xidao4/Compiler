@@ -3,25 +3,20 @@
 #include<sstream>
 #include<iostream>
 //#include "lex.yy.c"
-
-
 using namespace std;
+
 //int yyparse();
 //extern int yyparse();
-
 /*
 extern FILE* yyin;
 extern int yylineno;
 extern char* yytext;
 */
-
 extern "C"{
 	int yyparse();
 	//#include "lex.yy.c"
 	//#include "syntax.tab.h"
 }
-
-
 
 int yyerror(char* msg){
 	fprintf(stderr,"error: %s\n",msg);
@@ -69,12 +64,6 @@ string getFloat(char* yytext){
 	return to_string(f);
 }
 */
-
-
-
-
-
-
 
 /*
 int main(int argc,char** argv){
