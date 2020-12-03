@@ -3,7 +3,7 @@
     int yyparse(void);
     //#include "lex.yy.c"
 	#include <stdio.h>
-	// #include<unistd.h>
+	#include<unistd.h>
 %}
 
 
@@ -16,6 +16,7 @@
 /* declared tokens */
 %token <type_double> SEMI COMMA ASSIGNOP RELOP PLUS MINUS STAR DIV AND OR DOT NOT TYPE LP RP LB RB LC RC STRUCT RETURN IF ELSE WHILE ID INT FLOAT ERROR
 %type <type_double> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier OptTag Tag VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args
+
 %right ASSIGNOP
 %left OR
 %left AND

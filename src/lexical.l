@@ -63,7 +63,7 @@ type		"int"|"float"
 			}
 			
 		}
-.		{return 100;}
+.		{return ERROR;}
 
 %%
 int getNum(char* yytext){
