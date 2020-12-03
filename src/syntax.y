@@ -19,25 +19,21 @@
 /* declared non-terminals */
 %type <type_double> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier OptTag Tag VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args
 
-
-
-
-
 %%
-Program: ExtDefList
+/*High-Level Definations*/
+Program:|ExtDefList 
+    ;
+ExtDefList:ExtDef ExtDefList
+	| 
 	;
-ExtDefList: ExtDef ExtDefList
-	|
+ExtDef:Specifier ExtDecList SEMI  
+	|Specifier SEMI	
+	|Specifier FunDec CompSt	
 	;
-ExtDef:Specifier ExtDecList SEMI
-	|  Specifier SEMI
-	|  Specifier FunDec CompSt
+ExtDecList:VarDec
+	|VarDec COMMA ExtDecList
 	;
-ExtDecList: VarDec
-	| VarDec error ExtDefList
-	;
-
-
+/*Specifier*/
 Specifier:TYPE 
 	|StructSpecifier 
 	;
@@ -51,6 +47,7 @@ Tag:ID
 	;
 
 
+/*Declaratots*/
 VarDec:ID 
 	| VarDec LB INT RB 
 	;
@@ -61,9 +58,9 @@ VarList:ParamDec COMMA VarList
 	|ParamDec
 	;
 ParamDec:Specifier VarDec 
-	;
+    ;
 
-
+/*Statement*/
 CompSt:LC DefList StmtList RC 
 	;
 StmtList:Stmt StmtList
@@ -78,6 +75,7 @@ Stmt:Exp SEMI
 	;
 
 
+/*Local Definations*/
 DefList:Def DefList
 	| 
 	;
@@ -89,30 +87,29 @@ DecList:Dec
 Dec:VarDec
 	|VarDec ASSIGNOP Exp 
 	;
-
-
+/*Expressions*/
 Exp:Exp ASSIGNOP Exp
-	|Exp AND Exp
-	|Exp OR Exp
-	|Exp RELOP Exp
-	|Exp PLUS Exp
-	|Exp MINUS Exp
-	|Exp STAR Exp
-	|Exp DIV Exp
-	|LP Exp RP
-	|MINUS Exp 
-	|NOT Exp 
-	|ID LP Args RP
-	|ID LP RP 
-	|Exp LB Exp RB
-	|Exp DOT ID 
-	|ID 
-	|INT
-	|FLOAT
-	;
+        |Exp AND Exp
+        |Exp OR Exp
+        |Exp RELOP Exp
+        |Exp PLUS Exp
+        |Exp MINUS Exp
+        |Exp STAR Exp
+        |Exp DIV Exp
+        |LP Exp RP
+        |MINUS Exp 
+        |NOT Exp 
+        |ID LP Args RP
+        |ID LP RP 
+        |Exp LB Exp RB
+        |Exp DOT ID 
+        |ID 
+        |INT
+        |FLOAT
+        ;
 Args:Exp COMMA Args
-	|Exp 
-	;
+        |Exp 
+        ;
 
 
 
