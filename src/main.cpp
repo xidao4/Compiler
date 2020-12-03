@@ -24,9 +24,9 @@ int main(int argc,char** argv){
  	//yyparse();
 	 //if(argc<=1) return 1;
 	 //"/root/Lab/src/test0.cmm"
-	 FILE* f=fopen("/root/Lab/test0.cmm","r");
+	 FILE* f=fopen(argv[1],"r");
 	 if(!f){
-		 perror("cannot open test0.cmm");
+		 perror(argv[1]);
 		 return 1;
 	 }
 	 yyrestart(f);
