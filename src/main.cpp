@@ -33,9 +33,9 @@ int main(int argc,char** argv){
 	yyrestart(f);
 	yyparse();
 
-	// if(syntaxErr==0){
-	// 	tree_search(root,0);
-	// }
+	if(syntaxErr==0){
+		tree_search(root,0);
+	}
 	return 0;
 }
 
