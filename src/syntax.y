@@ -303,8 +303,9 @@ void tree_search(struct Node* cur,int depth){
 		}
 		fprintf(stderr,"\n");
 		tree_search(cur->child,depth+1);
-		tree_search(cur->next_sib,depth);
+		
 	}
+	tree_search(cur->next_sib,depth);
 }
 // int main(){
 // 	yyparse();
