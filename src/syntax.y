@@ -9,7 +9,7 @@
 	
 	struct Node* buildSyntaxTree(char* faName,int num_args,...);
 	void tree_search(struct Node* cur,int depth);
-	struct Node* createEmptyNode(char* faName);
+	struct Node* createSingleNode(char* faName);
 	extern struct Node* root; 
 
 %}
@@ -49,7 +49,7 @@ ExtDefList:ExtDef ExtDefList{
 }
 	| {
 		//$$=NULL;
-		$$=createEmptyNode("ExtDefList");
+		$$=createSingleNode("ExtDefList");
 	}
 	;
 ExtDef:Specifier ExtDecList SEMI  {
@@ -88,7 +88,7 @@ OptTag:ID{
 	$$=buildSyntaxTree("OptTag",1,$1);
 }
 	|{
-		$$=createEmptyNode("OptTag");
+		$$=createSingleNode("OptTag");
 	}
 	;
 Tag:ID {
@@ -133,7 +133,7 @@ StmtList:Stmt StmtList{
 	$$=buildSyntaxTree("StmtList",2,$1,$2);
 }
 	| {
-		$$=createEmptyNode("StmtList");
+		$$=createSingleNode("StmtList");
 	}
 	;
 Stmt:Exp SEMI {
@@ -162,7 +162,7 @@ DefList:Def DefList{
 	$$=buildSyntaxTree("DefList",2,$1,$2);
 }
 	| {
-		$$=createEmptyNode("DefList");
+		$$=createSingleNode("DefList");
 	}
 	;
 Def:Specifier DecList SEMI {
@@ -273,7 +273,7 @@ struct Node* buildSyntaxTree(char* faName,int num_args,...){
 	va_end(sons);
 	return fa;
 }
-struct Node* createEmptyNode(char* faName){
+struct Node* createSingleNode(char* faName){
 	struct Node* fa=(struct Node*)malloc(sizeof(struct Node));
 	strcpy(fa->name,faName);
 	fa->type=SYNTACTIC_UNIT;
