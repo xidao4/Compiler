@@ -41,7 +41,7 @@
 
 %option yylineno
 
-ws			[ \t\r]+
+ws			[ \t\n\r]+
 digit		[0-9]
 sixteenBit	[0-9a-fA-F]
 eightBit	[0-7]
