@@ -38,12 +38,12 @@
 %%
 /*High-Level Definations*/
 Program:ExtDefList {
-	$$=$$=buildSyntaxTree("Program",1,$1);
+	$$=buildSyntaxTree("Program",1,$1);
 	root=$$;
 }
     ;
 ExtDefList:ExtDef ExtDefList{
-	$$=$$=buildSyntaxTree("ExtDefList",2,$1,$2);
+	$$=buildSyntaxTree("ExtDefList",2,$1,$2);
 }
 	| {
 		$$=NULL;
@@ -131,7 +131,7 @@ StmtList:Stmt StmtList{
 	$$=buildSyntaxTree("StmtList",2,$1,$2);
 }
 	| {
-		$$=$$=buildSyntaxTree("StmtList",0);
+		$$=buildSyntaxTree("StmtList",0);
 	}
 	;
 Stmt:Exp SEMI {
