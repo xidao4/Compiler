@@ -263,7 +263,7 @@ struct Node* buildSyntaxTree(char* faName,int num_args,...){
 	struct Node* tmp=va_arg(sons,struct Node*);
 	fa->child=tmp;
 	fa->lineno=tmp->lineno;
-	for(int i=0;i<num_args-1;i++){
+	for(int i=1;i<num_args;i++){
 		tmp->next_sib=va_arg(sons,struct Node*);
 		if(tmp->next_sib!=NULL){
 			tmp=tmp->next_sib;
