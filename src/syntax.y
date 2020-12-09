@@ -284,7 +284,7 @@ struct Node* createSingleNode(char* faName){
 }
 void tree_search(struct Node* cur,int depth){
 	if(cur==NULL) return;
-	if(cur->lineno==-1 && cur->child==NULL) return;
+	if(cur->lineno!=-1 || cur->child!=NULL) {
 	
 		for(int i=0;i<depth;i++){
 			fprintf(stderr,"  ");
@@ -302,7 +302,7 @@ void tree_search(struct Node* cur,int depth){
 		;
 		}
 		fprintf(stderr,"\n");
-	
+	}
 
 	tree_search(cur->child,depth+1);
 	tree_search(cur->next_sib,depth);
