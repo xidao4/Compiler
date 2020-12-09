@@ -269,6 +269,7 @@ struct Node* buildSyntaxTree(char* faName,int num_args,...){
 			tmp=tmp->next_sib;
 		}
 	}
+	va_end(sons);
 }
 void tree_search(struct Node* cur,int depth){
 	if(cur==NULL) return;
