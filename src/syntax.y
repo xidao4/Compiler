@@ -248,7 +248,6 @@ Args:Exp COMMA Args{
 
 
 %%
-//#include "lex.yy.c"
 void yyerror(const char* msg){
 	fprintf(stderr,"Error type B at Line %d: %s.\n",yylineno,msg);
 }
@@ -270,6 +269,7 @@ struct Node* buildSyntaxTree(char* faName,int num_args,...){
 		}
 	}
 	va_end(sons);
+	return fa;
 }
 void tree_search(struct Node* cur,int depth){
 	if(cur==NULL) return;
