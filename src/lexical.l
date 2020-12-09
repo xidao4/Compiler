@@ -71,10 +71,10 @@ type		"int"|"float"
 			strcpy(yylval.node->str_constant,yytext);
 			return ID;}
 {integer}	{createTokenNode("INT",LEX_INT);
-			yylval.node->int_constant=4;
+			yylval.node->int_constant=getNum(yytext);
 			return INT;	}  
 {float}		{createTokenNode("FLOAT",LEX_FLOAT);
-			yylval.node->float_constant=0.4;
+			yylval.node->float_constant=atof(yytext);
 			return FLOAT;
 			}  
 {relop}		{createTokenNode("RELOP",LEX_OTHER_TOKEN);
