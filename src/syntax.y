@@ -7,7 +7,7 @@
 	extern int yylineno;
 	int syntaxErr=0;
 	
-	void buildSyntaxTree(char* faName,int num_args,...);
+	struct Node* buildSyntaxTree(char* faName,int num_args,...);
 	void tree_search(struct Node* cur,int depth);
 	extern struct Node* root; 
 %}
@@ -38,209 +38,210 @@
 %%
 /*High-Level Definations*/
 Program:ExtDefList {
-	buildSyntaxTree("Program",1,$1);
+	$$=$$=buildSyntaxTree("Program",1,$1);
 	root=$$;
 }
     ;
 ExtDefList:ExtDef ExtDefList{
-	buildSyntaxTree("ExtDefList",2,$1,$2);
+	$$=$$=buildSyntaxTree("ExtDefList",2,$1,$2);
 }
 	| {
 		$$=NULL;
+		//$$=buildSyntaxTree("ExtDefList",0);
 	}
 	;
 ExtDef:Specifier ExtDecList SEMI  {
-	buildSyntaxTree("ExtDef",3,$1,$2,$3);
+	$$=buildSyntaxTree("ExtDef",3,$1,$2,$3);
 }
 	|Specifier SEMI	{
-		buildSyntaxTree("ExtDef",2,$1,$2);
+		$$=buildSyntaxTree("ExtDef",2,$1,$2);
 	}
 	|Specifier FunDec CompSt{
-		buildSyntaxTree("ExtDef",3,$1,$2,$3);
+		$$=buildSyntaxTree("ExtDef",3,$1,$2,$3);
 	}	
 	;
 ExtDecList:VarDec{
-	buildSyntaxTree("ExtDecList",1,$1);
+	$$=buildSyntaxTree("ExtDecList",1,$1);
 }
 	|VarDec COMMA ExtDecList{
-		buildSyntaxTree("ExtDecList",3,$1,$2,$3);
+		$$=buildSyntaxTree("ExtDecList",3,$1,$2,$3);
 	}
 	;
 /*Specifier*/
 Specifier:TYPE {
-	buildSyntaxTree("Specifier",1,$1);
+	$$=buildSyntaxTree("Specifier",1,$1);
 }
 	|StructSpecifier {
-		buildSyntaxTree("Specifier",1,$1);
+		$$=buildSyntaxTree("Specifier",1,$1);
 	}
 	;
 StructSpecifier:STRUCT OptTag LC DefList RC {
-	buildSyntaxTree("StructSpecifier",5,$1,$2,$3,$4,$5);
+	$$=buildSyntaxTree("StructSpecifier",5,$1,$2,$3,$4,$5);
 }
 	|STRUCT Tag {
-		buildSyntaxTree("StructSpecifier",2,$1,$2);
+		$$=buildSyntaxTree("StructSpecifier",2,$1,$2);
 	}
 	;
 OptTag:ID{
-	buildSyntaxTree("OptTag",1,$1);
+	$$=buildSyntaxTree("OptTag",1,$1);
 }
 	|{
 		$$=NULL;
 	}
 	;
 Tag:ID {
-	buildSyntaxTree("Tag",1,$1);
+	$$=buildSyntaxTree("Tag",1,$1);
 }
 	;
 
 
 /*Declaratots*/
 VarDec:ID {
-	buildSyntaxTree("VarDec",1,$1);
+	$$=buildSyntaxTree("VarDec",1,$1);
 }
 	| VarDec LB INT RB {
-		buildSyntaxTree("VarDec",4,$1,$2,$3,$4);
+		$$=buildSyntaxTree("VarDec",4,$1,$2,$3,$4);
 	}
 	;
 FunDec:ID LP VarList RP {
-	buildSyntaxTree("FunDec",4,$1,$2,$3,$4);
+	$$=buildSyntaxTree("FunDec",4,$1,$2,$3,$4);
 }
 	|ID LP RP {
-		buildSyntaxTree("FunDec",3,$1,$2,$3);
+		$$=buildSyntaxTree("FunDec",3,$1,$2,$3);
 	}
 	;
 VarList:ParamDec COMMA VarList {
-	buildSyntaxTree("VarList",3,$1,$2,$3);
+	$$=buildSyntaxTree("VarList",3,$1,$2,$3);
 }
 	|ParamDec{
-		buildSyntaxTree("VarList",1,$1);
+		$$=buildSyntaxTree("VarList",1,$1);
 	}
 	;
 ParamDec:Specifier VarDec {
-	buildSyntaxTree("ParamDec",2,$1,$2);
+	$$=buildSyntaxTree("ParamDec",2,$1,$2);
 }
     ;
 
 /*Statement*/
 CompSt:LC DefList StmtList RC {
-	buildSyntaxTree("CompSt",4,$1,$2,$3,$4);
+	$$=buildSyntaxTree("CompSt",4,$1,$2,$3,$4);
 }
 	;
 StmtList:Stmt StmtList{
-	buildSyntaxTree("StmtList",2,$1,$2);
+	$$=buildSyntaxTree("StmtList",2,$1,$2);
 }
 	| {
-		$$=NULL;
+		$$=$$=buildSyntaxTree("StmtList",0);
 	}
 	;
 Stmt:Exp SEMI {
-	buildSyntaxTree("Stmt",2,$1,$2);
+	$$=buildSyntaxTree("Stmt",2,$1,$2);
 }
 	|CompSt{
-		buildSyntaxTree("Stmt",1,$1);
+		$$=buildSyntaxTree("Stmt",1,$1);
 	}
 	|RETURN Exp SEMI {
-		buildSyntaxTree("Stmt",3,$1,$2,$3);
+		$$=buildSyntaxTree("Stmt",3,$1,$2,$3);
 	}
 	|IF LP Exp RP Stmt {
-		buildSyntaxTree("Stmt",4,$1,$2,$3,$4);
+		$$=buildSyntaxTree("Stmt",4,$1,$2,$3,$4);
 	}
 	|IF LP Exp RP Stmt ELSE Stmt {
-		buildSyntaxTree("Stmt",7,$1,$2,$3,$4,$5,$6,$7);
+		$$=buildSyntaxTree("Stmt",7,$1,$2,$3,$4,$5,$6,$7);
 	}
 	|WHILE LP Exp RP Stmt {
-		buildSyntaxTree("Stmt",5,$1,$2,$3,$4,$5);
+		$$=buildSyntaxTree("Stmt",5,$1,$2,$3,$4,$5);
 	}
 	;
 
 
 /*Local Definations*/
 DefList:Def DefList{
-	buildSyntaxTree("DefList",2,$1,$2);
+	$$=buildSyntaxTree("DefList",2,$1,$2);
 }
 	| {
 		$$=NULL;
 	}
 	;
 Def:Specifier DecList SEMI {
-	buildSyntaxTree("Def",3,$1,$2,$3);
+	$$=buildSyntaxTree("Def",3,$1,$2,$3);
 }
 	;
 DecList:Dec {
-	buildSyntaxTree("DecList",1,$1);
+	$$=buildSyntaxTree("DecList",1,$1);
 }
 	|Dec COMMA DecList {
-		buildSyntaxTree("DecList",3,$1,$2,$3);
+		$$=buildSyntaxTree("DecList",3,$1,$2,$3);
 	}
 	;
 Dec:VarDec {
-	buildSyntaxTree("Dec",1,$1);
+	$$=buildSyntaxTree("Dec",1,$1);
 }
 	|VarDec ASSIGNOP Exp {
-		buildSyntaxTree("Dec",3,$1,$2,$3);
+		$$=buildSyntaxTree("Dec",3,$1,$2,$3);
 	}
 	;
 /*Expressions*/
 Exp:Exp ASSIGNOP Exp{
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |Exp AND Exp{
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |Exp OR Exp{
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |Exp RELOP Exp{
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |Exp PLUS Exp{
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |Exp MINUS Exp{
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |Exp STAR Exp{
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |Exp DIV Exp{
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |LP Exp RP{
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |MINUS Exp {
-	buildSyntaxTree("Exp",2,$1,$2);
+	$$=buildSyntaxTree("Exp",2,$1,$2);
 }
         |NOT Exp  {
-	buildSyntaxTree("Exp",2,$1,$2);
+	$$=buildSyntaxTree("Exp",2,$1,$2);
 }
         |ID LP Args RP{
-	buildSyntaxTree("Exp",4,$1,$2,$3,$4);
+	$$=buildSyntaxTree("Exp",4,$1,$2,$3,$4);
 }
         |ID LP RP {
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |Exp LB Exp RB{
-	buildSyntaxTree("Exp",4,$1,$2,$3,$4);
+	$$=buildSyntaxTree("Exp",4,$1,$2,$3,$4);
 }
         |Exp DOT ID {
-	buildSyntaxTree("Exp",3,$1,$2,$3);
+	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
         |ID {
-	buildSyntaxTree("Exp",1,$1);
+	$$=buildSyntaxTree("Exp",1,$1);
 }
         |INT{
-	buildSyntaxTree("Exp",1,$1);
+	$$=buildSyntaxTree("Exp",1,$1);
 }
         |FLOAT{
-	buildSyntaxTree("Exp",1,$1);
+	$$=buildSyntaxTree("Exp",1,$1);
 }
         ;
 Args:Exp COMMA Args{
-	buildSyntaxTree("Args",3,$1,$2,$3);
+	$$=buildSyntaxTree("Args",3,$1,$2,$3);
 }
         |Exp {
-	buildSyntaxTree("Args",1,$1);
+	$$=buildSyntaxTree("Args",1,$1);
 }
         ;
 
@@ -251,11 +252,17 @@ Args:Exp COMMA Args{
 void yyerror(const char* msg){
 	fprintf(stderr,"Error type B at Line %d: %s.\n",yylineno,msg);
 }
-void buildSyntaxTree(char* faName,int num_args,...){
+struct Node* buildSyntaxTree(char* faName,int num_args,...){
 	struct Node* fa=(struct Node*)malloc(sizeof(struct Node));
 	strcpy(fa->name,faName);
 	fa->type=SYNTACTIC_UNIT;
 	fa->next_sib=NULL;
+
+	// if(num_args==0){
+	// 	fa->child=NULL;
+	// 	fa->lineno=-1;
+	// 	return;
+	// }
 
 	va_list sons;
 	va_start(sons,num_args);

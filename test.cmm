@@ -1,4 +1,3 @@
-int a;
-float b, c;
-int d[10];
-int k = 5;
+float sub(){
+  return 10 - 5.5e-3;     
+}
