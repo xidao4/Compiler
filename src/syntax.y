@@ -209,7 +209,7 @@ Exp:Exp ASSIGNOP Exp{
         |LP Exp RP{
 	$$=buildSyntaxTree("Exp",3,$1,$2,$3);
 }
-        |MINUS Exp {
+        |MINUS Exp %prec UMINUS {
 	$$=buildSyntaxTree("Exp",2,$1,$2);
 }
         |NOT Exp  {
