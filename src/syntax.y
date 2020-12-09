@@ -283,29 +283,28 @@ struct Node* createSingleNode(char* faName){
 	return fa;
 }
 void tree_search(struct Node* cur,int depth){
-	if(cur==NULL) return;
-	if(cur->lineno!=-1 || cur->child!=NULL) {
-	
-		for(int i=0;i<depth;i++){
-			fprintf(stderr,"  ");
+	if(cur!=NULL){
+		if(cur->lineno!=-1 || cur->child!=NULL) {
+			for(int i=0;i<depth;i++){
+				fprintf(stderr,"  ");
+			}
+			fprintf(stderr,"%s",cur->name);
+			if(cur->type==SYNTACTIC_UNIT){
+				fprintf(stderr," (%d)",cur->lineno);
+			}else if(cur->type==LEX_INT){
+				fprintf(stderr,": %d",cur->int_constant);
+			}else if(cur->type==LEX_FLOAT){
+				fprintf(stderr,": %f",cur->float_constant);
+			}else if(cur->type==LEX_ID||cur->type==LEX_TYPE){
+				fprintf(stderr,": %s",cur->str_constant);
+			}else if(cur->type==LEX_OTHER_TOKEN){
+			;
+			}
+			fprintf(stderr,"\n");
 		}
-		fprintf(stderr,"%s",cur->name);
-		if(cur->type==SYNTACTIC_UNIT){
-			fprintf(stderr," (%d)",cur->lineno);
-		}else if(cur->type==LEX_INT){
-			fprintf(stderr,": %d",cur->int_constant);
-		}else if(cur->type==LEX_FLOAT){
-			fprintf(stderr,": %f",cur->float_constant);
-		}else if(cur->type==LEX_ID||cur->type==LEX_TYPE){
-			fprintf(stderr,": %s",cur->str_constant);
-		}else if(cur->type==LEX_OTHER_TOKEN){
-		;
-		}
-		fprintf(stderr,"\n");
+		tree_search(cur->child,depth+1);
+		tree_search(cur->next_sib,depth);
 	}
-
-	tree_search(cur->child,depth+1);
-	tree_search(cur->next_sib,depth);
 }
 // int main(){
 // 	yyparse();
