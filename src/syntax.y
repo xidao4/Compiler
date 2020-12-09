@@ -50,7 +50,6 @@ ExtDefList:ExtDef ExtDefList{
 	| {
 		//$$=NULL;
 		$$=createEmptyNode("ExtDefList");
-		//$$=buildSyntaxTree("ExtDefList",0);
 	}
 	;
 ExtDef:Specifier ExtDecList SEMI  {
@@ -281,6 +280,7 @@ struct Node* createEmptyNode(char* faName){
 	fa->next_sib=NULL;
 	fa->child=NULL;
 	fa->lineno=-1;
+	return fa;
 }
 void tree_search(struct Node* cur,int depth){
 	if(cur==NULL) return;
