@@ -131,7 +131,7 @@ StmtList:Stmt StmtList{
 	$$=buildSyntaxTree("StmtList",2,$1,$2);
 }
 	| {
-		$$=buildSyntaxTree("StmtList",0);
+		$$=NULL;
 	}
 	;
 Stmt:Exp SEMI {
