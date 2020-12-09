@@ -5,39 +5,46 @@
 //#include "lex.yy.c"
 using namespace std;
 
-//int yyparse();
-//extern int yyparse();
+
 /*
 extern FILE* yyin;
 extern int yylineno;
 extern char* yytext;
 */
+extern struct Node* root;
+extern int syntaxErr;
 extern "C"{
 	int yyparse();
 	int yyrestart(FILE*);
+	void tree_search(struct Node* cur,int depth);
 	//#include "lex.yy.c"
 	//#include "syntax.tab.h"
 }
 
 
 int main(int argc,char** argv){
- 	//yyparse();
-	 //if(argc<=1) return 1;
-	 //"/root/Lab/src/test0.cmm"
-	 FILE* f=fopen(argv[1],"r");
-	 if(!f){
-		 perror(argv[1]);
-		 return 1;
+	if(argc<=1) return 1;
+	//"/root/Lab/src/test.cmm"
+	FILE* f=fopen(argv[1],"r");
+	if(!f){
+		perror(argv[1]);
+		return 1;
 	 }
-	 yyrestart(f);
-	 yyparse();
-	 return 0;
+	yyrestart(f);
+	yyparse();
+
+	if(syntaxErr==0){
+		tree_search(root,0);
+	}
+	return 0;
 }
 
 /*
 string errOut="";
 string corrOut="";
 bool wrongFlag=false;
+*/
+/*
 string getNum(char* yytext){
 	unsigned int num=0;
 	if(*yytext=='0'&&(*(yytext+1)=='x'||*(yytext+1)=='X')){
@@ -63,6 +70,8 @@ string getNum(char* yytext){
 	}
 	return to_string(num);
 }
+*/
+/*
 string getFloat(char* yytext){
 	string text=yytext;
 	stringstream ss(text);
@@ -80,13 +89,8 @@ int main(int argc,char** argv){
 		perror(argv[1]);
 		return 1;	
 	}
-//	"/root/Lab/src/test0.cmm"
-//	argv[1]
-	yyrestart(f);
-	yyparse();
-	return 0;
 
-	/*
+
 	int no;
 	string tokens[]={"","","IF","ELSE","STRUCT","RETURN","WHILE","TYPE","ID",
 		"","","RELOP","PLUS","ASSIGNOP","SEMI","LP","RP","LB","RB",

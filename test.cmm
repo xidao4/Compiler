@@ -1,0 +1,4 @@
+int a;
+float b, c;
+int d[10];
+int k = 5;
