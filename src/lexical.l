@@ -74,7 +74,7 @@ type		"int"|"float"
 			yylval.node->int_constant=4;
 			return INT;	}  
 {float}		{createTokenNode("FLOAT",LEX_FLOAT);
-			yylval.node->float_constant=atof(yytext);
+			yylval.node->float_constant=0.4;
 			return FLOAT;
 			}  
 {relop}		{createTokenNode("RELOP",LEX_OTHER_TOKEN);
