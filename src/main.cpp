@@ -23,18 +23,18 @@ extern "C"{
 
 
 int main(int argc,char** argv){
-	//if(argc<=1) return 1;
+	if(argc<=1) return 1;
 	//"/root/Lab/src/test.cmm"
-	//FILE* f=fopen(argv[1],"r");
-	FILE* f=fopen("/root/LAB2-TESTS/Tests_1_Normal/Tests(normal)/Tests/C_1.cmm","r");
-	// if(!f){
-	// 	perror(argv[1]);
-	// 	return 1;
-	//  }
+	FILE* f=fopen(argv[1],"r");
+	//FILE* f=fopen("/root/LAB2-TESTS/Tests_1_Normal/Tests(normal)/Tests/C_1.cmm","r");
 	if(!f){
-		fprintf(stderr,"cannot open the file!");
+		perror(argv[1]);
 		return 1;
-	}
+	 }
+	// if(!f){
+	// 	fprintf(stderr,"cannot open the file!\n");
+	// 	return 1;
+	// }
 	yyrestart(f);
 	yyparse();
 
