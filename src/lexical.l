@@ -65,7 +65,7 @@ type		"int"|"float"
 			return RETURN;}
 "while"		{createTokenNode("WHILE",LEX_OTHER_TOKEN);
 			return WHILE;}
-{type}		{createTokenNode("TPYE",LEX_TYPE);
+{type}		{createTokenNode("TYPE",LEX_TYPE);
 			strcpy(yylval.node->str_constant,yytext);
 			return TYPE;}
 {id}		{createTokenNode("ID",LEX_ID);
