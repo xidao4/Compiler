@@ -192,9 +192,7 @@ DefList:Def DefList{
 Def:Specifier DecList SEMI {
 	$$=buildSyntaxTree(@$.first_line,"Def",3,$1,$2,$3);
 }
-	|Specifier error SEMI{}
 	|error SEMI{}
-	|Specifier DecList error SEMI{}
 	;
 DecList:Dec {
 	$$=buildSyntaxTree(@$.first_line,"DecList",1,$1);

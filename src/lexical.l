@@ -18,7 +18,7 @@
 		char name[32];
 		union{
 			int int_constant;
-			float float_constant;
+			double float_constant;
 			char str_constant[32];
 		};
 		int lineno;
