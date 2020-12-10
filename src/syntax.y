@@ -286,6 +286,7 @@ Args:Exp COMMA Args{
 
 %%
 void yyerror(const char* msg){
+	syntaxErr+=1;
 	fprintf(stderr,"Error type B at Line %d: %s.\n",yylineno,msg);
 }
 struct Node* buildSyntaxTree(int faLineno,char* faName,int num_args,...){
