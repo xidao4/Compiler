@@ -25,7 +25,8 @@ extern "C"{
 int main(int argc,char** argv){
 	if(argc<=1) return 1;
 	//"/root/Lab/src/test.cmm"
-	FILE* f=fopen(argv[1],"r");
+	//FILE* f=fopen(argv[1],"r");
+	FILE* f=fopen("/root/LAB2-TESTS/Tests_1_Normal/Tests(normal)/Tests/C_1.cmm","r");
 	if(!f){
 		perror(argv[1]);
 		return 1;
