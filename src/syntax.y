@@ -26,6 +26,7 @@
 %token <node> SEMI COMMA ASSIGNOP RELOP PLUS MINUS STAR DIV AND OR DOT NOT TYPE LP RP LB RB LC RC STRUCT RETURN IF ELSE WHILE ID INT FLOAT
 %type <node> Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier OptTag Tag VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args
 
+%start Program
 %right ASSIGNOP
 %left OR
 %left AND
@@ -60,7 +61,10 @@ ExtDef:Specifier ExtDecList SEMI  {
 	}
 	|Specifier FunDec CompSt{
 		$$=buildSyntaxTree(@$.first_line,"ExtDef",3,$1,$2,$3);
-	}	
+	}
+	|error SEMI{}
+    |Specifier error SEMI{}
+	|Specifier ExtDecList error SEMI{}	
 	;
 ExtDecList:VarDec{
 	$$=buildSyntaxTree(@$.first_line,"ExtDecList",1,$1);
@@ -69,6 +73,8 @@ ExtDecList:VarDec{
 		$$=buildSyntaxTree(@$.first_line,"ExtDecList",3,$1,$2,$3);
 	}
 	;
+
+
 /*Specifier*/
 Specifier:TYPE {
 	$$=buildSyntaxTree(@$.first_line,"Specifier",1,$1);
@@ -83,6 +89,8 @@ StructSpecifier:STRUCT OptTag LC DefList RC {
 	|STRUCT Tag {
 		$$=buildSyntaxTree(@$.first_line,"StructSpecifier",2,$1,$2);
 	}
+	|STRUCT OptTag LC error RC {}
+	|STRUCT OptTag LC DefList error RC{}
 	;
 OptTag:ID{
 	$$=buildSyntaxTree(@$.first_line,"OptTag",1,$1);
@@ -104,6 +112,8 @@ VarDec:ID {
 	| VarDec LB INT RB {
 		$$=buildSyntaxTree(@$.first_line,"VarDec",4,$1,$2,$3,$4);
 	}
+	|VarDec LB error RB{}
+	| VarDec LB INT error RB{} 
 	;
 FunDec:ID LP VarList RP {
 	$$=buildSyntaxTree(@$.first_line,"FunDec",4,$1,$2,$3,$4);
@@ -111,6 +121,8 @@ FunDec:ID LP VarList RP {
 	|ID LP RP {
 		$$=buildSyntaxTree(@$.first_line,"FunDec",3,$1,$2,$3);
 	}
+	|ID LP error RP{ }
+	|ID LP VarList error RP{}
 	;
 VarList:ParamDec COMMA VarList {
 	$$=buildSyntaxTree(@$.first_line,"VarList",3,$1,$2,$3);
@@ -124,10 +136,15 @@ ParamDec:Specifier VarDec {
 }
     ;
 
+
+
 /*Statement*/
 CompSt:LC DefList StmtList RC {
 	$$=buildSyntaxTree(@$.first_line,"CompSt",4,$1,$2,$3,$4);
 }
+	| LC error RC
+	|LC DefList error RC
+	|LC DefList StmtList error RC
 	;
 StmtList:Stmt StmtList{
 	$$=buildSyntaxTree(@$.first_line,"StmtList",2,$1,$2);
@@ -154,6 +171,13 @@ Stmt:Exp SEMI {
 	|WHILE LP Exp RP Stmt {
 		$$=buildSyntaxTree(@$.first_line,"Stmt",5,$1,$2,$3,$4,$5);
 	}
+	|error SEMI {}
+    |Exp error SEMI{}
+    |RETURN error SEMI{ }
+	|RETURN Exp error SEMI{}
+	|IF LP error RP Stmt{}
+	|IF LP error RP Stmt ELSE Stmt{}
+	|WHILE LP error RP Stmt{}
 	;
 
 
@@ -168,6 +192,9 @@ DefList:Def DefList{
 Def:Specifier DecList SEMI {
 	$$=buildSyntaxTree(@$.first_line,"Def",3,$1,$2,$3);
 }
+	|Specifier error SEMI{}
+	|error SEMI{}
+	|Specifier DecList error SEMI{}
 	;
 DecList:Dec {
 	$$=buildSyntaxTree(@$.first_line,"DecList",1,$1);
@@ -183,6 +210,9 @@ Dec:VarDec {
 		$$=buildSyntaxTree(@$.first_line,"Dec",3,$1,$2,$3);
 	}
 	;
+
+
+
 /*Expressions*/
 Exp:Exp ASSIGNOP Exp{
 	$$=buildSyntaxTree(@$.first_line,"Exp",3,$1,$2,$3);
@@ -238,6 +268,11 @@ Exp:Exp ASSIGNOP Exp{
         |FLOAT{
 	$$=buildSyntaxTree(@$.first_line,"Exp",1,$1);
 }
+		|LP error RP{}
+        |ID LP error RP{}
+        |Exp LB error RB{}
+		|Exp LB Exp error RB{}
+		|MINUS error{}
         ;
 Args:Exp COMMA Args{
 	$$=buildSyntaxTree(@$.first_line,"Args",3,$1,$2,$3);
