@@ -113,7 +113,7 @@ VarDec:ID {
 		$$=buildSyntaxTree(@$.first_line,"VarDec",4,$1,$2,$3,$4);
 	}
 	|VarDec LB error RB{}
-	| VarDec LB INT error RB{} 
+	|VarDec LB INT error RB{} 
 	;
 FunDec:ID LP VarList RP {
 	$$=buildSyntaxTree(@$.first_line,"FunDec",4,$1,$2,$3,$4);
@@ -142,7 +142,7 @@ ParamDec:Specifier VarDec {
 CompSt:LC DefList StmtList RC {
 	$$=buildSyntaxTree(@$.first_line,"CompSt",4,$1,$2,$3,$4);
 }
-	| LC error RC
+	|LC error RC
 	|LC DefList error RC
 	|LC DefList StmtList error RC
 	;
@@ -163,7 +163,7 @@ Stmt:Exp SEMI {
 		$$=buildSyntaxTree(@$.first_line,"Stmt",3,$1,$2,$3);
 	}
 	|IF LP Exp RP Stmt {
-		$$=buildSyntaxTree(@$.first_line,"Stmt",4,$1,$2,$3,$4);
+		$$=buildSyntaxTree(@$.first_line,"Stmt",5,$1,$2,$3,$4,$5);
 	}
 	|IF LP Exp RP Stmt ELSE Stmt {
 		$$=buildSyntaxTree(@$.first_line,"Stmt",7,$1,$2,$3,$4,$5,$6,$7);
@@ -338,7 +338,7 @@ void tree_search(struct Node* cur,int depth){
 			}else if(cur->type==LEX_OTHER_TOKEN){
 				;
 			}
-			
+
 			fprintf(stderr,"\n");
 		}
 
