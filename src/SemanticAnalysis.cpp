@@ -480,7 +480,7 @@ Type Exp(Node* n){
         //ID
         
         
-        if(map.find(n->child->str_constant)!=map.end()){
+        if(map.find(n->child->str_constant)==map.end()){
             fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->str_constant);
             return genErrType(1);
         }else{
