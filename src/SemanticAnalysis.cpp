@@ -489,18 +489,18 @@ void Stmt(Node* n,Type return_type){
     }else if(string(n->child->name)=="WHILE"){
         //      -> WHILE LP Exp RP Stmt
         Type while_condition=Exp(n->child->next_sib->next_sib);
-        if(while_condition->kind!=Type_::BASIC || while_condition->u.basic!=IS_INT){
-            fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为while的条件.\n",n->lineno);
-        }
+        // if(while_condition->kind!=Type_::BASIC || while_condition->u.basic!=IS_INT){
+        //     fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为while的条件.\n",n->lineno);
+        // }
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib,return_type);
     }
     else if(n->child->next_sib->next_sib->next_sib->next_sib->next_sib==NULL){
         //      -> IF LP Exp RP Stmt
         cout<<"Stmt_IF"<<endl;
         Type if_condition=Exp(n->child->next_sib->next_sib);
-        if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
-            fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
-        }
+        // if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
+        //     fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
+        // }
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib,return_type);
     }
     else{
@@ -519,7 +519,7 @@ Type Exp(Node* n){
     
     if(n->child->next_sib==NULL && string(n->child->name)=="ID"){
         //ID
-        cout<<"ID"<<endl;
+        cout<<"Exp_ID"<<endl;
         if(map.find(string(n->child->str_constant))==map.end()){
             fprintf(stderr,"Error Type 1 at Line %d: Undefined variable \"%s\".\n",n->lineno,n->child->str_constant);
             return genErrType(1);
@@ -582,7 +582,7 @@ Type Exp(Node* n){
             f=f->tail;
         }
         if(f==NULL){
-            fprintf(stderr,"Error Type 14 at Line %d: 访问结构体中未定义过的域.\n",n->lineno);
+            fprintf(stderr,"Error Type 14 at Line %d: Non-existent field in struct.\n",n->lineno);
             return genErrType(14); 
         }
         return f->type;
