@@ -721,7 +721,7 @@ Type Exp_Logic(Node* n){
         // }
     }else{
         cout<<"Exp_Logic"<<endl;
-        Type t1=Exp(n->child->next_sib);
+        Type t1=Exp(n->child);
         Type t2=Exp(n->child->next_sib->next_sib);
         if(t1->kind==Type_::ERROR||t2->kind==Type_::ERROR) return t1;
         // if(t1->kind!=Type_::BASIC || t1->u.basic!=IS_INT ||t2->kind!=Type_::BASIC || t2->u.basic!=IS_INT ){
