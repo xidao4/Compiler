@@ -621,19 +621,22 @@ FuncList Args(Node* n){
 }
 Type Exp_ASSIGNOP(Node* n){
     //Exp ASSIGNOP Exp
-    printf("前面：等号左边\n");
+
+    //左边是  右值
+    if(string(n->child->child->name)=="INT"||string(n->child->child->name)=="FLOAT"){
+        fprintf(stderr,"Error Type 6 at Line %d: 赋值号左边出现一个只有右值的表达式.\n",n->lineno);
+        return genErrType(6);
+    }
     Type left_type=Exp(n->child);
     if(left_type==NULL){
         printf("等号左边是空指针\n");
     }
-    //左边是  右值
-    if(left_type->kind==Type_::BASIC||left_type->kind==Type_::FUNCTION||left_type->kind==Type_::ERROR ){
+    if(left_type->kind==Type_::FUNCTION||left_type->kind==Type_::ERROR ){
         fprintf(stderr,"Error Type 6 at Line %d: 赋值号左边出现一个只有右值的表达式.\n",n->lineno);
         return genErrType(6);
     }
+
     
-    
-    printf("前面：等号右边\n");
     Type right_type=Exp(n->child->next_sib->next_sib);
     if(right_type==NULL){
         printf("等号右边是空指针\n");
