@@ -447,6 +447,7 @@ void StmtList(Node* n,Type return_type){
     StmtList(n->child->next_sib,return_type);
 }
 void Stmt(Node* n,Type return_type){
+    cout<<"Stmt"<<endl;
     if(n->child->next_sib==NULL){
         // Stmt -> CompSt        //?还需要return_type吗
         CompSt(n->child,return_type);
@@ -486,6 +487,7 @@ void Stmt(Node* n,Type return_type){
 
 
 Type Exp(Node* n){
+    cout<<"Exp"<<endl;
     if(string(n->child->name)=="ID"){
         //ID
         if(map.find(n->child->str_constant)==map.end()){
