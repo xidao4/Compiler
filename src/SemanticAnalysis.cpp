@@ -102,7 +102,6 @@ void ExtDefList(Node* n){
     ExtDefList(n->child->next_sib);
 }
 void ExtDef(Node* n){
-    cout<<"in ExtDef"<<endl;
     Type type=Specifier(n->child);
     if(strcmp(n->child->next_sib->name,"ExtDecList")==0){
         // Specifier ExtDecList SEMI
@@ -112,9 +111,8 @@ void ExtDef(Node* n){
         ;
     }else if(string(n->child->next_sib->name)=="FunDec"){
         //ExtDef -> Specifier FunDec CompSt
-        cout<<"before FunDec"<<endl;
         FunDec(n->child->next_sib,type);
-        //CompSt(n->child->next_sib->next_sib,type);
+        CompSt(n->child->next_sib->next_sib,type);
     }else{
         cout<<"wrong with ExtDef"<<endl;
     }
@@ -307,13 +305,10 @@ void FunDec(Node* n,Type return_type){
     //如果函数定义（函数返回参数）有问题，则不将该函数加入函数表
     cout<<"in FunDec"<<endl;
     if(return_type->kind==Type_::ERROR) return;
-
-    cout<<"no error about return_type"<<endl;
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
     function->name=n->child->str_constant;
     printf("%s\n",n->child->next_sib->next_sib->str_constant);
     function->type=return_type;
-   
     if(string(n->child->next_sib->next_sib->name)=="RP"){
         //inc()的形式，只有三个子节点
         //FunDec -> ID LP RP
@@ -390,7 +385,7 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
 void CompSt(Node *n,Type return_type){
     // CompSt -> LC DefList StmtList RC
     DefList_in_Function(n->child->next_sib);
-    StmtList(n->child->next_sib->next_sib,return_type);
+    //StmtList(n->child->next_sib->next_sib,return_type);
 }
 void DefList_in_Function(Node* n){
     // DefList -> empty
