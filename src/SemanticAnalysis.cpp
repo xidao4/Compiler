@@ -1,28 +1,23 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string>
-//include<hash_map>
 #include <unordered_map>
 #include<sstream>
 #include<iostream>
 #include<cstring>
 //include "lex.yy.c"
 #include <cstdlib>
-//include "tsl/ordered_map.h"
 #include "SyntaxNode.h"
 using namespace std;
 
 typedef struct Type_* Type;
 typedef struct FieldList_* FieldList;
 typedef struct FuncList_* FuncList;
-//typedef struct ArrayList_* ArrayList;
 #define IS_INT 0
 #define IS_FLOAT 1
 
-//tsl::ordered_map<char*,Type> functionMap;
-//tsl::ordered_map<char*,Type> decMap;
-unordered_map<char*,Type> map;
-//放基本类型变量、数组变量、结构体变量、函数形式参数变量、结构体域名变量
+
+unordered_map<char*,Type> map;//放基本类型变量、数组变量、结构体变量、函数形式参数变量、结构体域名变量
 unordered_map<char*,Type> structureMap;//只放结构体的定义（结构体名：类型）
 unordered_map<char*,Type> functionMap;
 
@@ -122,7 +117,7 @@ void ExtDef(Node* n){
 Type Specifier(Node* n){
     if(strcmp(n->child->name,"TYPE")==0){
         //Specifier -> TYPE
-        cout<<"Specifier -> TYPE"<<endl;
+        
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::BASIC;
         if(n->child->type==LEX_INT){
@@ -130,6 +125,8 @@ Type Specifier(Node* n){
         }
         else if(n->child->type==LEX_FLOAT)
             type->u.basic=IS_FLOAT;
+
+        cout<<type->kind<<" "<<type->u.basic<<endl;
         return type;
     }else{
         //Specifier -> StructSpecifier
@@ -286,7 +283,7 @@ void VarDec(Node* n,Type type){
         }else{
             map.insert({id->str_constant,type});
             for(auto x:map)
-                cout<<x.first<<" "<<x.second->kind<<endl;
+                cout<<x.first<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
         }
 
 
