@@ -154,11 +154,11 @@ Type StructSpecifier(Node* n){
         // STRUCT OptTag LC DefList RC
         string optTag=OptTag(n->child->next_sib);
         if(structureMap.find(optTag)!=structureMap.end()){
-            fprintf(stderr,"Error Type 16 at Line %d: 结构体名\"%s\"与定义过的结构体或变量重复.\n",n->lineno,n->child->next_sib->str_constant);
+            fprintf(stderr,"Error type 16 at Line %d: Duplicated name of struct when declaring.\n",n->lineno);
             return genErrType(16);
 
         }else if(map.find(optTag)!=map.end()){
-            fprintf(stderr,"Error Type 16 at Line %d: 结构体名\"%s\"与定义过的变量重复.\n",n->lineno,n->child->next_sib->str_constant);
+            fprintf(stderr,"Error type 16 at Line %d: Duplicated name of struct when declaring.\n",n->lineno);
             return genErrType(16);
 
         }else{
@@ -180,7 +180,7 @@ Type StructSpecifier(Node* n){
         char* tagName=n->child->next_sib->child->str_constant;
         if(structureMap.find(tagName)==structureMap.end()){
             //理解为这样的形式 struct Complex c;
-            fprintf(stderr,"Error Type 17 at Line %d: 直接使用未定义过的结构体名\"%s\"来定义变量.\n",n->lineno,tagName);
+            fprintf(stderr,"Error type 17 at Line %d: use Undefined structure to declare others.\n",n->lineno);
             return genErrType(17);
         }else{
             return structureMap[tagName];
@@ -215,7 +215,7 @@ void Dec_in_Struct(Node* n,string optTag,Type type){
         VarDec_in_Struct(n->child,optTag,type);
     }else{
         //Dec -> VarDec ASSIGNOP Exp
-        fprintf(stderr,"Error Type 15 at line %d: 结构体\"%s\"在定义时对域进行初始化.\n",n->lineno,optTag);
+        fprintf(stderr,"Error type 15 at line %d: cannot initialize the fields of struct when declaring.\n",n->lineno);
     }  
 }
 void VarDec_in_Struct(Node* n,string optTag,Type type){
@@ -225,7 +225,7 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
 
         //1. 将域名加入map中
         if(map.find(string(n->child->str_constant))!=map.end()){
-            fprintf(stderr,"Error Type 15 at Line %d: 结构体\"%s\"中域名重复定义（同一结构体中/不同结构体中）.\n",n->lineno,optTag);
+            fprintf(stderr,"Error type 15 at Line %d: redefined field in struct.\n",n->lineno);
             return;
             //不采用：如果结构体定义错误，则该结构体不加入符号表。
             //采用：如果结构体定义中域名重复，则仍然该结构体名加入符号表，但是重复的定义并不加入该结构体域。
@@ -300,9 +300,9 @@ void VarDec(Node* n,Type type){
 
         Node* id=n->child;
         if(map.find(string(id->str_constant))!=map.end()){
-            fprintf(stderr,"Error Type 3 at Line %d: Redefined variable \"%s\".\n",n->lineno,id->str_constant);
+            fprintf(stderr,"Error type 3 at Line %d: Redefined variable \"%s\".\n",n->lineno,id->str_constant);
         }else if(structureMap.find(string(id->str_constant))!=structureMap.end()){
-            fprintf(stderr,"Error Type 3 at Line %d: Redefined variable \"%s\".\n",n->lineno,id->str_constant);
+            fprintf(stderr,"Error type 3 at Line %d: Redefined variable \"%s\".\n",n->lineno,id->str_constant);
         }else{
             map.insert({string(id->str_constant),type});
             for(auto x:map)
@@ -388,10 +388,10 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
     if(n->child->next_sib==NULL){
         // VarDec -> ID
         if(map.find(string(n->child->str_constant))!=map.end()){
-            fprintf(stderr,"Error Type 3 at Line %d: Redefined variable.\n",n->lineno);
+            fprintf(stderr,"Error type 3 at Line %d: Redefined variable.\n",n->lineno);
             return NULL;
         }else if(structureMap.find(string(n->child->str_constant))!=structureMap.end()){
-            fprintf(stderr,"Error Type 3 at Line %d: Redefined variable.\n",n->lineno); 
+            fprintf(stderr,"Error type 3 at Line %d: Redefined variable.\n",n->lineno); 
             return NULL;
         }else{
             FuncList funcList=(FuncList)malloc(sizeof(struct FuncList_));
@@ -452,7 +452,7 @@ void Dec_in_Function(Node* n,Type dec_type){
         // Dec -> VarDec ASSIGNOP EXP
         Type right=Exp(n->child->next_sib->next_sib);
         if(!isSameType(dec_type,right)){
-            fprintf(stderr,"Error Type 5 at Line %d: int a=1.1 OR int a=ErrorType.\n",n->lineno);
+            fprintf(stderr,"Error type 5 at Line %d: int a=1.1 OR int a=ErrorType.\n",n->lineno);
         }else{
             VarDec(n->child,dec_type);//VarDec是全局或函数内部
         } 
@@ -480,17 +480,17 @@ void Stmt(Node* n,Type return_type){
     }
     else if(string(n->child->name)=="RETURN"){
         // Stmt -> RETURN Exp SEMI
-        cout<<"return_type:"<<return_type->kind<<endl;
+        //cout<<"return_type:"<<return_type->kind<<endl;
         Type type_in_reality=Exp(n->child->next_sib);
-        cout<<"type_in_reality:"<<type_in_reality->kind<<endl;
+        //cout<<"type_in_reality:"<<type_in_reality->kind<<endl;
         if(!isSameType(return_type,type_in_reality)){
-            fprintf(stderr,"Error Type 8 at Line %d: Type mismatched for return.\n",n->lineno);
+            fprintf(stderr,"Error type 8 at Line %d: Type mismatched for return.\n",n->lineno);
         }
     }else if(string(n->child->name)=="WHILE"){
         //      -> WHILE LP Exp RP Stmt
         Type while_condition=Exp(n->child->next_sib->next_sib);
         // if(while_condition->kind!=Type_::BASIC || while_condition->u.basic!=IS_INT){
-        //     fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为while的条件.\n",n->lineno);
+        //     fprintf(stderr,"Error type ? at Line %d: 违反假设2：只有INT才能作为while的条件.\n",n->lineno);
         // }
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib,return_type);
     }
@@ -499,7 +499,7 @@ void Stmt(Node* n,Type return_type){
         cout<<"Stmt_IF"<<endl;
         Type if_condition=Exp(n->child->next_sib->next_sib);
         // if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
-        //     fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
+        //     fprintf(stderr,"Error type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
         // }
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib,return_type);
     }
@@ -507,7 +507,7 @@ void Stmt(Node* n,Type return_type){
         //      -> IF LP Exp RP Stmt ELSE Stmt
         Type if_condition=Exp(n->child->next_sib->next_sib);
         if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
-            fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
+            fprintf(stderr,"Error type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
         }
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib,return_type);
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib->next_sib->next_sib,return_type);
@@ -521,7 +521,7 @@ Type Exp(Node* n){
         //ID
         cout<<"Exp_ID"<<endl;
         if(map.find(string(n->child->str_constant))==map.end()){
-            fprintf(stderr,"Error Type 1 at Line %d: Undefined variable \"%s\".\n",n->lineno,n->child->str_constant);
+            fprintf(stderr,"Error type 1 at Line %d: Undefined variable \"%s\".\n",n->lineno,n->child->str_constant);
             return genErrType(1);
         }else{
             string targetID=string(n->child->str_constant);
@@ -571,7 +571,7 @@ Type Exp(Node* n){
         cout<<"Exp_DOT"<<endl;
         Type t=Exp(n->child);
         if(t->kind!=Type_::STRUCTURE){
-            fprintf(stderr,"Error Type 13 at Line %d: Illegal use of \".\", apply to non-structure.\n",n->lineno);
+            fprintf(stderr,"Error type 13 at Line %d: Illegal use of \".\", apply to non-structure.\n",n->lineno);
             return genErrType(13);
         }
         FieldList f=t->u.structure;
@@ -582,7 +582,7 @@ Type Exp(Node* n){
             f=f->tail;
         }
         if(f==NULL){
-            fprintf(stderr,"Error Type 14 at Line %d: Non-existent field in struct.\n",n->lineno);
+            fprintf(stderr,"Error type 14 at Line %d: Non-existent field in struct.\n",n->lineno);
             return genErrType(14); 
         }
         return f->type;
@@ -592,12 +592,12 @@ Type Exp(Node* n){
         cout<<"Exp_LB_INT_RB"<<endl;
         Type t=Exp(n->child);
         if(t->kind!=Type_::ARRAY){
-            fprintf(stderr,"Error Type 10 at Line %d: cannot apply [] to non-array.\n",n->lineno);
+            fprintf(stderr,"Error type 10 at Line %d: cannot apply [] to non-array.\n",n->lineno);
             return genErrType(10);
         }
         t=Exp(n->child->next_sib->next_sib);
         if(t->kind!=Type_::BASIC || t->u.basic!=IS_INT){
-            fprintf(stderr,"Error Type 12 at Line %d: num in [] is not an integer.\n",n->lineno);
+            fprintf(stderr,"Error type 12 at Line %d: num in [] is not an integer.\n",n->lineno);
             return genErrType(12);
         }
         return t->u.array.elem;
@@ -605,11 +605,11 @@ Type Exp(Node* n){
     else if(string(n->child->next_sib->next_sib->name)=="RP"){
         //ID LP RP
         if(map.find(n->child->str_constant)!=map.end()){
-            fprintf(stderr,"Error Type 11 at Line %d: cannot apply () to non-function.\n",n->lineno);
+            fprintf(stderr,"Error type 11 at Line %d: cannot apply () to non-function.\n",n->lineno);
             return genErrType(2);
         }
         if(functionMap.find(n->child->str_constant)==functionMap.end()){
-            fprintf(stderr,"Error Type 2 at Line %d: Undefined function.\n",n->lineno);
+            fprintf(stderr,"Error type 2 at Line %d: Undefined function.\n",n->lineno);
             return genErrType(2);
         }
         return functionMap[n->child->str_constant]->u.myfunc->type;
@@ -617,11 +617,11 @@ Type Exp(Node* n){
     else{
         //ID LP Args RP
         if(map.find(n->child->str_constant)!=map.end()){
-            fprintf(stderr,"Error Type 11 at Line %d: cannot apply () to non-function.\n",n->lineno);
+            fprintf(stderr,"Error type 11 at Line %d: cannot apply () to non-function.\n",n->lineno);
             return genErrType(2);
         }
         if(functionMap.find(n->child->str_constant)==functionMap.end()){
-            fprintf(stderr,"Error Type 2 at Line %d: 函数在调用时未经定义.\n",n->lineno);
+            fprintf(stderr,"Error type 2 at Line %d: 函数在调用时未经定义.\n",n->lineno);
             return genErrType(2);
         }
         Type f=functionMap[n->child->str_constant];
@@ -634,7 +634,7 @@ Type Exp(Node* n){
             f2=f2->next;
         }
         if(f1==NULL && f2==NULL) return f->u.myfunc->type;
-        fprintf(stderr,"Error Type 9 at Line %d: Function is not applicable for the provided arguments.\n",n->lineno);
+        fprintf(stderr,"Error type 9 at Line %d: Function is not applicable for the provided arguments.\n",n->lineno);
         //函数实参与形参不匹配
         return genErrType(9);
     }
@@ -666,11 +666,11 @@ Type Exp_ASSIGNOP(Node* n){
 
     //左边是  右值
     if(left_type->kind==Type_::FUNCTION){
-        fprintf(stderr,"Error Type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
+        fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
         return genErrType(6);
     }
     if(string(n->child->child->name)=="INT"||string(n->child->child->name)=="FLOAT"){
-        fprintf(stderr,"Error Type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
+        fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
         return genErrType(6);
     }
     
@@ -685,7 +685,7 @@ Type Exp_ASSIGNOP(Node* n){
 
 
     if (!isSameType(right_type,left_type)){
-        fprintf(stderr,"Error Type 5 at Line %d: Type mismatched for assignment.\n",n->lineno);
+        fprintf(stderr,"Error type 5 at Line %d: Type mismatched for assignment.\n",n->lineno);
         return genErrType(5);
     }
 
@@ -698,13 +698,13 @@ Type Exp_Math(Node* n){
     Type opLeft=Exp(n->child);
     Type opRight=Exp(n->child->next_sib->next_sib);
     if(opLeft->kind!=Type_::BASIC || opRight->kind!=Type_::BASIC){
-        fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands.\n",n->lineno);
+        fprintf(stderr,"Error type 7 at Line %d: Type mismatched for operands.\n",n->lineno);
         //（只有BASIC类型可以算数运算）（例如数组（或结构体）变量与数组（或结构体）变量相加减量）
         return genErrType(7);
     }else if (isSameType(opLeft,opRight)){
         return opLeft;
     }else{
-        fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands.\n",n->lineno);      
+        fprintf(stderr,"Error type 7 at Line %d: Type mismatched for operands.\n",n->lineno);      
         //（例如整型变量与数组变量相加减）
         return genErrType(7);
     }
@@ -718,17 +718,17 @@ Type Exp_Logic(Node* n){
         if(t->kind==Type_::ERROR) return t;
         
         // if(t->kind!=Type_::BASIC || t->u.basic!=IS_INT){
-        //     fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands, only int can do the logical operations.\n",n->lineno);
+        //     fprintf(stderr,"Error type 7 at Line %d: Type mismatched for operands, only int can do the logical operations.\n",n->lineno);
         //     return genErrType(7);
         // }
     }else{
         cout<<"Exp_Logic"<<endl;
         Type t1=Exp(n->child);
-        cout<<"done p.n"<<endl;
+        //cout<<"done p.n"<<endl;
         Type t2=Exp(n->child->next_sib->next_sib);
         if(t1->kind==Type_::ERROR||t2->kind==Type_::ERROR) return t1;
         // if(t1->kind!=Type_::BASIC || t1->u.basic!=IS_INT ||t2->kind!=Type_::BASIC || t2->u.basic!=IS_INT ){
-        //     fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands, only int can do the logical operations.\n",n->lineno);
+        //     fprintf(stderr,"Error type 7 at Line %d: Type mismatched for operands, only int can do the logical operations.\n",n->lineno);
         //     return genErrType(7);
         // }    
     }
