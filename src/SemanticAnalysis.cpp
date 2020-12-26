@@ -517,7 +517,7 @@ void Stmt(Node* n,Type return_type){
 
 Type Exp(Node* n){
     
-    if(n->child->next_sib==NULL && n->child->name=="ID"){
+    if(n->child->next_sib==NULL && string(n->child->name)=="ID"){
         //ID
         cout<<"ID"<<endl;
         if(map.find(string(n->child->str_constant))==map.end()){
