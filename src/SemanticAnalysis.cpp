@@ -488,7 +488,7 @@ void Stmt(Node* n,Type return_type){
 
 Type Exp(Node* n){
     cout<<"Exp"<<endl;
-    if(string(n->child->name)=="ID"){
+    if(n->child->next_sib==NULL && n->child->name=="ID"){
         //ID
         if(map.find(n->child->str_constant)==map.end()){
             fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->str_constant);
