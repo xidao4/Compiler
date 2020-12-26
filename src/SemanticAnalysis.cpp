@@ -630,7 +630,7 @@ Type Exp_ASSIGNOP(Node* n){
     if(left_type==NULL){
         printf("等号左边是空指针\n");
     }
-    if(left_type->kind==Type_::FUNCTION||left_type->kind==Type_::ERROR ){
+    if(left_type->kind==Type_::FUNCTION){
         fprintf(stderr,"Error Type 6 at Line %d: 赋值号左边出现一个只有右值的表达式.\n",n->lineno);
         return genErrType(6);
     }
