@@ -442,6 +442,7 @@ void StmtList(Node* n,Type return_type){
     // StmtList -> empty
     if(n->type==SYNTACTIC_UNIT_EMPTY) return;
     // StmtList -> Stmt StmtList
+    //cout<<"StmtList"<<endl;
     Stmt(n->child,return_type);
     StmtList(n->child->next_sib,return_type);
 }
@@ -487,8 +488,6 @@ void Stmt(Node* n,Type return_type){
 Type Exp(Node* n){
     if(string(n->child->name)=="ID"){
         //ID
-        
-        
         if(map.find(n->child->str_constant)==map.end()){
             fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->str_constant);
             return genErrType(1);
@@ -621,6 +620,7 @@ FuncList Args(Node* n){
 }
 Type Exp_ASSIGNOP(Node* n){
     //Exp ASSIGNOP Exp
+    cout<<"Exp_ASSIGNOP"<<endl;
 
     //左边是  右值
     if(string(n->child->child->name)=="INT"||string(n->child->child->name)=="FLOAT"){
@@ -652,6 +652,8 @@ Type Exp_ASSIGNOP(Node* n){
 }
 Type Exp_Math(Node* n){
     //Exp PLUS|MINUS|STAR|DIV Exp
+    cout<<"Exp_ASSIGNOP"<<endl;
+    
     Type opLeft=Exp(n->child);
     Type opRight=Exp(n->child->next_sib->next_sib);
     if(opLeft->kind!=Type_::BASIC || opRight->kind!=Type_::BASIC){
