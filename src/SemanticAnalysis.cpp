@@ -458,10 +458,10 @@ void Stmt(Node* n,Type return_type){
     if(n->child->next_sib==NULL){
         // Stmt -> CompSt        //?还需要return_type吗
         CompSt(n->child,return_type);
-    }else if(n->child->next_sib->name=="SEMI"){
+    }else if(string(n->child->next_sib->name)=="SEMI"){
         // Stmt -> Exp SEMI
         Exp(n->child);
-    }else if(n->child->name=="RETURN"){
+    }else if(string(n->child->name)=="RETURN"){
         // Stmt -> RETURN Exp SEMI
         cout<<"return_type:"<<return_type->kind<<endl;
         Type type_in_reality=Exp(n->child->next_sib);
