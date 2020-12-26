@@ -314,9 +314,9 @@ void FunDec(Node* n,Type return_type){
 
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
 
-    printf("%s\n",n->child->str_constant);//!
+    //printf("%s\n",n->child->str_constant);//!
     function->name=n->child->str_constant;
-    cout<<function->name<<endl;//!
+    //cout<<function->name<<endl;//!
 
     function->type=return_type;
     if(string(n->child->next_sib->next_sib->name)=="RP"){
@@ -338,8 +338,11 @@ void FunDec(Node* n,Type return_type){
         type->kind=Type_::FUNCTION;
         type->u.myfunc=function;
         functionMap.insert({function->name,type});
-        for(auto x:functionMap)
+        for(auto x:functionMap){
             cout<<"functionMap:"<<x.first<<" "<<x.second->kind<<endl;
+            //while(x) output all the params!
+        }
+            
     }
 }
 FuncList VarList(Node* n){
@@ -357,6 +360,7 @@ FuncList VarList(Node* n){
 }
 FuncList ParamDec(Node* n){
     //ParamDec -> Specifier VarDec
+    cout<<"ParamDec"<<endl;
     Type type=Specifier(n->child);
     return VarDec_in_FuncParams(n->child->next_sib,type);
 }
@@ -368,10 +372,10 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
 
     if(n->child->next_sib==NULL){
         // VarDec -> ID
-        if(map.find(n->child->str_constant)!=map.end()){
+        if(map.find(string(n->child->str_constant))!=map.end()){
             fprintf(stderr,"Error Type 3 at Line %d: 函数参数名与其他变量名相同.\n",n->lineno);
             return NULL;
-        }else if(structureMap.find(n->child->str_constant)!=structureMap.end()){
+        }else if(structureMap.find(string(n->child->str_constant))!=structureMap.end()){
             fprintf(stderr,"Error Type 3 at Line %d: 函数参数与结构体名相同.\n",n->lineno); 
             return NULL;
         }else{
@@ -379,7 +383,10 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
             funcList->name=n->child->str_constant;
             funcList->type=type;
             funcList->next=NULL;
-            map.insert({n->child->str_constant,type});
+            map.insert({string(n->child->str_constant),type});
+            for(auto x:map){
+                cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+            }
             return funcList;
         }
 
