@@ -121,10 +121,14 @@ Type Specifier(Node* n){
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::BASIC;
         if(n->child->type==LEX_INT){
+            cout<<"LEX_INT"<<endl;
             type->u.basic=IS_INT;
         }
-        else if(n->child->type==LEX_FLOAT)
+        else if(n->child->type==LEX_FLOAT){
+            cout<<"LEX_FLOAT"<<endl;
             type->u.basic=IS_FLOAT;
+        }
+            
 
         cout<<type->kind<<" "<<type->u.basic<<endl;
         return type;
