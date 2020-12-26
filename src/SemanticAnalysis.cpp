@@ -482,7 +482,7 @@ Type Exp(Node* n){
             return genErrType(1);
         }else{
             char* tmp=n->child->str_constant;
-            if(map[tmp]==NULL) printf("确实这里产生了NULL");
+            if(map[tmp]==NULL) printf("确实这里产生了NULL.\n");
             return map[tmp];
         }
     }
@@ -606,15 +606,27 @@ FuncList Args(Node* n){
 }
 Type Exp_ASSIGNOP(Node* n){
     //Exp ASSIGNOP Exp
-
+    printf("前面：等号左边\n");
     Type left_type=Exp(n->child);
-    //左边是  右值？
-    // if(left_type->kind==Type_::BASIC||left_type->kind==Type_::FUNCTION||left_type->kind==Type_::ERROR ){
-    //     fprintf(stderr,"Error Type 6 at Line %d: 赋值号左边出现一个只有右值的表达式.\n",n->lineno);
-    //     return genErrType(6);
-    // }
+    if(left_type==NULL){
+        printf("等号左边是空指针\n");
+    }else{
+        //左边是  右值
+        if(left_type->kind==Type_::BASIC||left_type->kind==Type_::FUNCTION||left_type->kind==Type_::ERROR ){
+            fprintf(stderr,"Error Type 6 at Line %d: 赋值号左边出现一个只有右值的表达式.\n",n->lineno);
+            return genErrType(6);
+        }
+    }
+    
 
+
+    printf("前面：等号右边");
     Type right_type=Exp(n->child->next_sib->next_sib);
+    if(right_type==NULL){
+        printf("等号右边是空指针\n");
+    }
+
+
     if (!isSameType(right_type,left_type)){
         fprintf(stderr,"Error Type 5 at Line %d: 赋值号两边的表达式类型不匹配.\n",n->lineno);
         return genErrType(5);
