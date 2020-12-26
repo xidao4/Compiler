@@ -1,7 +1,7 @@
 /src/*
 !/src/*.c
 !/src/*.cpp
-!/stc/*.h
+!/src/*.h
 /src/lex.yy.c
 /src/syntax.tab.*
 !/src/lexical.l
