@@ -461,9 +461,11 @@ void Stmt(Node* n,Type return_type){
     }else if(string(n->child->next_sib->name)=="SEMI"){
         // Stmt -> Exp SEMI
         Exp(n->child);
-    }else if(string(n->child->name)=="RETURN"){
+    }else if(n->child->name=="RETURN"){
         // Stmt -> RETURN Exp SEMI
+        cout<<"return_type:"<<return_type->kind<<endl;
         Type type_in_reality=Exp(n->child->next_sib);
+        cout<<"type_in_reality:"<<type_in_reality->kind<<endl;
         if(isSameType(return_type,type_in_reality)){
             fprintf(stderr,"Error Type 8 at Line %d: return语句返回类型与函数定义的返回类型不匹配.\n",n->lineno);
         }
@@ -475,12 +477,12 @@ void Stmt(Node* n,Type return_type){
         }
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib,return_type);
     }else if(n->child->next_sib->next_sib->next_sib->next_sib->next_sib==NULL){
+        //      -> IF LP Exp RP Stmt
         Type if_condition=Exp(n->child->next_sib->next_sib);
         if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
             fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
         }
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib,return_type);
-        //      -> IF LP Exp RP Stmt
     }else{
         //      -> IF LP Exp RP Stmt ELSE Stmt
         Type if_condition=Exp(n->child->next_sib->next_sib);
@@ -508,7 +510,7 @@ Type Exp(Node* n){
             return map.at(targetID);
         }
     }
-    else if(string(n->child->name)=="INT"){
+    else if(n->child->name=="INT"){
         //INT
         Type t=(Type)malloc(sizeof(struct Type_));
         t->kind=Type_::BASIC;
