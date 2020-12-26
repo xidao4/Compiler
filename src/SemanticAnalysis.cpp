@@ -471,7 +471,7 @@ void Stmt(Node* n,Type return_type){
         Type type_in_reality=Exp(n->child->next_sib);
         cout<<"type_in_reality:"<<type_in_reality->kind<<endl;
         if(!isSameType(return_type,type_in_reality)){
-            fprintf(stderr,"Error Type 8 at Line %d: return语句返回类型与函数定义的返回类型不匹配.\n",n->lineno);
+            fprintf(stderr,"Error Type 8 at Line %d: Type mismatched for return.\n",n->lineno);
         }
     }else if(string(n->child->name)=="WHILE"){
         //      -> WHILE LP Exp RP Stmt
