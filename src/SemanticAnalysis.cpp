@@ -538,7 +538,7 @@ Type Exp(Node* n){
             fprintf(stderr,"Error Type 12 at Line %d: 数组访问操作符[]中出现非整数.\n",n->lineno);
             return genErrType(12);
         }
-        return t->u.array.elem;//?
+        return t->u.array.elem;//???????
     }
     else if(string(n->child->next_sib->next_sib->name)=="RP"){
         //ID LP RP
@@ -668,8 +668,7 @@ bool isArrayEqual(Type t1,Type t2){
     }
     if(dimen1!=dimen2) return false;
     if(tmp1->kind==Type_::BASIC) return tmp1->u.basic==tmp2->u.basic;
-    else if(tmp1->kind==Type_::STRUCTURE) return isStructEqual(tmp1,tmp2);
-    
+    else return isStructEqual(tmp1,tmp2);//if(tmp1->kind==Type_::STRUCTURE) 
 }
 bool isStructEqual(Type t1,Type t2){
     FieldList f1=t1->u.structure;

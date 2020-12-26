@@ -3,10 +3,10 @@
 #include<sstream>
 #include<iostream>
 //#include "lex.yy.c"
-#include "SemanticAnalysis.cpp"
 using namespace std;
-
-
+//extern struct Node;
+#include "SyntaxNode.h"
+extern void Program(Node* n);
 /*
 extern FILE* yyin;
 extern int yylineno;
