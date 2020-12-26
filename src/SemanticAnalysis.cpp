@@ -102,15 +102,16 @@ void ExtDefList(Node* n){
     ExtDefList(n->child->next_sib);
 }
 void ExtDef(Node* n){
+    //ExtDef -> Specifier ExtDecList
     cout<<"in ExtDef"<<endl;
     Type type=Specifier(n->child);
-    if(strcmp(n->child->name,"ExtDecList")==0){
+    if(strcmp(n->child->next_sib->name,"ExtDecList")==0){
         // Specifier ExtDecList SEMI
         ExtDecList(n->child->next_sib,type);
-    }else if(strcmp(n->child->name,"SEMI")==0){
+    }else if(strcmp(n->child->next_sib->name,"SEMI")==0){
         // Specifier SEMI
         ;
-    }else if(string(n->child->name)=="FunDec"){
+    }else if(string(n->child->next_sib->name)=="FunDec"){
         //ExtDef -> Specifier FunDec CompSt
         cout<<"before FunDec"<<endl;
         FunDec(n->child->next_sib,type);
@@ -124,6 +125,7 @@ void ExtDef(Node* n){
 Type Specifier(Node* n){
     if(strcmp(n->child->name,"TYPE")==0){
         //Specifier -> TYPE
+        cout<<"Specifier -> TYPE"<<endl;
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::BASIC;
         if(n->child->type==LEX_INT){
