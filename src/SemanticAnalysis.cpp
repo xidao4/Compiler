@@ -145,11 +145,11 @@ Type StructSpecifier(Node* n){
         // STRUCT OptTag LC DefList RC
         char* optTag=OptTag(n->child->next_sib);
         if(structureMap.find(optTag)!=structureMap.end()){
-            fprintf(stderr,"Error Type 16 at Line %d: 结构体名\"%s\"与定义过的结构体或变量重复.\n",n->lineno,n->child->next_sib->name);
+            fprintf(stderr,"Error Type 16 at Line %d: 结构体名\"%s\"与定义过的结构体或变量重复.\n",n->lineno,n->child->next_sib->str_constant);
             return genErrType(16);
 
         }else if(map.find(optTag)!=map.end()){
-            fprintf(stderr,"Error Type 16 at Line %d: 结构体名\"%s\"与定义过的变量重复.\n",n->lineno,n->child->next_sib->name);
+            fprintf(stderr,"Error Type 16 at Line %d: 结构体名\"%s\"与定义过的变量重复.\n",n->lineno,n->child->next_sib->str_constant);
             return genErrType(16);
 
         }else{
@@ -164,7 +164,7 @@ Type StructSpecifier(Node* n){
 
     }else{
         // STRUCT Tag
-        char* tagName=n->child->next_sib->child->name;
+        char* tagName=n->child->next_sib->child->str_constant;
         if(structureMap.find(tagName)==structureMap.end()){
             //理解为这样的形式 struct Complex c;
             fprintf(stderr,"Error Type 17 at Line %d: 直接使用未定义过的结构体名\"%s\"来定义变量.\n",n->lineno,tagName);
@@ -211,13 +211,13 @@ void VarDec_in_Struct(Node* n,char* optTag,Type type){
 
 
         //1. 将域名加入map中
-        if(map.find(n->child->name)!=map.end()){
+        if(map.find(n->child->str_constant)!=map.end()){
             fprintf(stderr,"Error Type 15 at Line %d: 结构体\"%s\"中域名重复定义（同一结构体中/不同结构体中）.\n",n->lineno,optTag);
             return;
             //不采用：如果结构体定义错误，则该结构体不加入符号表。
             //采用：如果结构体定义中域名重复，则仍然该结构体名加入符号表，但是重复的定义并不加入该结构体域。
         }else{
-            map.insert({n->child->name,type});
+            map.insert({n->child->str_constant,type});
         }
 
         //2. 结构体名已经在前面加入了structureMap
@@ -226,7 +226,7 @@ void VarDec_in_Struct(Node* n,char* optTag,Type type){
         FieldList fieldList=type->u.structure;
         if(fieldList==NULL){//结构体还没有加入任何的域名
             fieldList=(FieldList)malloc(sizeof(struct FieldList_));
-            fieldList->name=n->child->name;
+            fieldList->name=n->child->str_constant;
             fieldList->type=type;
             fieldList->tail=NULL;
         }else{
@@ -234,7 +234,7 @@ void VarDec_in_Struct(Node* n,char* optTag,Type type){
                 fieldList=fieldList->tail;
             }
             fieldList->tail=(FieldList)malloc(sizeof(struct FieldList_));
-            fieldList->tail->name=n->child->name;
+            fieldList->tail->name=n->child->str_constant;
             fieldList->tail->type=type;
             fieldList->tail->tail=NULL;
         }
@@ -259,7 +259,7 @@ char* OptTag(Node* n){
         *ret='\0';
         return ret;
     }else{
-        return n->child->name;
+        return n->child->str_constant;
     }
 }
 
@@ -281,12 +281,12 @@ void VarDec(Node* n,Type type){
         // VarDec -> ID
 
         Node* id=n->child;
-        if(map.find(id->name)!=map.end()){
-            fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"出现重复定义.\n",n->lineno,id->name);
-        }else if(structureMap.find(id->name)!=map.end()){
-            fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"与前面定义过的结构体名字重复.\n",n->lineno,id->name);
+        if(map.find(id->str_constant)!=map.end()){
+            fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"出现重复定义.\n",n->lineno,id->str_constant);
+        }else if(structureMap.find(id->str_constant)!=map.end()){
+            fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"与前面定义过的结构体名字重复.\n",n->lineno,id->str_constant);
         }else{
-            map.insert({id->name,type});
+            map.insert({id->str_constant,type});
             for(auto x:map)
                 cout<<x.first<<" "<<x.second<<endl;
         }
@@ -310,10 +310,8 @@ void FunDec(Node* n,Type return_type){
 
     cout<<"no error about return_type"<<endl;
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
-    printf("%s\n",n->child->str_constant);
     function->name=n->child->str_constant;
-    printf("%s\n",n->child->str_constant);
-    printf("%s\n",n->child->next_sib->next_sib->name);
+    printf("%s\n",n->child->next_sib->next_sib->str_constant);
     function->type=return_type;
    
     if(string(n->child->next_sib->next_sib->name)=="RP"){
@@ -363,18 +361,18 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
 
     if(n->child->next_sib==NULL){
         // VarDec -> ID
-        if(map.find(n->child->name)!=map.end()){
+        if(map.find(n->child->str_constant)!=map.end()){
             fprintf(stderr,"Error Type 3 at Line %d: 函数参数名与其他变量名相同.\n",n->lineno);
             return NULL;
-        }else if(structureMap.find(n->child->name)!=structureMap.end()){
+        }else if(structureMap.find(n->child->str_constant)!=structureMap.end()){
             fprintf(stderr,"Error Type 3 at Line %d: 函数参数与结构体名相同.\n",n->lineno); 
             return NULL;
         }else{
             FuncList funcList=(FuncList)malloc(sizeof(struct FuncList_));
-            funcList->name=n->child->name;
+            funcList->name=n->child->str_constant;
             funcList->type=type;
             funcList->next=NULL;
-            map.insert({n->child->name,type});
+            map.insert({n->child->str_constant,type});
             return funcList;
         }
 
@@ -481,11 +479,11 @@ void Stmt(Node* n,Type return_type){
 Type Exp(Node* n){
     if(string(n->child->name)=="ID"){
         //ID
-        if(map.find(n->child->name)!=map.end()){
-            fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->name);
+        if(map.find(n->child->str_constant)!=map.end()){
+            fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->str_constant);
             return genErrType(1);
         }else{
-            return map[n->child->name];
+            return map[n->child->str_constant];
         }
     }
     else if(string(n->child->name)=="INT"){
@@ -530,7 +528,7 @@ Type Exp(Node* n){
         }
         FieldList f=t->u.structure;
         //int found=0;
-        char* target=n->child->next_sib->next_sib->name;
+        char* target=n->child->next_sib->next_sib->str_constant;
         while(f!=NULL){
             if(strcmp(f->name,target)==0) break;
             f=f->tail;
@@ -557,27 +555,27 @@ Type Exp(Node* n){
     }
     else if(string(n->child->next_sib->next_sib->name)=="RP"){
         //ID LP RP
-        if(map.find(n->child->name)!=map.end()){
+        if(map.find(n->child->str_constant)!=map.end()){
             fprintf(stderr,"Error Type 11 at Line %d: 对普通变量使用().\n",n->lineno);
             return genErrType(2);
         }
-        if(functionMap.find(n->child->name)==functionMap.end()){
+        if(functionMap.find(n->child->str_constant)==functionMap.end()){
             fprintf(stderr,"Error Type 2 at Line %d: 函数在调用时未经定义.\n",n->lineno);
             return genErrType(2);
         }
-        return functionMap[n->child->name]->u.myfunc->type;
+        return functionMap[n->child->str_constant]->u.myfunc->type;
     }
     else{
         //ID LP Args RP
-        if(map.find(n->child->name)!=map.end()){
+        if(map.find(n->child->str_constant)!=map.end()){
             fprintf(stderr,"Error Type 11 at Line %d: 对普通变量使用().\n",n->lineno);
             return genErrType(2);
         }
-        if(functionMap.find(n->child->name)==functionMap.end()){
+        if(functionMap.find(n->child->str_constant)==functionMap.end()){
             fprintf(stderr,"Error Type 2 at Line %d: 函数在调用时未经定义.\n",n->lineno);
             return genErrType(2);
         }
-        Type f=functionMap[n->child->name];
+        Type f=functionMap[n->child->str_constant];
         FuncList f1=f->u.myfunc->next;//第一个是返回类型的节点
         FuncList f2=Args(n->child->next_sib->next_sib);
         //bool typeEqual=true;
