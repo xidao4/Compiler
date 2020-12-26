@@ -117,6 +117,7 @@ void ExtDef(Node* n){
 Type Specifier(Node* n){
     if(string(n->child->name)=="TYPE"){
         //Specifier -> TYPE
+        cout<<"Specifier"<<endl;
         
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::BASIC;
@@ -281,6 +282,7 @@ void ExtDecList(Node* n,Type type){
 void VarDec(Node* n,Type type){
     if(n->child->next_sib==NULL){
         // VarDec -> ID
+        cout<<"VarDec"<<endl;
 
         Node* id=n->child;
         if(map.find(string(id->str_constant))!=map.end()){
@@ -307,7 +309,7 @@ void VarDec(Node* n,Type type){
 
 void FunDec(Node* n,Type return_type){
     //如果函数定义（函数返回参数）有问题，则不将该函数加入函数表
-    //cout<<"in FunDec"<<endl;
+    cout<<"FunDec"<<endl;
     if(return_type->kind==Type_::ERROR) return;
 
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
@@ -391,6 +393,7 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
 
 void CompSt(Node *n,Type return_type){
     // CompSt -> LC DefList StmtList RC
+    cout<<"compst"<<endl;
     DefList_in_Function(n->child->next_sib);
     StmtList(n->child->next_sib->next_sib,return_type);
 }
