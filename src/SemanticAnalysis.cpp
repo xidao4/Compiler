@@ -293,7 +293,7 @@ void VarDec(Node* n,Type type){
         }else{
             map.insert({string(id->str_constant),type});
             for(auto x:map)
-                cout<<"map:"<<x.first<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
+                cout<<"map:"<<x.first<<" "<<x.second->kind<<endl;
         }
 
 
@@ -502,7 +502,7 @@ void Stmt(Node* n,Type return_type){
 
 
 Type Exp(Node* n){
-    cout<<"Exp"<<endl;
+    
     if(n->child->next_sib==NULL && string(n->child->name)=="ID"){
         //ID
         if(map.find(n->child->str_constant)==map.end()){
@@ -538,6 +538,7 @@ Type Exp(Node* n){
     }
     else if(string(n->child->next_sib->name)=="PLUS"||string(n->child->next_sib->name)=="MINUS"||string(n->child->next_sib->name)=="STAR"||string(n->child->next_sib->name)=="DIV"){
         //算数运算Exp PLUS|MINUS|STAR|DIV Exp
+        cout<<"Exp_Math"<<endl;
         return Exp_Math(n);
     }
     else if(string(n->child->name)=="LP" || string(n->child->name)=="MINUS"){
@@ -547,6 +548,7 @@ Type Exp(Node* n){
     }
     else if(string(n->child->next_sib->name)=="ASSIGNOP"){
         //Exp ASSIGNOP Exp
+        cout<<"Exp_ASSIGNOP"<<endl;
         return Exp_ASSIGNOP(n);
     }
     else if(string(n->child->next_sib->name)=="DOT"){
@@ -571,13 +573,14 @@ Type Exp(Node* n){
     }
     else if(string(n->child->next_sib->name)=="LB"){
         //Exp LB Exp RB
+        cout<<"Exp_LB_INT_RB"<<endl;
         Type t=Exp(n->child);
         if(t->kind!=Type_::ARRAY){
-            fprintf(stderr,"Error Type 10 at Line %d: 对非数组变量使用[].\n",n->lineno);
+            fprintf(stderr,"Error Type 10 at Line %d: cannot apply [] to non-array.\n",n->lineno);
             return genErrType(10);
         }
         t=Exp(n->child->next_sib->next_sib);
-        if(t->kind!=Type_::BASIC || t->u.basic==IS_INT){
+        if(t->kind!=Type_::BASIC || t->u.basic!=IS_INT){
             fprintf(stderr,"Error Type 12 at Line %d: 数组访问操作符[]中出现非整数.\n",n->lineno);
             return genErrType(12);
         }
@@ -586,7 +589,7 @@ Type Exp(Node* n){
     else if(string(n->child->next_sib->next_sib->name)=="RP"){
         //ID LP RP
         if(map.find(n->child->str_constant)!=map.end()){
-            fprintf(stderr,"Error Type 11 at Line %d: 对普通变量使用().\n",n->lineno);
+            fprintf(stderr,"Error Type 11 at Line %d: cannot apply () to non-function.\n",n->lineno);
             return genErrType(2);
         }
         if(functionMap.find(n->child->str_constant)==functionMap.end()){
@@ -598,7 +601,7 @@ Type Exp(Node* n){
     else{
         //ID LP Args RP
         if(map.find(n->child->str_constant)!=map.end()){
-            fprintf(stderr,"Error Type 11 at Line %d: 对普通变量使用().\n",n->lineno);
+            fprintf(stderr,"Error Type 11 at Line %d: cannot apply () to non-function.\n",n->lineno);
             return genErrType(2);
         }
         if(functionMap.find(n->child->str_constant)==functionMap.end()){
@@ -615,7 +618,8 @@ Type Exp(Node* n){
             f2=f2->next;
         }
         if(f1==NULL && f2==NULL) return f->u.myfunc->type;
-        fprintf(stderr,"Error Type 9 at Line %d: 函数实参与形参不匹配.\n",n->lineno);
+        fprintf(stderr,"Error Type 9 at Line %d: Function is not applicable for the provided arguments.\n",n->lineno);
+        //函数实参与形参不匹配
         return genErrType(9);
     }
 }
@@ -636,8 +640,6 @@ FuncList Args(Node* n){
 }
 Type Exp_ASSIGNOP(Node* n){
     //Exp ASSIGNOP Exp
-    cout<<"Exp_ASSIGNOP"<<endl;
-
     Type left_type=Exp(n->child);
     if(left_type==NULL){
         printf("等号左边是空指针\n");
@@ -675,7 +677,7 @@ Type Exp_ASSIGNOP(Node* n){
 }
 Type Exp_Math(Node* n){
     //Exp PLUS|MINUS|STAR|DIV Exp
-    cout<<"Exp_Math"<<endl;
+  
 
     Type opLeft=Exp(n->child);
     Type opRight=Exp(n->child->next_sib->next_sib);
