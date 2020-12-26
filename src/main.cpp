@@ -7,6 +7,7 @@ using namespace std;
 //extern struct Node;
 #include "SyntaxNode.h"
 extern void Program(Node* n);
+
 /*
 extern FILE* yyin;
 extern int yylineno;
@@ -14,7 +15,7 @@ extern char* yytext;
 */
 extern struct Node* root;//define in lexical.l, used in main.cpp and syntax.y
 extern int syntaxErr;//这次没用
-//extern符号表symbolTable
+
 extern "C"{
 	int yyparse();//extern from syntax.y Bison
 	int yyrestart(FILE*);
@@ -30,10 +31,11 @@ int main(int argc,char** argv){
 	//FILE* f=fopen("/root/LAB2-TESTS/Tests_1_Normal/Tests(normal)/Tests/C_1.cmm","r");
 	if(!f){
 		perror(argv[1]);
+		fprintf(stderr,"cannot open the file!\n");
 		return 1;
 	 }
 	// if(!f){
-	// 	fprintf(stderr,"cannot open the file!\n");
+	// 	
 	// 	return 1;
 	// }
 	yyrestart(f);
