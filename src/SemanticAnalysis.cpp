@@ -308,6 +308,7 @@ void FunDec(Node* n,Type return_type){
     cout<<"in FunDec"<<endl;
     if(return_type->kind==Type_::ERROR) return;
 
+    cout<<"no error about return_type"<<endl;
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
     strcpy(function->name,n->child->name);
     printf("%s\n",n->child->name);
