@@ -120,15 +120,16 @@ Type Specifier(Node* n){
         
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::BASIC;
-        if(string(n->child->name)=="INT"){
+        if(string(n->child->str_constant)=="INT"){
             cout<<"LEX_INT"<<endl;
             type->u.basic=IS_INT;
         }
-        else if(string(n->child->name)=="FLOAT"){
+        else if(string(n->child->str_constant)=="FLOAT"){
             cout<<"LEX_FLOAT"<<endl;
             type->u.basic=IS_FLOAT;
         }else{
-            printf("%s\n",n->child->name);
+            printf("%s\n",n->child->str_constant);
+
             cout<<"specifier error"<<endl;
         }
             
