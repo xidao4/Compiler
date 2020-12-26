@@ -481,7 +481,8 @@ Type Exp(Node* n){
             fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->str_constant);
             return genErrType(1);
         }else{
-            return map[n->child->str_constant];
+            char* tmp=n->child->str_constant;
+            return map[tmp];
         }
     }
     else if(string(n->child->name)=="INT"){
