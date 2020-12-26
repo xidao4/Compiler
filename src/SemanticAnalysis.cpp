@@ -248,7 +248,9 @@ void VarDec_in_Struct(Node* n,char* optTag,Type type){
 }
 char* OptTag(Node* n){
     if(n->type==SYNTACTIC_UNIT_EMPTY){
-        return "";
+        char ret[1];
+        ret[1]='\0';
+        return ret;
     }else{
         return n->child->name;
     }
@@ -648,24 +650,22 @@ Type genErrType(int type){
 }
 bool isArrayEqual(Type t1,Type t2){
     //array
-    if(t1->kind==Type_::ARRAY){
-        int dimen1=1;
-        Type tmp1=t1->u.array.elem;
-        while(tmp1->kind==Type_::ARRAY){
-            dimen1++;
-            tmp1=tmp1->u.array.elem;
-        }
-        int dimen2=1;
-        Type tmp2=t2->u.array.elem;
-        while(tmp2->kind==Type_::ARRAY){
-            dimen2++;
-            tmp2=tmp2->u.array.elem;
-        }
-        if(dimen1!=dimen2) return false;
-        if(tmp1->kind==Type_::BASIC) return tmp1->u.basic==tmp2->u.basic;
-
-        else if(tmp1->kind==Type_::STRUCTURE) return isStructEqual(tmp1,tmp2);
-    } 
+    int dimen1=1;
+    Type tmp1=t1->u.array.elem;
+    while(tmp1->kind==Type_::ARRAY){
+        dimen1++;
+        tmp1=tmp1->u.array.elem;
+    }
+    int dimen2=1;
+    Type tmp2=t2->u.array.elem;
+    while(tmp2->kind==Type_::ARRAY){
+        dimen2++;
+        tmp2=tmp2->u.array.elem;
+    }
+    if(dimen1!=dimen2) return false;
+    if(tmp1->kind==Type_::BASIC) return tmp1->u.basic==tmp2->u.basic;
+    else if(tmp1->kind==Type_::STRUCTURE) return isStructEqual(tmp1,tmp2);
+    
 }
 bool isStructEqual(Type t1,Type t2){
     FieldList f1=t1->u.structure;
@@ -694,5 +694,7 @@ bool isSameType(Type t1,Type t2){
     if(t1->kind==Type_::BASIC){
         return t1->u.basic==t2->u.basic;
     }
+    fprintf(stderr,"isSameType出错了！");
+    return true;
     //error
 }
