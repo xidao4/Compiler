@@ -121,15 +121,14 @@ Type Specifier(Node* n){
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::BASIC;
         if(string(n->child->str_constant)=="int"){
-            cout<<"LEX_INT"<<endl;
+            cout<<"int"<<endl;
             type->u.basic=IS_INT;
         }
         else if(string(n->child->str_constant)=="float"){
-            cout<<"LEX_FLOAT"<<endl;
+            cout<<"float"<<endl;
             type->u.basic=IS_FLOAT;
         }else{
             printf("%s\n",n->child->str_constant);
-
             cout<<"specifier error"<<endl;
         }
             
@@ -487,7 +486,7 @@ Type Exp(Node* n){
             return genErrType(1);
         }else{
             char* tmp=n->child->str_constant;
-            if(map.at(tmp)==NULL) printf("确实这里产生了NULL.\n");
+            if(map[tmp]==NULL) printf("确实这里产生了NULL.\n");
             return map.at(tmp);
         }
     }
