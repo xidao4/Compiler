@@ -567,6 +567,7 @@ Type Exp(Node* n){
     }
     else if(string(n->child->next_sib->name)=="DOT"){
         //Exp DOT ID
+        cout<<"Exp_DOT"<<endl;
         Type t=Exp(n->child);
         if(t->kind!=Type_::STRUCTURE){
             fprintf(stderr,"Error Type 13 at Line %d: Illegal use of \".\", apply to non-structure.\n",n->lineno);
@@ -722,6 +723,7 @@ Type Exp_Logic(Node* n){
     }else{
         cout<<"Exp_Logic"<<endl;
         Type t1=Exp(n->child);
+        cout<<"done p.n"<<endl;
         Type t2=Exp(n->child->next_sib->next_sib);
         if(t1->kind==Type_::ERROR||t2->kind==Type_::ERROR) return t1;
         // if(t1->kind!=Type_::BASIC || t1->u.basic!=IS_INT ||t2->kind!=Type_::BASIC || t2->u.basic!=IS_INT ){
