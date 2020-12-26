@@ -648,11 +648,11 @@ Type Exp_ASSIGNOP(Node* n){
 
     //左边是  右值
     if(left_type->kind==Type_::FUNCTION){
-        fprintf(stderr,"Error Type 6 at Line %d: 赋值号左边出现一个只有右值的表达式.\n",n->lineno);
+        fprintf(stderr,"Error Type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
         return genErrType(6);
     }
     if(string(n->child->child->name)=="INT"||string(n->child->child->name)=="FLOAT"){
-        fprintf(stderr,"Error Type 6 at Line %d: 赋值号左边出现一个只有右值的表达式.\n",n->lineno);
+        fprintf(stderr,"Error Type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
         return genErrType(6);
     }
     
@@ -680,12 +680,14 @@ Type Exp_Math(Node* n){
     Type opLeft=Exp(n->child);
     Type opRight=Exp(n->child->next_sib->next_sib);
     if(opLeft->kind!=Type_::BASIC || opRight->kind!=Type_::BASIC){
-        fprintf(stderr,"Error Type 7 at Line %d: 操作数类型与操作符不匹配（只有BASIC类型可以算数运算）（例如数组（或结构体）变量与数组（或结构体）变量相加减量）.\n",n->lineno);
+        fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands.\n",n->lineno);
+        //（只有BASIC类型可以算数运算）（例如数组（或结构体）变量与数组（或结构体）变量相加减量）
         return genErrType(7);
     }else if (isSameType(opLeft,opRight)){
         return opLeft;
     }else{
-        fprintf(stderr,"Error Type 7 at Line %d: 操作数类型不匹配（例如整型变量与数组变量相加减）.\n",n->lineno);      
+        fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands.\n",n->lineno);      
+        //（例如整型变量与数组变量相加减）
         return genErrType(7);
     }
 }
@@ -696,13 +698,13 @@ Type Exp_Logic(Node* n){
     if(string(n->child->name)=="NOT"){
         Type t=Exp(n->child->next_sib);
         if(t->kind!=Type_::BASIC || t->u.basic!=IS_INT)
-            fprintf(stderr,"Error Type 7 at Line %d: 操作数类型与操作符不匹配，只有int可以做逻辑运算.\n",n->lineno);
+            fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands, only int can do the logical operations.\n",n->lineno);
         return genErrType(7);
     }else{
         Type t1=Exp(n->child->next_sib);
         Type t2=Exp(n->child->next_sib->next_sib);
         if(t1->kind!=Type_::BASIC || t1->u.basic!=IS_INT ||t2->kind!=Type_::BASIC || t2->u.basic!=IS_INT )
-            fprintf(stderr,"Error Type 7 at Line %d: 操作数类型与操作符不匹配，只有int可以做逻辑运算.\n",n->lineno);
+            fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands, only int can do the logical operations.\n",n->lineno);
         return genErrType(7);
     }
     Type type=(Type)malloc(sizeof(struct Type_));
