@@ -17,9 +17,9 @@ typedef struct FuncList_* FuncList;
 #define IS_FLOAT 1
 
 
-unordered_map<char*,Type> map;//放基本类型变量、数组变量、结构体变量、函数形式参数变量、结构体域名变量
-unordered_map<char*,Type> structureMap;//只放结构体的定义（结构体名：类型）
-unordered_map<char*,Type> functionMap;
+unordered_map<string,Type> map;//放基本类型变量、数组变量、结构体变量、函数形式参数变量、结构体域名变量
+unordered_map<string,Type> structureMap;//只放结构体的定义（结构体名：类型）
+unordered_map<string,Type> functionMap;
 
 struct Type_{
     enum{BASIC,ARRAY,STRUCTURE,FUNCTION,ERROR} kind;
@@ -32,12 +32,12 @@ struct Type_{
     }u;
 };
 struct FieldList_{
-    char* name;//域名
+    string name;//域名
     Type type;//域的类型
     FieldList tail;//下一个域的指针
 };
 struct FuncList_{
-    char* name;//函数名&参数名
+    string name;//函数名&参数名
     Type type;//返回类型&参数类型
     FuncList next;
 };
@@ -98,10 +98,10 @@ void ExtDefList(Node* n){
 }
 void ExtDef(Node* n){
     Type type=Specifier(n->child);
-    if(strcmp(n->child->next_sib->name,"ExtDecList")==0){
+    if(string(n->child->next_sib->name)=="ExtDecList"){
         // Specifier ExtDecList SEMI
         ExtDecList(n->child->next_sib,type);
-    }else if(strcmp(n->child->next_sib->name,"SEMI")==0){
+    }else if(string(n->child->next_sib->name)=="SEMI"){
         // Specifier SEMI
         ;
     }else if(string(n->child->next_sib->name)=="FunDec"){
@@ -115,25 +115,25 @@ void ExtDef(Node* n){
 
 
 Type Specifier(Node* n){
-    if(strcmp(n->child->name,"TYPE")==0){
+    if(string(n->child->name)=="TYPE"){
         //Specifier -> TYPE
         
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::BASIC;
         if(string(n->child->str_constant)=="int"){
-            cout<<"int"<<endl;
+            //cout<<"int"<<endl;
             type->u.basic=IS_INT;
         }
         else if(string(n->child->str_constant)=="float"){
-            cout<<"float"<<endl;
+            //cout<<"float"<<endl;
             type->u.basic=IS_FLOAT;
         }else{
-            printf("%s\n",n->child->str_constant);
+            //printf("%s\n",n->child->str_constant);
             cout<<"specifier error"<<endl;
         }
             
 
-        cout<<type->kind<<" "<<type->u.basic<<endl;
+        //cout<<type->kind<<" "<<type->u.basic<<endl;
         return type;
     }else{
         //Specifier -> StructSpecifier
@@ -283,14 +283,14 @@ void VarDec(Node* n,Type type){
         // VarDec -> ID
 
         Node* id=n->child;
-        if(map.find(id->str_constant)!=map.end()){
+        if(map.find(string(id->str_constant))!=map.end()){
             fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"出现重复定义.\n",n->lineno,id->str_constant);
-        }else if(structureMap.find(id->str_constant)!=map.end()){
+        }else if(structureMap.find(string(id->str_constant))!=structureMap.end()){
             fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"与前面定义过的结构体名字重复.\n",n->lineno,id->str_constant);
         }else{
-            map.insert({id->str_constant,type});
+            map.insert({string(id->str_constant),type});
             for(auto x:map)
-                cout<<x.first<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
+                cout<<"map:"<<x.first<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
         }
 
 
@@ -307,16 +307,17 @@ void VarDec(Node* n,Type type){
 
 void FunDec(Node* n,Type return_type){
     //如果函数定义（函数返回参数）有问题，则不将该函数加入函数表
-    cout<<"in FunDec"<<endl;
+    //cout<<"in FunDec"<<endl;
     if(return_type->kind==Type_::ERROR) return;
+
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
-    function->name=n->child->str_constant;
-    printf("%s\n",n->child->next_sib->next_sib->name);
+    function->name=string(n->child->str_constant);
+    //printf("%s\n",n->child->next_sib->next_sib->name);
     function->type=return_type;
     if(string(n->child->next_sib->next_sib->name)=="RP"){
         //inc()的形式，只有三个子节点
         //FunDec -> ID LP RP
-        cout<<"FunDec -> ID LP RP"<<endl;
+        //cout<<"FunDec -> ID LP RP"<<endl;
         function->next=NULL;//没有参数
     }else{
         //FunDec -> ID LP VarList RP
@@ -332,6 +333,8 @@ void FunDec(Node* n,Type return_type){
         type->kind=Type_::FUNCTION;
         type->u.myfunc=function;
         functionMap.insert({function->name,type});
+        for(auto x:functionMap)
+            cout<<"functionMap:"<<x.first<<" "<<x.second->kind<<endl;
     }
 }
 FuncList VarList(Node* n){
@@ -484,12 +487,12 @@ Type Exp(Node* n){
             fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->str_constant);
             return genErrType(1);
         }else{
-            char* tmp=n->child->str_constant;
-            printf("%s\n",tmp);
+            string targetID=string(n->child->str_constant);
+            cout<<targetID<<endl;
             for(auto x:map)
                 cout<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
             //if(map.at(tmp)==NULL) printf("确实这里产生了NULL.\n");
-            return map.at(tmp);
+            return map.at(targetID);
         }
     }
     else if(string(n->child->name)=="INT"){
@@ -536,7 +539,7 @@ Type Exp(Node* n){
         //int found=0;
         char* target=n->child->next_sib->next_sib->str_constant;
         while(f!=NULL){
-            if(strcmp(f->name,target)==0) break;
+            if(f->name==string(target)) break;
             f=f->tail;
         }
         if(f==NULL){
