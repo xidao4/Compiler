@@ -166,7 +166,11 @@ Type StructSpecifier(Node* n){
             type->kind=Type_::STRUCTURE;
             type->u.structure=NULL;
             structureMap.insert({optTag,type});
+            for(auto x:structureMap){
+                cout<<"structureMap:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+            }
             DefList_in_Struct(n->child->next_sib->next_sib->next_sib,optTag);
+            //here could output the fields of struct to check!
             return structureMap[optTag];
         }
 
@@ -492,6 +496,7 @@ void Stmt(Node* n,Type return_type){
     }
     else if(n->child->next_sib->next_sib->next_sib->next_sib->next_sib==NULL){
         //      -> IF LP Exp RP Stmt
+        cout<<"Stmt_IF"<<endl;
         Type if_condition=Exp(n->child->next_sib->next_sib);
         if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
             fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
