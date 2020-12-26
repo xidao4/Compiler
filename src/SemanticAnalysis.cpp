@@ -315,7 +315,7 @@ void FunDec(Node* n,Type return_type){
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
 
     printf("%s\n",n->child->str_constant);//!
-    function->name=string(n->child->str_constant);
+    function->name=n->child->str_constant;
     cout<<function->name<<endl;//!
 
     function->type=return_type;
