@@ -458,7 +458,7 @@ void Stmt(Node* n,Type return_type){
     if(n->child->next_sib==NULL){
         // Stmt -> CompSt        //?还需要return_type吗
         CompSt(n->child,return_type);
-    }else if(string(n->child->next_sib->name)=="SEMI"){
+    }else if(n->child->next_sib->name=="SEMI"){
         // Stmt -> Exp SEMI
         Exp(n->child);
     }else if(n->child->name=="RETURN"){
