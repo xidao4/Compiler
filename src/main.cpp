@@ -3,6 +3,7 @@
 #include<sstream>
 #include<iostream>
 //#include "lex.yy.c"
+#include "SemanticAnalysis.cpp"
 using namespace std;
 
 
@@ -41,9 +42,8 @@ int main(int argc,char** argv){
 	// 	tree_search(root,0);
 	// }
 
-	//SymbolTable符号表初始化为NULL
-
 	//从ROOT开始调用Program开始符号进行遍历
+	Program(root);
 	return 0;
 }
 

@@ -15,13 +15,14 @@ using namespace std;
 typedef struct Type_* Type;
 typedef struct FieldList_* FieldList;
 typedef struct FuncList_* FuncList;
-typedef struct ArrayList_* ArrayList;
+//typedef struct ArrayList_* ArrayList;
 #define IS_INT 0
 #define IS_FLOAT 1
 
 //tsl::ordered_map<char*,Type> functionMap;
 //tsl::ordered_map<char*,Type> decMap;
-unordered_map<char*,Type> map;//放基本类型变量、数组变量、结构体变量、形式参数变量、结构体域名变量？？。。
+unordered_map<char*,Type> map;
+//放基本类型变量、数组变量、结构体变量、函数形式参数变量、结构体域名变量
 unordered_map<char*,Type> structureMap;//只放结构体的定义（结构体名：类型）
 unordered_map<char*,Type> functionMap;
 
@@ -34,9 +35,6 @@ struct Type_{
         FuncList myfunc;//函数名
         int error_type;//错误类型
     }u;
-};
-struct ArrayList_{
-
 };
 struct FieldList_{
     char* name;//域名
@@ -78,16 +76,21 @@ void DefList_in_Function(Node* n);
 void Def_in_Function(Node* n);
 void DecList_in_Function(Node* n,Type dec_type);
 void Dec_in_Function(Node* n,Type dec_type);
+//void Exp_ASSIGNOP_in_VarDec(Node* n,Type dec_type);
 /*Statements*/
 void StmtList(Node* n,Type return_type);
 void Stmt(Node* n,Type return_type);
 /*Expression*/
 Type Exp(Node* n);
-void Exp_ASSIGNOP(Node* n,Type dec_type);
+Type Exp_ASSIGNOP(Node* n);
 Type Exp_Math(Node* n);
 Type Exp_Logic(Node* n);
+FuncList Args(Node* n);
 /*helper*/
 bool isSameType(Type t1,Type t2);
+Type genErrType(int type);
+bool isArrayEqual(Type t1,Type t2);
+bool isStructEqual(Type t1,Type t2);
 
 
 void Program(Node* n){
@@ -138,27 +141,29 @@ Type StructSpecifier(Node* n){
         char* optTag=OptTag(n->child->next_sib);
         if(structureMap.find(optTag)!=structureMap.end()){
             fprintf(stderr,"Error Type 16 at Line %d: 结构体名\"%s\"与定义过的结构体或变量重复.\n",n->lineno,n->child->next_sib->name);
-            Type err=(Type)malloc(sizeof(struct Type_));
-            err->kind=Type_::ERROR;
-            err->u.error_type=16;
-            return err;
+            return genErrType(16);
+
+        }else if(map.find(optTag)!=map.end()){
+            fprintf(stderr,"Error Type 16 at Line %d: 结构体名\"%s\"与定义过的变量重复.\n",n->lineno,n->child->next_sib->name);
+            return genErrType(16);
+
         }else{
             Type type=(Type)malloc(sizeof(struct Type_));
             type->kind=Type_::STRUCTURE;
             type->u.structure=NULL;
             structureMap.insert({optTag,type});
             DefList_in_Struct(n->child->next_sib->next_sib->next_sib,optTag);
+            return structureMap[optTag];
         }
+
+
     }else{
         // STRUCT Tag
         char* tagName=n->child->next_sib->child->name;
         if(structureMap.find(tagName)==structureMap.end()){
             //理解为这样的形式 struct Complex c;
             fprintf(stderr,"Error Type 17 at Line %d: 直接使用未定义过的结构体名\"%s\"来定义变量.\n",n->lineno,tagName);
-            Type err=(Type)malloc(sizeof(struct Type_));
-            err->kind=Type_::ERROR;
-            err->u.error_type=17;
-            return err;
+            return genErrType(17);
         }else{
             return structureMap[tagName];
         }
@@ -197,8 +202,21 @@ void Dec_in_Struct(Node* n,char* optTag,Type type){
 }
 void VarDec_in_Struct(Node* n,char* optTag,Type type){
     if(n->child->next_sib==NULL){
-
         //VarDec -> ID
+
+
+        //1. 将域名加入map中
+        if(map.find(n->child->name)!=map.end()){
+            fprintf(stderr,"Error Type 15 at Line %d: 结构体\"%s\"中域名重复定义（同一结构体中/不同结构体中）.\n",n->lineno,optTag);
+            return;
+            //不采用：如果结构体定义错误，则该结构体不加入符号表。
+            //采用：如果结构体定义中域名重复，则仍然该结构体名加入符号表，但是重复的定义并不加入该结构体域。
+        }else{
+            map.insert({n->child->name,type});
+        }
+
+        //2. 结构体名已经在前面加入了structureMap
+        //   将域名加入structureMap的结构体定义中
         Type type=structureMap[optTag];
         FieldList fieldList=type->u.structure;
         if(fieldList==NULL){//结构体还没有加入任何的域名
@@ -219,9 +237,9 @@ void VarDec_in_Struct(Node* n,char* optTag,Type type){
 
 
     }else{
-
-
         //VarDec -> VarDec LB INT RB
+
+
         Type newtype=(Type)malloc(sizeof (struct Type_));
         newtype->kind=Type_::ARRAY;
         newtype->u.array.elem=type;
@@ -247,19 +265,25 @@ void ExtDecList(Node* n,Type type){
         ExtDecList(n->child->next_sib->next_sib,type);
     }
 }
-//正常的变量声明Variable Declarator    既可以是全局的变量，又可以在函数中使用来声明变量
-void VarDec(Node* n,Type type){//VarDec是全局或函数内部
+//正常的变量声明Variable Declarator    
+//VarDec 既可以是全局的变量，又可以在函数中使用来声明变量
+void VarDec(Node* n,Type type){
     if(n->child->next_sib==NULL){
         // VarDec -> ID
+
         Node* id=n->child;
         if(map.find(id->name)!=map.end()){
-            //重复定义
-            fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"出现重复定义或变量与前面定义过的结构体名字重复.\n",n->lineno,id->name);
+            fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"出现重复定义.\n",n->lineno,id->name);
+        }else if(structureMap.find(id->name)!=map.end()){
+            fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"与前面定义过的结构体名字重复.\n",n->lineno,id->name);
         }else{
             map.insert({id->name,type});
         }
+
+
     }else{
         // VarDec -> VarDec LB INT RB
+
         Type newtype=(Type)malloc(sizeof (struct Type_));
         newtype->kind=Type_::ARRAY;
         newtype->u.array.elem=type;
@@ -269,6 +293,9 @@ void VarDec(Node* n,Type type){//VarDec是全局或函数内部
 
 
 void FunDec(Node* n,Type return_type){
+    //如果函数定义（函数返回参数）有问题，则不将该函数加入函数表
+    if(return_type->kind==Type_::ERROR) return;
+
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
     strcpy(function->name,n->child->name);
     function->type=return_type;
@@ -281,22 +308,25 @@ void FunDec(Node* n,Type return_type){
         function->next=VarList(n->child->next_sib->next_sib);
     }
     
-    if(map.find(function->name)!=map.end()){
+    if(functionMap.find(function->name)!=functionMap.end()){
         //只要函数名重复定义就是错误类型4,参数不同也是错
+        //直接丢弃这个函数
         fprintf(stderr,"Error type 4 at line %d: 相同的函数名\"%s\"被多次定义.\n",n->lineno,function->name);
     }else{
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::FUNCTION;
         type->u.myfunc=function;
-        map.insert({function->name,type});
+        functionMap.insert({function->name,type});
     }
 }
 FuncList VarList(Node* n){
     if(n->child->next_sib!=NULL){
         //VarList -> ParamDec COMMA VarList
-        FuncList funcList=ParamDec(n->child);
-        funcList->next=VarList(n->child->next_sib->next_sib);
-        return funcList;
+        FuncList f1=ParamDec(n->child);
+        FuncList f2=VarList(n->child->next_sib->next_sib);
+        if(f1==NULL) return f2;//如果函数参数出问题，该函数还是加入函数符号表，只是舍弃出错的参数
+        f1->next=f2;
+        return f1;
     }else{
         //VarList -> ParamDec
         return ParamDec(n->child);
@@ -307,15 +337,29 @@ FuncList ParamDec(Node* n){
     Type type=Specifier(n->child);
     return VarDec_in_FuncParams(n->child->next_sib,type);
 }
-//函数参数部分
+//VarDec 函数参数
 FuncList VarDec_in_FuncParams(Node* n,Type type){
+    //如果链接函数链表时发现有函数参数类型错误，则？？直接丢弃这个函数？
+    //用例中可能只有重复定义这种错误，不会出现type是没定义过的struct这种情况。暂且返回NULL
+    if(type->kind==Type_::ERROR) return NULL;
+
     if(n->child->next_sib==NULL){
         // VarDec -> ID
-        FuncList funcList=(FuncList)malloc(sizeof(struct FuncList_));
-        funcList->name=n->child->name;
-        funcList->type=type;
-        funcList->next=NULL;
-        return funcList;
+        if(map.find(n->child->name)!=map.end()){
+            fprintf(stderr,"Error Type 3 at Line %d: 函数参数名与其他变量名相同.\n",n->lineno);
+            return NULL;
+        }else if(structureMap.find(n->child->name)!=structureMap.end()){
+            fprintf(stderr,"Error Type 3 at Line %d: 函数参数与结构体名相同.\n",n->lineno); 
+            return NULL;
+        }else{
+            FuncList funcList=(FuncList)malloc(sizeof(struct FuncList_));
+            funcList->name=n->child->name;
+            funcList->type=type;
+            funcList->next=NULL;
+            return funcList;
+        }
+
+       
     }else{
         // VarDec -> VarDec LB INT RB
         Type newType=(Type)malloc(sizeof (struct Type_));
@@ -359,8 +403,12 @@ void Dec_in_Function(Node* n,Type dec_type){
         VarDec(n->child,dec_type);//VarDec是全局或函数内部
     }else{
         // Dec -> VarDec ASSIGNOP EXP
-        VarDec(n->child,dec_type);//VarDec是全局或函数内部
-        Exp_ASSIGNOP(n->child->next_sib->next_sib,dec_type);
+        Type right=Exp(n->child->next_sib->next_sib);
+        if(!isSameType(dec_type,right)){
+            fprintf(stderr,"Error Type 5 at Line %d: int a=1.1或者int a=ErrorType 这种形式.\n",n->lineno);
+        }else{
+            VarDec(n->child,dec_type);//VarDec是全局或函数内部
+        } 
     }
 }
 
@@ -412,42 +460,148 @@ void Stmt(Node* n,Type return_type){
 
 
 Type Exp(Node* n){
-    if(n->child->next_sib->name=="ASSIGNOP"){
-        //Exp ASSIGNOP Exp
-        Type ret_type=Exp(n->child);
-        Exp_ASSIGNOP(n->child->next_sib->next_sib,ret_type);
-        return ret_type;
-    }else if(n->child->name=="ID"){
+    if(n->child->name=="ID"){
         //ID
         if(map.find(n->child->name)!=map.end()){
             fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->name);
+            return genErrType(1);
         }else{
             return map[n->child->name];
         }
-    }else if(n->child->name=="Exp"){
-        Node * secChild=n->child->next_sib;
-        if(secChild->name=="PLUS" || secChild->name=="MINUS"||secChild->name=="STAR"||secChild->name=="DIV"){
-            //算数运算Exp PLUS|MINUS|STAR|DIV Exp
-            return Exp_Math(n);
-        }else if(secChild->name=="AND"||secChild->name=="OR"||secChild->name=="RELOP"){
-            //逻辑运算Exp AND|OR|RELOP Exp
-            return Exp_Logic(n);
+    }
+    else if(n->child->name=="INT"){
+        //INT
+        Type t=(Type)malloc(sizeof(struct Type_));
+        t->kind=Type_::BASIC;
+        t->u.basic=IS_INT;
+        return t;
+    }
+    else if(n->child->name=="FLOAT"){
+        //FLOAT
+        Type t=(Type)malloc(sizeof(struct Type_));
+        t->kind=Type_::BASIC;
+        t->u.basic=IS_FLOAT;
+        return t;
+    }
+    else if(n->child->name=="NOT" || n->child->next_sib->name=="AND" || n->child->next_sib->name=="OR" || n->child->next_sib->name=="RELOP" ){
+        //逻辑运算
+        //NOT Exp
+        //Exp AND|OR|RELOP Exp
+        return Exp_Logic(n);
+    }
+    else if(n->child->next_sib->name=="PLUS"||n->child->next_sib->name=="MINUS"||n->child->next_sib->name=="STAR"||n->child->next_sib->name=="DIV"){
+        //算数运算Exp PLUS|MINUS|STAR|DIV Exp
+        return Exp_Math(n);
+    }
+    else if(n->child->name=="LP" || n->child->name=="MINUS"){
+        //LP Exp RP
+        //Minus Exp
+        return Exp(n->child->next_sib);
+    }
+    else if(n->child->next_sib->name=="ASSIGNOP"){
+        //Exp ASSIGNOP Exp
+        return Exp_ASSIGNOP(n);
+    }
+    else if(n->child->next_sib->name=="DOT"){
+        //Exp DOT ID
+        Type t=Exp(n->child);
+        if(t->kind!=Type_::STRUCTURE){
+            fprintf(stderr,"Error Type 13 at Line %d: 对非结构体变量使用DOT.\n",n->lineno);
+            return genErrType(13);
+        }
+        FieldList f=t->u.structure;
+        //int found=0;
+        char* target=n->child->next_sib->next_sib->name;
+        while(f!=NULL){
+            if(f->name==target) break;
+            f=f->tail;
+        }
+        if(f==NULL){
+            fprintf(stderr,"Error Type 14 at Line %d: 访问结构体中未定义过的域.\n",n->lineno);
+            return genErrType(14); 
+        }
+        return f->type;
+    }
+    else if(n->child->next_sib->name=="LB"){
+        //Exp LB Exp RB
+        Type t=Exp(n->child);
+        if(t->kind!=Type_::ARRAY){
+            fprintf(stderr,"Error Type 10 at Line %d: 对非数组变量使用[].\n",n->lineno);
+            return genErrType(10);
+        }
+        t=Exp(n->child->next_sib->next_sib);
+        if(t->kind!=Type_::BASIC || t->u.basic==IS_INT){
+            fprintf(stderr,"Error Type 10 at Line %d: 对非数组变量使用[].\n",n->lineno);
+            return genErrType(10);
         }
     }
-    
-    //LP Exp RP
-    //Minus Exp
-    //NOT Exp
-    
-    //INT | FLOT
-}
-void Exp_ASSIGNOP(Node* n,Type left_type){
-    Type retType=Exp(n);
-    if (isSameType(retType,left_type)){
-        ;
-    }else{
-        fprintf(stderr,"Error Type 5 at Line %d: 赋值号两边的表达式类型不匹配.\n",n->lineno);
+    else if(n->child->next_sib->next_sib->name=="RP"){
+        //ID LP RP
+        if(map.find(n->child->name)!=map.end()){
+            fprintf(stderr,"Error Type 11 at Line %d: 对普通变量使用().\n",n->lineno);
+            return genErrType(2);
+        }
+        if(functionMap.find(n->child->name)==functionMap.end()){
+            fprintf(stderr,"Error Type 2 at Line %d: 函数在调用时未经定义.\n",n->lineno);
+            return genErrType(2);
+        }
     }
+    else{
+        //ID LP Args RP
+        if(map.find(n->child->name)!=map.end()){
+            fprintf(stderr,"Error Type 11 at Line %d: 对普通变量使用().\n",n->lineno);
+            return genErrType(2);
+        }
+        if(functionMap.find(n->child->name)==functionMap.end()){
+            fprintf(stderr,"Error Type 2 at Line %d: 函数在调用时未经定义.\n",n->lineno);
+            return genErrType(2);
+        }
+        Type f=functionMap[n->child->name];
+        FuncList f1=f->u.myfunc->next;//第一个是返回类型的节点
+        FuncList f2=Args(n->child->next_sib->next_sib);
+        //bool typeEqual=true;
+        while(f1!=NULL && f2!=NULL){
+            if(!isSameType(f1->type,f2->type)) break;
+            f1=f1->next;
+            f2=f2->next;
+        }
+        if(f1==NULL && f2==NULL) return f->u.myfunc->type;
+        fprintf(stderr,"Error Type 9 at Line %d: 函数实参与形参不匹配.\n",n->lineno);
+        return genErrType(9);
+    }
+}
+FuncList Args(Node* n){
+    if(n->child->next_sib!=NULL){
+        //Args -> Exp COMMA Args
+        FuncList left=(FuncList)malloc(sizeof(struct FuncList_));
+        left->type=Exp(n->child);
+        left->next=Args(n->child->next_sib->next_sib);
+        return left;
+    }else{
+        //Args -> Exp
+        FuncList funcList=(FuncList)malloc(sizeof(struct FuncList_));
+        funcList->type=Exp(n->child);
+        funcList->next=NULL;
+        return funcList;
+    } 
+}
+Type Exp_ASSIGNOP(Node* n){
+    //Exp ASSIGNOP Exp
+
+    Type left_type=Exp(n->child);
+    //左边是  右值？
+    if(left_type->kind==Type_::BASIC||left_type->kind==Type_::FUNCTION||left_type->kind==Type_::ERROR ){
+        fprintf(stderr,"Error Type 6 at Line %d: 赋值号左边出现一个只有右值的表达式.\n",n->lineno);
+        return genErrType(6);
+    }
+
+    Type right_type=Exp(n->child->next_sib->next_sib);
+    if (!isSameType(right_type,left_type)){
+        fprintf(stderr,"Error Type 5 at Line %d: 赋值号两边的表达式类型不匹配.\n",n->lineno);
+        return genErrType(5);
+    }
+
+    return left_type;
 }
 Type Exp_Math(Node* n){
     //Exp PLUS|MINUS|STAR|DIV Exp
@@ -455,31 +609,87 @@ Type Exp_Math(Node* n){
     Type opRight=Exp(n->child->next_sib->next_sib);
     if(opLeft->kind!=Type_::BASIC || opRight->kind!=Type_::BASIC){
         fprintf(stderr,"Error Type 7 at Line %d: 操作数类型与操作符不匹配（只有BASIC类型可以算数运算）（例如数组（或结构体）变量与数组（或结构体）变量相加减量）.\n",n->lineno);
-        Type errType=(Type)malloc(sizeof(struct Type_));
-        errType->kind=Type_::ERROR;
-        errType->u.error_type=7;
-        return errType;
+        return genErrType(7);
     }else if (isSameType(opLeft,opRight)){
         return opLeft;
     }else{
-        fprintf(stderr,"Error Type 7 at Line %d: 操作数类型不匹配（例如整型变量与数组变量相加减）.\n",n->lineno);
-        Type errType=(Type)malloc(sizeof(struct Type_));
-        errType->kind=Type_::ERROR;
-        errType->u.error_type=7;
-        return errType;
+        fprintf(stderr,"Error Type 7 at Line %d: 操作数类型不匹配（例如整型变量与数组变量相加减）.\n",n->lineno);      
+        return genErrType(7);
     }
+}
+Type Exp_Logic(Node* n){
+    //逻辑运算
+    //NOT Exp
+    //Exp AND|OR|RELOP Exp
+    if(n->child->name=="NOT"){
+        Type t=Exp(n->child->next_sib);
+        if(t->kind!=Type_::BASIC || t->u.basic!=IS_INT)
+            fprintf(stderr,"Error Type 7 at Line %d: 操作数类型与操作符不匹配，只有int可以做逻辑运算.\n",n->lineno);
+        return genErrType(7);
+    }else{
+        Type t1=Exp(n->child->next_sib);
+        Type t2=Exp(n->child->next_sib->next_sib);
+        if(t1->kind!=Type_::BASIC || t1->u.basic!=IS_INT ||t2->kind!=Type_::BASIC || t2->u.basic!=IS_INT )
+            fprintf(stderr,"Error Type 7 at Line %d: 操作数类型与操作符不匹配，只有int可以做逻辑运算.\n",n->lineno);
+        return genErrType(7);
+    }
+    Type type=(Type)malloc(sizeof(struct Type_));
+    type->kind=Type_::BASIC;
+    type->u.basic=IS_INT;
+    return type;
 }
 
 
+Type genErrType(int type){
+    Type err=(Type)malloc(sizeof(struct Type_));
+    err->kind=Type_::ERROR;
+    err->u.error_type=type;
+    return err;
+}
+bool isArrayEqual(Type t1,Type t2){
+    //array
+    if(t1->kind==Type_::ARRAY){
+        int dimen1=1;
+        Type tmp1=t1->u.array.elem;
+        while(tmp1->kind==Type_::ARRAY){
+            dimen1++;
+            tmp1=tmp1->u.array.elem;
+        }
+        int dimen2=1;
+        Type tmp2=t2->u.array.elem;
+        while(tmp2->kind==Type_::ARRAY){
+            dimen2++;
+            tmp2=tmp2->u.array.elem;
+        }
+        if(dimen1!=dimen2) return false;
+        if(tmp1->kind==Type_::BASIC) return tmp1->u.basic==tmp2->u.basic;
 
-
+        else if(tmp1->kind==Type_::STRUCTURE) return isStructEqual(tmp1,tmp2);
+    } 
+}
+bool isStructEqual(Type t1,Type t2){
+    FieldList f1=t1->u.structure;
+    FieldList f2=t2->u.structure;
+    while(f1!=NULL && f2!=NULL){
+        if(!isSameType(f1->type,f2->type)) return false;
+        f1=f1->tail;
+        f2=f2->tail;
+    }
+    return f1==NULL && f2==NULL;
+}
 bool isSameType(Type t1,Type t2){
     //function 
     if(t1->kind!=t2->kind){
         return false;
     }
-    //array 
+    //array
+    if(t1->kind==Type_::ARRAY){
+        return isArrayEqual(t1,t2);
+    } 
     //structure 
+    if(t1->kind==Type_::STRUCTURE){
+        return isStructEqual(t1,t2);
+    }
     //basic:int|float
     if(t1->kind==Type_::BASIC){
         return t1->u.basic==t2->u.basic;
