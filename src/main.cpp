@@ -11,20 +11,20 @@ extern FILE* yyin;
 extern int yylineno;
 extern char* yytext;
 */
-extern struct Node* root;
-extern int syntaxErr;
+extern struct Node* root;//define in lexical.l, used in main.cpp and syntax.y
+extern int syntaxErr;//这次没用
+//extern符号表symbolTable
 extern "C"{
-	int yyparse();
+	int yyparse();//extern from syntax.y Bison
 	int yyrestart(FILE*);
-	void tree_search(struct Node* cur,int depth);
+	//void tree_search(struct Node* cur,int depth);//Lab2
 	//#include "lex.yy.c"
 	//#include "syntax.tab.h"
 }
 
 
 int main(int argc,char** argv){
-	if(argc<=1) return 1;
-	//"/root/Lab/src/test.cmm"
+	if(argc<=1) return 1;//"/root/Lab/src/test.cmm"
 	FILE* f=fopen(argv[1],"r");
 	//FILE* f=fopen("/root/LAB2-TESTS/Tests_1_Normal/Tests(normal)/Tests/C_1.cmm","r");
 	if(!f){
@@ -37,10 +37,13 @@ int main(int argc,char** argv){
 	// }
 	yyrestart(f);
 	yyparse();
+	// if(syntaxErr==0){
+	// 	tree_search(root,0);
+	// }
 
-	if(syntaxErr==0){
-		tree_search(root,0);
-	}
+	//SymbolTable符号表初始化为NULL
+
+	//从ROOT开始调用Program开始符号进行遍历
 	return 0;
 }
 
