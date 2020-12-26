@@ -439,7 +439,7 @@ void Dec_in_Function(Node* n,Type dec_type){
         // Dec -> VarDec ASSIGNOP EXP
         Type right=Exp(n->child->next_sib->next_sib);
         if(!isSameType(dec_type,right)){
-            fprintf(stderr,"Error Type 5 at Line %d: int a=1.1或者int a=ErrorType 这种形式.\n",n->lineno);
+            fprintf(stderr,"Error Type 5 at Line %d: int a=1.1 OR int a=ErrorType.\n",n->lineno);
         }else{
             VarDec(n->child,dec_type);//VarDec是全局或函数内部
         } 
@@ -667,7 +667,7 @@ Type Exp_ASSIGNOP(Node* n){
 
 
     if (!isSameType(right_type,left_type)){
-        fprintf(stderr,"Error Type 5 at Line %d: 赋值号两边的表达式类型不匹配.\n",n->lineno);
+        fprintf(stderr,"Error Type 5 at Line %d: Type mismatched for assignment.\n",n->lineno);
         return genErrType(5);
     }
 
