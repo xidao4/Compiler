@@ -538,7 +538,7 @@ Type Exp(Node* n){
             fprintf(stderr,"Error Type 12 at Line %d: 数组访问操作符[]中出现非整数.\n",n->lineno);
             return genErrType(12);
         }
-        return t->u.array.elem;//???????
+        return t->u.array.elem;
     }
     else if(string(n->child->next_sib->next_sib->name)=="RP"){
         //ID LP RP
