@@ -482,8 +482,8 @@ Type Exp(Node* n){
             return genErrType(1);
         }else{
             char* tmp=n->child->str_constant;
-            if(map[tmp]==NULL) printf("确实这里产生了NULL.\n");
-            return map[tmp];
+            if(map.at(tmp)==NULL) printf("确实这里产生了NULL.\n");
+            return map.at(tmp);
         }
     }
     else if(string(n->child->name)=="INT"){
@@ -619,8 +619,7 @@ Type Exp_ASSIGNOP(Node* n){
     }
     
 
-
-    printf("前面：等号右边");
+    printf("前面：等号右边\n");
     Type right_type=Exp(n->child->next_sib->next_sib);
     if(right_type==NULL){
         printf("等号右边是空指针\n");
