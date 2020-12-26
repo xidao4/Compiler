@@ -478,15 +478,17 @@ void Stmt(Node* n,Type return_type){
 Type Exp(Node* n){
     if(string(n->child->name)=="ID"){
         //ID
-        printf("%s\n",n->child->str_constant);
-        for(auto x:map)
-            cout<<x.first<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
+        
+        
         if(map.find(n->child->str_constant)!=map.end()){
             fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->str_constant);
             return genErrType(1);
         }else{
             char* tmp=n->child->str_constant;
-            if(map[tmp]==NULL) printf("确实这里产生了NULL.\n");
+            printf("%s\n",tmp);
+            for(auto x:map)
+                cout<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
+            //if(map.at(tmp)==NULL) printf("确实这里产生了NULL.\n");
             return map.at(tmp);
         }
     }
