@@ -102,6 +102,7 @@ void ExtDefList(Node* n){
     ExtDefList(n->child->next_sib);
 }
 void ExtDef(Node* n){
+    cout<<"in ExtDef"<<endl;
     Type type=Specifier(n->child);
     if(strcmp(n->child->name,"ExtDecList")==0){
         // Specifier ExtDecList SEMI
@@ -111,6 +112,7 @@ void ExtDef(Node* n){
         ;
     }else if(strcmp(n->child->name,"FunDec")==0){
         //ExtDef -> Specifier FunDec CompSt
+        cout<<"before FunDec"<<endl;
         FunDec(n->child->next_sib,type);
         CompSt(n->child->next_sib->next_sib,type);
     }
