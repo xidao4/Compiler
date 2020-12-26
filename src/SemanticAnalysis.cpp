@@ -310,6 +310,8 @@ void FunDec(Node* n,Type return_type){
 
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
     strcpy(function->name,n->child->name);
+    printf("%s\n",n->child->name);
+    printf("%s\n",n->child->next_sib->next_sib->name);
     function->type=return_type;
    
     if(string(n->child->next_sib->next_sib->name)=="RP"){
@@ -318,6 +320,7 @@ void FunDec(Node* n,Type return_type){
         cout<<"FunDec -> ID LP RP"<<endl;
         function->next=NULL;//没有参数
     }else{
+        //FunDec -> ID LP VarList RP
         function->next=VarList(n->child->next_sib->next_sib);
     }
     
