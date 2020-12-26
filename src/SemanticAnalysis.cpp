@@ -713,15 +713,21 @@ Type Exp_Logic(Node* n){
     //Exp AND|OR|RELOP Exp
     if(string(n->child->name)=="NOT"){
         Type t=Exp(n->child->next_sib);
-        if(t->kind!=Type_::BASIC || t->u.basic!=IS_INT)
-            fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands, only int can do the logical operations.\n",n->lineno);
-        return genErrType(7);
+        if(t->kind==Type_::ERROR) return t;
+        
+        // if(t->kind!=Type_::BASIC || t->u.basic!=IS_INT){
+        //     fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands, only int can do the logical operations.\n",n->lineno);
+        //     return genErrType(7);
+        // }
     }else{
+        cout<<"Exp_Logic"<<endl;
         Type t1=Exp(n->child->next_sib);
         Type t2=Exp(n->child->next_sib->next_sib);
-        if(t1->kind!=Type_::BASIC || t1->u.basic!=IS_INT ||t2->kind!=Type_::BASIC || t2->u.basic!=IS_INT )
-            fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands, only int can do the logical operations.\n",n->lineno);
-        return genErrType(7);
+        if(t1->kind==Type_::ERROR||t2->kind==Type_::ERROR) return t1;
+        // if(t1->kind!=Type_::BASIC || t1->u.basic!=IS_INT ||t2->kind!=Type_::BASIC || t2->u.basic!=IS_INT ){
+        //     fprintf(stderr,"Error Type 7 at Line %d: Type mismatched for operands, only int can do the logical operations.\n",n->lineno);
+        //     return genErrType(7);
+        // }    
     }
     Type type=(Type)malloc(sizeof(struct Type_));
     type->kind=Type_::BASIC;
