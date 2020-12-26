@@ -248,8 +248,10 @@ void VarDec_in_Struct(Node* n,char* optTag,Type type){
 }
 char* OptTag(Node* n){
     if(n->type==SYNTACTIC_UNIT_EMPTY){
-        char ret[1];
-        ret[1]='\0';
+        // char ret[1];
+        // ret[1]='\0';
+        char* ret;
+        *ret='\0';
         return ret;
     }else{
         return n->child->name;
@@ -302,7 +304,7 @@ void FunDec(Node* n,Type return_type){
     strcpy(function->name,n->child->name);
     function->type=return_type;
    
-    if(n->child->next_sib->next_sib->name=="RP"){
+    if(string(n->child->next_sib->next_sib->name)=="RP"){
         //inc()的形式，只有三个子节点
         //FunDec -> ID LP RP
         function->next=NULL;//没有参数
@@ -426,16 +428,16 @@ void Stmt(Node* n,Type return_type){
     if(n->child->next_sib==NULL){
         // Stmt -> CompSt        //?还需要return_type吗
         CompSt(n->child,return_type);
-    }else if(n->child->next_sib->name=="SEMI"){
+    }else if(string(n->child->next_sib->name)=="SEMI"){
         // Stmt -> Exp SEMI
         Exp(n->child);
-    }else if(n->child->name=="RETURN"){
+    }else if(string(n->child->name)=="RETURN"){
         // Stmt -> RETURN Exp SEMI
         Type type_in_reality=Exp(n->child->next_sib);
         if(isSameType(return_type,type_in_reality)){
             fprintf(stderr,"Error Type 8 at Line %d: return语句返回类型与函数定义的返回类型不匹配.\n",n->lineno);
         }
-    }else if(n->child->name=="WHILE"){
+    }else if(string(n->child->name)=="WHILE"){
         //      -> WHILE LP Exp RP Stmt
         Type while_condition=Exp(n->child->next_sib->next_sib);
         if(while_condition->kind!=Type_::BASIC || while_condition->u.basic!=IS_INT){
@@ -462,7 +464,7 @@ void Stmt(Node* n,Type return_type){
 
 
 Type Exp(Node* n){
-    if(n->child->name=="ID"){
+    if(string(n->child->name)=="ID"){
         //ID
         if(map.find(n->child->name)!=map.end()){
             fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->name);
@@ -471,40 +473,40 @@ Type Exp(Node* n){
             return map[n->child->name];
         }
     }
-    else if(n->child->name=="INT"){
+    else if(string(n->child->name)=="INT"){
         //INT
         Type t=(Type)malloc(sizeof(struct Type_));
         t->kind=Type_::BASIC;
         t->u.basic=IS_INT;
         return t;
     }
-    else if(n->child->name=="FLOAT"){
+    else if(string(n->child->name)=="FLOAT"){
         //FLOAT
         Type t=(Type)malloc(sizeof(struct Type_));
         t->kind=Type_::BASIC;
         t->u.basic=IS_FLOAT;
         return t;
     }
-    else if(n->child->name=="NOT" || n->child->next_sib->name=="AND" || n->child->next_sib->name=="OR" || n->child->next_sib->name=="RELOP" ){
+    else if(string(n->child->name)=="NOT" || string(n->child->next_sib->name)=="AND" || string(n->child->next_sib->name)=="OR" || string(n->child->next_sib->name)=="RELOP" ){
         //逻辑运算
         //NOT Exp
         //Exp AND|OR|RELOP Exp
         return Exp_Logic(n);
     }
-    else if(n->child->next_sib->name=="PLUS"||n->child->next_sib->name=="MINUS"||n->child->next_sib->name=="STAR"||n->child->next_sib->name=="DIV"){
+    else if(string(n->child->next_sib->name)=="PLUS"||string(n->child->next_sib->name)=="MINUS"||string(n->child->next_sib->name)=="STAR"||string(n->child->next_sib->name)=="DIV"){
         //算数运算Exp PLUS|MINUS|STAR|DIV Exp
         return Exp_Math(n);
     }
-    else if(n->child->name=="LP" || n->child->name=="MINUS"){
+    else if(string(n->child->name)=="LP" || string(n->child->name)=="MINUS"){
         //LP Exp RP
         //Minus Exp
         return Exp(n->child->next_sib);
     }
-    else if(n->child->next_sib->name=="ASSIGNOP"){
+    else if(string(n->child->next_sib->name)=="ASSIGNOP"){
         //Exp ASSIGNOP Exp
         return Exp_ASSIGNOP(n);
     }
-    else if(n->child->next_sib->name=="DOT"){
+    else if(string(n->child->next_sib->name)=="DOT"){
         //Exp DOT ID
         Type t=Exp(n->child);
         if(t->kind!=Type_::STRUCTURE){
@@ -515,7 +517,7 @@ Type Exp(Node* n){
         //int found=0;
         char* target=n->child->next_sib->next_sib->name;
         while(f!=NULL){
-            if(f->name==target) break;
+            if(strcmp(f->name,target)==0) break;
             f=f->tail;
         }
         if(f==NULL){
@@ -524,7 +526,7 @@ Type Exp(Node* n){
         }
         return f->type;
     }
-    else if(n->child->next_sib->name=="LB"){
+    else if(string(n->child->next_sib->name)=="LB"){
         //Exp LB Exp RB
         Type t=Exp(n->child);
         if(t->kind!=Type_::ARRAY){
@@ -533,11 +535,12 @@ Type Exp(Node* n){
         }
         t=Exp(n->child->next_sib->next_sib);
         if(t->kind!=Type_::BASIC || t->u.basic==IS_INT){
-            fprintf(stderr,"Error Type 10 at Line %d: 对非数组变量使用[].\n",n->lineno);
-            return genErrType(10);
+            fprintf(stderr,"Error Type 12 at Line %d: 数组访问操作符[]中出现非整数.\n",n->lineno);
+            return genErrType(12);
         }
+        return t->u.array.elem;//?
     }
-    else if(n->child->next_sib->next_sib->name=="RP"){
+    else if(string(n->child->next_sib->next_sib->name)=="RP"){
         //ID LP RP
         if(map.find(n->child->name)!=map.end()){
             fprintf(stderr,"Error Type 11 at Line %d: 对普通变量使用().\n",n->lineno);
@@ -547,6 +550,7 @@ Type Exp(Node* n){
             fprintf(stderr,"Error Type 2 at Line %d: 函数在调用时未经定义.\n",n->lineno);
             return genErrType(2);
         }
+        return functionMap[n->child->name]->u.myfunc->type;
     }
     else{
         //ID LP Args RP
@@ -623,7 +627,7 @@ Type Exp_Logic(Node* n){
     //逻辑运算
     //NOT Exp
     //Exp AND|OR|RELOP Exp
-    if(n->child->name=="NOT"){
+    if(string(n->child->name)=="NOT"){
         Type t=Exp(n->child->next_sib);
         if(t->kind!=Type_::BASIC || t->u.basic!=IS_INT)
             fprintf(stderr,"Error Type 7 at Line %d: 操作数类型与操作符不匹配，只有int可以做逻辑运算.\n",n->lineno);
