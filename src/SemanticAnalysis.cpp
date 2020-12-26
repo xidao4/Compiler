@@ -60,7 +60,7 @@ void ExtDecList(Node* n,Type type);
 /*declarition*/
 void VarDec(Node* n,Type type);//VarDec 既可以是全局的变量，又可以在函数中使用来声明变量
 /*definition in function*/
-void FunDec(Node* n,Type return_type);
+Type FunDec(Node* n,Type return_type);
 FuncList VarList(Node* n);
 FuncList ParamDec(Node* n);
 FuncList VarDec_in_FuncParams(Node* n,Type type);//VarDec 函数**参数**的变量声明
@@ -106,8 +106,9 @@ void ExtDef(Node* n){
         ;
     }else if(string(n->child->next_sib->name)=="FunDec"){
         //ExtDef -> Specifier FunDec CompSt
-        FunDec(n->child->next_sib,type);
-        CompSt(n->child->next_sib->next_sib,type);
+        Type t=FunDec(n->child->next_sib,type);
+        if(t->kind!=Type_::ERROR)
+            CompSt(n->child->next_sib->next_sib,type);
     }else{
         cout<<"wrong with ExtDef"<<endl;
     }
@@ -307,10 +308,10 @@ void VarDec(Node* n,Type type){
 }
 
 
-void FunDec(Node* n,Type return_type){
+Type FunDec(Node* n,Type return_type){
     //如果函数定义（函数返回参数）有问题，则不将该函数加入函数表
     cout<<"FunDec"<<endl;
-    if(return_type->kind==Type_::ERROR) return;
+    if(return_type->kind==Type_::ERROR) return return_type;
 
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
 
@@ -332,7 +333,8 @@ void FunDec(Node* n,Type return_type){
     if(functionMap.find(function->name)!=functionMap.end()){
         //只要函数名重复定义就是错误类型4,参数不同也是错
         //直接丢弃这个函数
-        fprintf(stderr,"Error type 4 at line %d: Redefined function \"%s\".\n",n->lineno,function->name);
+        fprintf(stderr,"Error type 4 at line %d: Redefined function.\n",n->lineno);
+        return genErrType(4);
     }else{
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::FUNCTION;
@@ -342,7 +344,7 @@ void FunDec(Node* n,Type return_type){
             cout<<"functionMap:"<<x.first<<" "<<x.second->kind<<endl;
             //while(x) output all the params!
         }
-            
+        return type;    
     }
 }
 FuncList VarList(Node* n){
