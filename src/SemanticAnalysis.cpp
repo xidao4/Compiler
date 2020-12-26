@@ -282,6 +282,8 @@ void VarDec(Node* n,Type type){
             fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"与前面定义过的结构体名字重复.\n",n->lineno,id->name);
         }else{
             map.insert({id->name,type});
+            for(auto x:map)
+                cout<<x.first<<" "<<x.second<<endl;
         }
 
 
@@ -360,6 +362,7 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
             funcList->name=n->child->name;
             funcList->type=type;
             funcList->next=NULL;
+            map.insert({n->child->name,type});
             return funcList;
         }
 

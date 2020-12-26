@@ -34,10 +34,6 @@ int main(int argc,char** argv){
 		fprintf(stderr,"cannot open the file!\n");
 		return 1;
 	 }
-	// if(!f){
-	// 	
-	// 	return 1;
-	// }
 	yyrestart(f);
 	yyparse();
 	// if(syntaxErr==0){
