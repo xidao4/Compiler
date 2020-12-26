@@ -476,7 +476,7 @@ Type Exp(Node* n){
         //ID
         printf("%s\n",n->child->str_constant);
         for(auto x:map)
-            cout<<x.first<<" "<<x.second->kind<<endl;
+            cout<<x.first<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
         if(map.find(n->child->str_constant)!=map.end()){
             fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->str_constant);
             return genErrType(1);
