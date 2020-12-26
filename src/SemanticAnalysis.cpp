@@ -127,6 +127,9 @@ Type Specifier(Node* n){
         else if(string(n->child->name)=="FLOAT"){
             cout<<"LEX_FLOAT"<<endl;
             type->u.basic=IS_FLOAT;
+        }else{
+            printf("%s\n",n->child->name);
+            cout<<"specifier error"<<endl;
         }
             
 
