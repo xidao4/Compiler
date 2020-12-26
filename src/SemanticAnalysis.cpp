@@ -286,7 +286,7 @@ void VarDec(Node* n,Type type){
         }else{
             map.insert({id->str_constant,type});
             for(auto x:map)
-                cout<<x.first<<" "<<x.second<<endl;
+                cout<<x.first<<" "<<x.second->kind<<endl;
         }
 
 
@@ -307,7 +307,7 @@ void FunDec(Node* n,Type return_type){
     if(return_type->kind==Type_::ERROR) return;
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
     function->name=n->child->str_constant;
-    printf("%s\n",n->child->next_sib->next_sib->str_constant);
+    printf("%s\n",n->child->next_sib->next_sib->name);
     function->type=return_type;
     if(string(n->child->next_sib->next_sib->name)=="RP"){
         //inc()的形式，只有三个子节点
@@ -385,7 +385,7 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
 void CompSt(Node *n,Type return_type){
     // CompSt -> LC DefList StmtList RC
     DefList_in_Function(n->child->next_sib);
-    //StmtList(n->child->next_sib->next_sib,return_type);
+    StmtList(n->child->next_sib->next_sib,return_type);
 }
 void DefList_in_Function(Node* n){
     // DefList -> empty
