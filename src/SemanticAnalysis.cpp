@@ -482,6 +482,7 @@ Type Exp(Node* n){
             return genErrType(1);
         }else{
             char* tmp=n->child->str_constant;
+            if(map[tmp]==NULL) printf("确实这里产生了NULL");
             return map[tmp];
         }
     }
