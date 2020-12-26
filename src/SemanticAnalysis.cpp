@@ -493,10 +493,9 @@ Type Exp(Node* n){
             return genErrType(1);
         }else{
             string targetID=string(n->child->str_constant);
-            cout<<targetID<<endl;
-            for(auto x:map)
-                cout<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
-            //if(map.at(tmp)==NULL) printf("确实这里产生了NULL.\n");
+            //cout<<targetID<<endl;
+            //for(auto x:map)
+            //    cout<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
             return map.at(targetID);
         }
     }
@@ -652,8 +651,8 @@ Type Exp_ASSIGNOP(Node* n){
 }
 Type Exp_Math(Node* n){
     //Exp PLUS|MINUS|STAR|DIV Exp
-    cout<<"Exp_ASSIGNOP"<<endl;
-    
+    cout<<"Exp_Math"<<endl;
+
     Type opLeft=Exp(n->child);
     Type opRight=Exp(n->child->next_sib->next_sib);
     if(opLeft->kind!=Type_::BASIC || opRight->kind!=Type_::BASIC){
