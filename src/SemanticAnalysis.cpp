@@ -49,12 +49,12 @@ void ExtDef(Node* n);
 Type Specifier(Node* n);
 /*struct*/
 Type StructSpecifier(Node* n);
-char* OptTag(Node* n);
-void DefList_in_Struct(Node* n,char* optTag);
-void Def_in_Struct(Node* n,char* optTag);
-void DecList_in_Struct(Node* n,char* optTag,Type type);
-void Dec_in_Struct(Node* n,char* optTag,Type type);
-void VarDec_in_Struct(Node* n,char* optTag,Type type);//VarDec 结构体变量的声明
+string OptTag(Node* n);
+void DefList_in_Struct(Node* n,string optTag);
+void Def_in_Struct(Node* n,string optTag);
+void DecList_in_Struct(Node* n,string optTag,Type type);
+void Dec_in_Struct(Node* n,string optTag,Type type);
+void VarDec_in_Struct(Node* n,string optTag,Type type);//VarDec 结构体变量的声明
 /*high-level definitions*/
 void ExtDecList(Node* n,Type type);
 /*declarition*/
@@ -101,15 +101,18 @@ void ExtDef(Node* n){
     if(string(n->child->next_sib->name)=="ExtDecList"){
         // Specifier ExtDecList SEMI
         ExtDecList(n->child->next_sib,type);
-    }else if(string(n->child->next_sib->name)=="SEMI"){
+    }
+    else if(string(n->child->next_sib->name)=="SEMI"){
         // Specifier SEMI
         ;
-    }else if(string(n->child->next_sib->name)=="FunDec"){
+    }
+    else if(string(n->child->next_sib->name)=="FunDec"){
         //ExtDef -> Specifier FunDec CompSt
         Type t=FunDec(n->child->next_sib,type);
         if(t->kind!=Type_::ERROR)
             CompSt(n->child->next_sib->next_sib,type);
-    }else{
+    }
+    else{
         cout<<"wrong with ExtDef"<<endl;
     }
 }
@@ -137,7 +140,8 @@ Type Specifier(Node* n){
 
         //cout<<type->kind<<" "<<type->u.basic<<endl;
         return type;
-    }else{
+    }
+    else{
         //Specifier -> StructSpecifier
         return StructSpecifier(n->child);
     }
@@ -145,9 +149,10 @@ Type Specifier(Node* n){
 
 
 Type StructSpecifier(Node* n){
+    cout<<"StructSpecifier"<<endl;
     if(n->child->next_sib->next_sib!=NULL){
         // STRUCT OptTag LC DefList RC
-        char* optTag=OptTag(n->child->next_sib);
+        string optTag=OptTag(n->child->next_sib);
         if(structureMap.find(optTag)!=structureMap.end()){
             fprintf(stderr,"Error Type 16 at Line %d: 结构体名\"%s\"与定义过的结构体或变量重复.\n",n->lineno,n->child->next_sib->str_constant);
             return genErrType(16);
@@ -178,19 +183,19 @@ Type StructSpecifier(Node* n){
         }
     } 
 }
-void DefList_in_Struct(Node* n,char* optTag){
+void DefList_in_Struct(Node* n,string optTag){
     // DefList -> empty
     if (n->type==SYNTACTIC_UNIT_EMPTY) return;
     // DefList -> Def DefList
     Def_in_Struct(n->child,optTag);
     DefList_in_Struct(n->child->next_sib,optTag);
 }
-void Def_in_Struct(Node* n,char* optTag){
+void Def_in_Struct(Node* n,string optTag){
     //Def -> Specifier DecList SEMI
     Type type=Specifier(n->child);
     DecList_in_Struct(n->child->next_sib,optTag,type);
 }
-void DecList_in_Struct(Node* n,char* optTag,Type type){
+void DecList_in_Struct(Node* n,string optTag,Type type){
     if(n->child->next_sib==NULL){
         //DecList -> Dec
         Dec_in_Struct(n->child,optTag,type);
@@ -200,7 +205,7 @@ void DecList_in_Struct(Node* n,char* optTag,Type type){
         DecList_in_Struct(n->child->next_sib->next_sib,optTag,type);
     }
 }
-void Dec_in_Struct(Node* n,char* optTag,Type type){
+void Dec_in_Struct(Node* n,string optTag,Type type){
     if(n->child->next_sib==NULL){
         //Dec -> VarDec
         VarDec_in_Struct(n->child,optTag,type);
@@ -209,19 +214,22 @@ void Dec_in_Struct(Node* n,char* optTag,Type type){
         fprintf(stderr,"Error Type 15 at line %d: 结构体\"%s\"在定义时对域进行初始化.\n",n->lineno,optTag);
     }  
 }
-void VarDec_in_Struct(Node* n,char* optTag,Type type){
+void VarDec_in_Struct(Node* n,string optTag,Type type){
     if(n->child->next_sib==NULL){
         //VarDec -> ID
 
 
         //1. 将域名加入map中
-        if(map.find(n->child->str_constant)!=map.end()){
+        if(map.find(string(n->child->str_constant))!=map.end()){
             fprintf(stderr,"Error Type 15 at Line %d: 结构体\"%s\"中域名重复定义（同一结构体中/不同结构体中）.\n",n->lineno,optTag);
             return;
             //不采用：如果结构体定义错误，则该结构体不加入符号表。
             //采用：如果结构体定义中域名重复，则仍然该结构体名加入符号表，但是重复的定义并不加入该结构体域。
         }else{
-            map.insert({n->child->str_constant,type});
+            map.insert({string(n->child->str_constant),type});
+            for(auto x:map){
+                cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+            }
         }
 
         //2. 结构体名已经在前面加入了structureMap
@@ -255,15 +263,16 @@ void VarDec_in_Struct(Node* n,char* optTag,Type type){
         VarDec_in_Struct(n->child,optTag,newtype);
     }
 }
-char* OptTag(Node* n){
+string OptTag(Node* n){
     if(n->type==SYNTACTIC_UNIT_EMPTY){
         // char ret[1];
         // ret[1]='\0';
-        char* ret;
-        *ret='\0';
-        return ret;
+
+        // char* ret;
+        // *ret='\0';
+        return "";
     }else{
-        return n->child->str_constant;
+        return string(n->child->str_constant);
     }
 }
 
@@ -555,7 +564,7 @@ Type Exp(Node* n){
         //Exp DOT ID
         Type t=Exp(n->child);
         if(t->kind!=Type_::STRUCTURE){
-            fprintf(stderr,"Error Type 13 at Line %d: 对非结构体变量使用DOT.\n",n->lineno);
+            fprintf(stderr,"Error Type 13 at Line %d: Illegal use of \".\", apply to non-structure.\n",n->lineno);
             return genErrType(13);
         }
         FieldList f=t->u.structure;
@@ -581,7 +590,7 @@ Type Exp(Node* n){
         }
         t=Exp(n->child->next_sib->next_sib);
         if(t->kind!=Type_::BASIC || t->u.basic!=IS_INT){
-            fprintf(stderr,"Error Type 12 at Line %d: 数组访问操作符[]中出现非整数.\n",n->lineno);
+            fprintf(stderr,"Error Type 12 at Line %d: num in [] is not an integer.\n",n->lineno);
             return genErrType(12);
         }
         return t->u.array.elem;
