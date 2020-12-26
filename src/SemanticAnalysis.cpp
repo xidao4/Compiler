@@ -115,7 +115,7 @@ void ExtDef(Node* n){
         //ExtDef -> Specifier FunDec CompSt
         cout<<"before FunDec"<<endl;
         FunDec(n->child->next_sib,type);
-        CompSt(n->child->next_sib->next_sib,type);
+        //CompSt(n->child->next_sib->next_sib,type);
     }else{
         cout<<"wrong with ExtDef"<<endl;
     }
@@ -315,6 +315,7 @@ void FunDec(Node* n,Type return_type){
     if(string(n->child->next_sib->next_sib->name)=="RP"){
         //inc()的形式，只有三个子节点
         //FunDec -> ID LP RP
+        cout<<"FunDec -> ID LP RP"<<endl;
         function->next=NULL;//没有参数
     }else{
         function->next=VarList(n->child->next_sib->next_sib);
