@@ -110,11 +110,13 @@ void ExtDef(Node* n){
     }else if(strcmp(n->child->name,"SEMI")==0){
         // Specifier SEMI
         ;
-    }else if(strcmp(n->child->name,"FunDec")==0){
+    }else if(string(n->child->name)=="FunDec"){
         //ExtDef -> Specifier FunDec CompSt
         cout<<"before FunDec"<<endl;
         FunDec(n->child->next_sib,type);
         CompSt(n->child->next_sib->next_sib,type);
+    }else{
+        cout<<"wrong with ExtDef"<<endl;
     }
 }
 
