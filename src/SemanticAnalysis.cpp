@@ -205,7 +205,7 @@ void Dec_in_Struct(Node* n,char* optTag,Type type){
         VarDec_in_Struct(n->child,optTag,type);
     }else{
         //Dec -> VarDec ASSIGNOP Exp
-        fprintf(stderr,"Error type 15 at line %d: 结构体\"%s\"在定义时对域进行初始化.\n",n->lineno,optTag);
+        fprintf(stderr,"Error Type 15 at line %d: 结构体\"%s\"在定义时对域进行初始化.\n",n->lineno,optTag);
     }  
 }
 void VarDec_in_Struct(Node* n,char* optTag,Type type){
@@ -286,9 +286,9 @@ void VarDec(Node* n,Type type){
 
         Node* id=n->child;
         if(map.find(string(id->str_constant))!=map.end()){
-            fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"出现重复定义.\n",n->lineno,id->str_constant);
+            fprintf(stderr,"Error Type 3 at Line %d: Redefined variable \"%s\".\n",n->lineno,id->str_constant);
         }else if(structureMap.find(string(id->str_constant))!=structureMap.end()){
-            fprintf(stderr,"Error Type 3 at Line %d: 变量\"%s\"与前面定义过的结构体名字重复.\n",n->lineno,id->str_constant);
+            fprintf(stderr,"Error Type 3 at Line %d: Redefined variable \"%s\".\n",n->lineno,id->str_constant);
         }else{
             map.insert({string(id->str_constant),type});
             for(auto x:map)
@@ -332,7 +332,7 @@ void FunDec(Node* n,Type return_type){
     if(functionMap.find(function->name)!=functionMap.end()){
         //只要函数名重复定义就是错误类型4,参数不同也是错
         //直接丢弃这个函数
-        fprintf(stderr,"Error type 4 at line %d: 相同的函数名\"%s\"被多次定义.\n",n->lineno,function->name);
+        fprintf(stderr,"Error type 4 at line %d: Redefined function \"%s\".\n",n->lineno,function->name);
     }else{
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::FUNCTION;
@@ -373,10 +373,10 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
     if(n->child->next_sib==NULL){
         // VarDec -> ID
         if(map.find(string(n->child->str_constant))!=map.end()){
-            fprintf(stderr,"Error Type 3 at Line %d: 函数参数名与其他变量名相同.\n",n->lineno);
+            fprintf(stderr,"Error Type 3 at Line %d: Redefined variable.\n",n->lineno);
             return NULL;
         }else if(structureMap.find(string(n->child->str_constant))!=structureMap.end()){
-            fprintf(stderr,"Error Type 3 at Line %d: 函数参数与结构体名相同.\n",n->lineno); 
+            fprintf(stderr,"Error Type 3 at Line %d: Redefined variable.\n",n->lineno); 
             return NULL;
         }else{
             FuncList funcList=(FuncList)malloc(sizeof(struct FuncList_));
@@ -458,15 +458,17 @@ void Stmt(Node* n,Type return_type){
     if(n->child->next_sib==NULL){
         // Stmt -> CompSt        //?还需要return_type吗
         CompSt(n->child,return_type);
-    }else if(string(n->child->next_sib->name)=="SEMI"){
+    }
+    else if(string(n->child->next_sib->name)=="SEMI"){
         // Stmt -> Exp SEMI
         Exp(n->child);
-    }else if(string(n->child->name)=="RETURN"){
+    }
+    else if(string(n->child->name)=="RETURN"){
         // Stmt -> RETURN Exp SEMI
         cout<<"return_type:"<<return_type->kind<<endl;
         Type type_in_reality=Exp(n->child->next_sib);
         cout<<"type_in_reality:"<<type_in_reality->kind<<endl;
-        if(isSameType(return_type,type_in_reality)){
+        if(!isSameType(return_type,type_in_reality)){
             fprintf(stderr,"Error Type 8 at Line %d: return语句返回类型与函数定义的返回类型不匹配.\n",n->lineno);
         }
     }else if(string(n->child->name)=="WHILE"){
@@ -476,14 +478,16 @@ void Stmt(Node* n,Type return_type){
             fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为while的条件.\n",n->lineno);
         }
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib,return_type);
-    }else if(n->child->next_sib->next_sib->next_sib->next_sib->next_sib==NULL){
+    }
+    else if(n->child->next_sib->next_sib->next_sib->next_sib->next_sib==NULL){
         //      -> IF LP Exp RP Stmt
         Type if_condition=Exp(n->child->next_sib->next_sib);
         if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
             fprintf(stderr,"Error Type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
         }
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib,return_type);
-    }else{
+    }
+    else{
         //      -> IF LP Exp RP Stmt ELSE Stmt
         Type if_condition=Exp(n->child->next_sib->next_sib);
         if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
@@ -500,7 +504,7 @@ Type Exp(Node* n){
     if(n->child->next_sib==NULL && string(n->child->name)=="ID"){
         //ID
         if(map.find(n->child->str_constant)==map.end()){
-            fprintf(stderr,"Error Type 1 at Line %d: 变量\"%s\"在使用时未经定义.\n",n->lineno,n->child->str_constant);
+            fprintf(stderr,"Error Type 1 at Line %d: Undefined variable \"%s\".\n",n->lineno,n->child->str_constant);
             return genErrType(1);
         }else{
             string targetID=string(n->child->str_constant);
@@ -584,7 +588,7 @@ Type Exp(Node* n){
             return genErrType(2);
         }
         if(functionMap.find(n->child->str_constant)==functionMap.end()){
-            fprintf(stderr,"Error Type 2 at Line %d: 函数在调用时未经定义.\n",n->lineno);
+            fprintf(stderr,"Error Type 2 at Line %d: Undefined function.\n",n->lineno);
             return genErrType(2);
         }
         return functionMap[n->child->str_constant]->u.myfunc->type;
