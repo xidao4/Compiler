@@ -313,8 +313,11 @@ void FunDec(Node* n,Type return_type){
     if(return_type->kind==Type_::ERROR) return;
 
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
+
+    printf("%s\n",n->child->str_constant);//!
     function->name=string(n->child->str_constant);
-    //printf("%s\n",n->child->next_sib->next_sib->name);
+    cout<<function->name<<endl;//!
+
     function->type=return_type;
     if(string(n->child->next_sib->next_sib->name)=="RP"){
         //inc()的形式，只有三个子节点
