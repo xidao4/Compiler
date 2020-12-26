@@ -105,7 +105,7 @@ type		"int"|"float"
 			}
 		}
 .		{
-			fprintf(stderr,"Error type A at Line %d: Mystery character \'%s\'.\n",yylineno,yytext);
+			
 		}
 
 %%
@@ -150,4 +150,6 @@ int getNum(char* yytext){
 // 	ss>>f;
 // 	return f;
 // }
+
+//fprintf(stderr,"Error type A at Line %d: Mystery character \'%s\'.\n",yylineno,yytext);
 
