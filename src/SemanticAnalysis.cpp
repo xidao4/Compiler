@@ -102,7 +102,6 @@ void ExtDefList(Node* n){
     ExtDefList(n->child->next_sib);
 }
 void ExtDef(Node* n){
-    //ExtDef -> Specifier ExtDecList
     cout<<"in ExtDef"<<endl;
     Type type=Specifier(n->child);
     if(strcmp(n->child->next_sib->name,"ExtDecList")==0){
@@ -306,6 +305,7 @@ void VarDec(Node* n,Type type){
 
 void FunDec(Node* n,Type return_type){
     //如果函数定义（函数返回参数）有问题，则不将该函数加入函数表
+    cout<<"in FunDec"<<endl;
     if(return_type->kind==Type_::ERROR) return;
 
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
