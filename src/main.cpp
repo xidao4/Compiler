@@ -36,12 +36,12 @@ int main(int argc,char** argv){
 	 }
 	yyrestart(f);
 	yyparse();
-	if(syntaxErr==0){
-		tree_search(root,0);
-	}
+	// if(syntaxErr==0){
+	// 	tree_search(root,0);
+	// }
 
 	//从ROOT开始调用Program开始符号进行遍历
-	//Program(root);
+	Program(root);
 	return 0;
 }
 
