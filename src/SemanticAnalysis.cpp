@@ -237,8 +237,8 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
 
         //2. 结构体名已经在前面加入了structureMap
         //   将域名加入structureMap的结构体定义中
-        Type type=structureMap[optTag];
-        FieldList fieldList=type->u.structure;
+        Type mystruct=structureMap[optTag];
+        FieldList fieldList=mystruct->u.structure;
         if(fieldList==NULL){//结构体还没有加入任何的域名
             cout<<"  first field in struct"<<endl;
             fieldList=(FieldList)malloc(sizeof(struct FieldList_));
@@ -247,7 +247,7 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
             cout<<"    "<<fieldList->name<<"  kind:"<<fieldList->type->kind<<endl;
             fieldList->tail=NULL;
 
-            type->u.structure=fieldList;//!
+            mystruct->u.structure=fieldList;//!
         }else{
             while(fieldList->tail!=NULL){
                 fieldList=fieldList->tail;
