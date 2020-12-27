@@ -167,7 +167,7 @@ Type StructSpecifier(Node* n){
             type->u.structure=NULL;
             structureMap.insert({optTag,type});
             for(auto x:structureMap){
-                cout<<"structureMap:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+                cout<<"  structureMap:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
             DefList_in_Struct(n->child->next_sib->next_sib->next_sib,optTag);
             //here could output the fields of struct to check!
@@ -232,7 +232,7 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
         }else{
             map.insert({string(n->child->str_constant),type});
             for(auto x:map){
-                cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+                cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
         }
 
@@ -241,8 +241,10 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
         Type type=structureMap[optTag];
         FieldList fieldList=type->u.structure;
         if(fieldList==NULL){//结构体还没有加入任何的域名
+            cout<<"  first field in struct"<<endl;
             fieldList=(FieldList)malloc(sizeof(struct FieldList_));
             fieldList->name=n->child->str_constant;
+            cout<<"    "<<fieldList->name<<"  kind:"<<fieldList->type->kind<<endl;
             fieldList->type=type;
             fieldList->tail=NULL;
         }else{
@@ -306,7 +308,7 @@ void VarDec(Node* n,Type type){
         }else{
             map.insert({string(id->str_constant),type});
             for(auto x:map){
-                cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+                cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
                 
         }
@@ -356,7 +358,7 @@ Type FunDec(Node* n,Type return_type){
         type->u.myfunc=function;
         functionMap.insert({function->name,type});
         for(auto x:functionMap){
-            cout<<"functionMap:"<<x.first<<" "<<x.second->kind<<endl;
+            cout<<"  functionMap:"<<x.first<<" "<<x.second->kind<<endl;
             //while(x) output all the params!
         }
         return type;    
@@ -402,7 +404,7 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
             funcList->next=NULL;
             map.insert({string(n->child->str_constant),type});
             for(auto x:map){
-                cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+                cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
             return funcList;
         }
@@ -529,7 +531,7 @@ Type Exp(Node* n){
             string targetID=string(n->child->str_constant);
             
             for(auto x:map){
-                cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
+                cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
             }
                 
             return map.at(targetID);
