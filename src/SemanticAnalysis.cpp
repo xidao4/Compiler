@@ -97,6 +97,7 @@ void ExtDefList(Node* n){
     ExtDefList(n->child->next_sib);
 }
 void ExtDef(Node* n){
+    cout<<"ExtDef"<<endl;
     Type type=Specifier(n->child);
     if(string(n->child->next_sib->name)=="ExtDecList"){
         // Specifier ExtDecList SEMI
@@ -149,8 +150,9 @@ Type Specifier(Node* n){
 
 
 Type StructSpecifier(Node* n){
-    cout<<"StructSpecifier"<<endl;
+    
     if(n->child->next_sib->next_sib!=NULL){
+        cout<<"StructSpecifier_OptTag_LC_DefList_RC"<<endl;
         // STRUCT OptTag LC DefList RC
         string optTag=OptTag(n->child->next_sib);
         if(structureMap.find(optTag)!=structureMap.end()){
@@ -162,13 +164,15 @@ Type StructSpecifier(Node* n){
             return genErrType(16);
 
         }else{
+            cout<<"StructSpecifier_Struct_Tag"<<endl;
             Type type=(Type)malloc(sizeof(struct Type_));
             type->kind=Type_::STRUCTURE;
             type->u.structure=NULL;
             structureMap.insert({optTag,type});
-            for(auto x:structureMap){
-                cout<<"  structureMap:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
-            }
+            cout<<"insert structureMap:"<<optTag<<endl;
+            // for(auto x:structureMap){
+            //     cout<<"  structureMap:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+            // }
             DefList_in_Struct(n->child->next_sib->next_sib->next_sib,optTag);
             //here could output the fields of struct to check!
             return structureMap[optTag];
@@ -196,6 +200,7 @@ void DefList_in_Struct(Node* n,string optTag){
 }
 void Def_in_Struct(Node* n,string optTag){
     //Def -> Specifier DecList SEMI
+    cout<<"Def_in_Struct"<<endl;
     Type type=Specifier(n->child);
     DecList_in_Struct(n->child->next_sib,optTag,type);
 }
@@ -210,8 +215,10 @@ void DecList_in_Struct(Node* n,string optTag,Type type){
     }
 }
 void Dec_in_Struct(Node* n,string optTag,Type type){
+    cout<<"Dec_in_Struct"<<endl;
     if(n->child->next_sib==NULL){
         //Dec -> VarDec
+        
         VarDec_in_Struct(n->child,optTag,type);
     }else{
         //Dec -> VarDec ASSIGNOP Exp
@@ -231,50 +238,51 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
         }else{
             cout<<"VarDec_in_Struct"<<endl;
             map.insert({string(n->child->str_constant),type});
-            for(auto x:map){
-                cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
-            }
+            // for(auto x:map){
+            //     cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+            // }
+            cout<<"insert map:域名"<<n->child->str_constant<<endl;
         }
 
         //2. 结构体名已经在前面加入了structureMap
         //   将域名加入structureMap的结构体定义中
         Type mystruct=structureMap[optTag];//!
-        cout<<"1"<<endl;
+       
         FieldList fieldList=mystruct->u.structure;
-        cout<<"2"<<endl;
+      
         if(fieldList==NULL){//结构体还没有加入任何的域名
             cout<<"  first field in struct"<<endl;
             fieldList=(FieldList)malloc(sizeof(struct FieldList_));
-            cout<<"3"<<endl;
+          
             printf("%s\n",n->child->str_constant);
             string test=n->child->str_constant;
-            cout<<test<<endl;
+         
             fieldList->name=test;
-            cout<<"4"<<endl;
+           
             fieldList->type=type;
             cout<<"    "<<fieldList->name<<"  kind:"<<fieldList->type->kind<<endl;
             fieldList->tail=NULL;
 
             mystruct->u.structure=fieldList;//!
         }else{
-            cout<<"3"<<endl;
+            
             while(fieldList->tail!=NULL){
-                cout<<"4"<<endl;
+             
                 cout<<"  fieldList names:"<<fieldList->name<<" "<<fieldList->type<<endl;
-                cout<<"5"<<endl;
+                
                 fieldList=fieldList->tail;
-                cout<<"6"<<endl;
+               
             }
-            cout<<"7"<<endl;
+      
             fieldList->tail=(FieldList)malloc(sizeof(struct FieldList_));
-            cout<<"8"<<endl;
-            printf("%s\n",n->child->str_constant);
+      
+        
             fieldList->tail->type=type;
-            cout<<"9"<<endl;
+          
             fieldList->tail->tail=NULL;
-            cout<<"10"<<endl;
+          
             fieldList->tail->name=n->child->str_constant;
-            cout<<"11"<<endl;
+        
             
         }
     
@@ -305,6 +313,7 @@ string OptTag(Node* n){
 
 
 void ExtDecList(Node* n,Type type){
+    cout<<"ExtDecList"<<endl;
     if(n->child->next_sib==NULL){
         //ExtDecList -> VarDec
         VarDec(n->child,type);
