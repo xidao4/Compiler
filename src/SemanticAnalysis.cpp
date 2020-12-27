@@ -459,7 +459,8 @@ void Def_in_Function(Node* n){
     // Def -> Specifier DecList SEMI
     cout<<"Def_in_Function"<<endl;
     Type dec_type=Specifier(n->child);
-    DecList_in_Function(n->child->next_sib,dec_type);
+    if(dec_type->kind!=Type_::ERROR)
+        DecList_in_Function(n->child->next_sib,dec_type);
 }
 void DecList_in_Function(Node* n,Type dec_type){
     if(n->child->next_sib==NULL){
