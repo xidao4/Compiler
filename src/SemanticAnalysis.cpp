@@ -252,11 +252,15 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
 
             mystruct->u.structure=fieldList;//!
         }else{
+            cout<<"3"<<endl;
             while(fieldList->tail!=NULL){
+                cout<<"4"<<endl;
                 cout<<"  fieldList names:"<<fieldList->name<<" "<<fieldList->type<<endl;
+                cout<<"5"<<endl;
                 fieldList=fieldList->tail;
-
+                cout<<"6"<<endl;
             }
+            cout<<"7"<<endl;
             fieldList->tail=(FieldList)malloc(sizeof(struct FieldList_));
             fieldList->tail->name=n->child->str_constant;
             fieldList->tail->type=type;
