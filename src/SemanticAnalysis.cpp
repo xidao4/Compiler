@@ -108,7 +108,7 @@ void ExtDef(Node* n){
     }
     else if(string(n->child->next_sib->name)=="FunDec"){
         //ExtDef -> Specifier FunDec CompSt
-        Type t=FunDec(n->child->next_sib,type);
+        Type t=FunDec(n->child->next_sib,type);//函数定义出问题，后面大括号里的都不检查了
         if(t->kind!=Type_::ERROR)
             CompSt(n->child->next_sib->next_sib,type);
     }
@@ -229,6 +229,7 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
             fprintf(stderr,"Error type 15 at Line %d: redefined field in struct.\n",n->lineno);
             return;//method2:如果结构体定义错误，则该结构体不加入符号表。
         }else{
+            cout<<"VarDec_in_Struct"<<endl;
             map.insert({string(n->child->str_constant),type});
             for(auto x:map){
                 cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
@@ -256,6 +257,8 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
             fieldList->tail->name=n->child->str_constant;
             fieldList->tail->type=type;
             fieldList->tail->tail=NULL;
+
+            
         }
     
 
@@ -536,9 +539,9 @@ Type Exp(Node* n){
         }else{
             string targetID=string(n->child->str_constant);
             
-            for(auto x:map){
-                cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
-            }
+            // for(auto x:map){
+            //     cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+            // }
                 
             return map.at(targetID);
         }
