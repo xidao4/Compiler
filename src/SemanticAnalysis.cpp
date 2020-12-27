@@ -237,7 +237,7 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
 
         //2. 结构体名已经在前面加入了structureMap
         //   将域名加入structureMap的结构体定义中
-        Type mystruct=structureMap[optTag];
+        Type mystruct=structureMap[optTag];//!
         FieldList fieldList=mystruct->u.structure;
         if(fieldList==NULL){//结构体还没有加入任何的域名
             cout<<"  first field in struct"<<endl;
@@ -488,6 +488,8 @@ void Stmt(Node* n,Type return_type){
         cout<<"return_type:"<<return_type->kind<<endl;
         Type type_in_reality=Exp(n->child->next_sib);
         cout<<"type_in_reality:"<<type_in_reality->kind<<endl;
+        if(type_in_reality->kind==Type_::ERROR)
+            return;
         if(!isSameType(return_type,type_in_reality)){
             fprintf(stderr,"Error type 8 at Line %d: Type mismatched for return.\n",n->lineno);
         }
@@ -577,6 +579,8 @@ Type Exp(Node* n){
         //Exp DOT ID
         cout<<"Exp_DOT"<<endl;
         Type t=Exp(n->child);
+        if(t->kind==Type_::ERROR)
+            return t;
         if(t->kind!=Type_::STRUCTURE){
             fprintf(stderr,"Error type 13 at Line %d: Illegal use of \".\", apply to non-structure.\n",n->lineno);
             return genErrType(13);
