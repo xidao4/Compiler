@@ -495,6 +495,7 @@ void Stmt(Node* n,Type return_type){
         }
     }else if(string(n->child->name)=="WHILE"){
         //      -> WHILE LP Exp RP Stmt
+        cout<<"Stmt_WHILE"<<endl;
         Type while_condition=Exp(n->child->next_sib->next_sib);
         // if(while_condition->kind!=Type_::BASIC || while_condition->u.basic!=IS_INT){
         //     fprintf(stderr,"Error type ? at Line %d: 违反假设2：只有INT才能作为while的条件.\n",n->lineno);
@@ -512,6 +513,7 @@ void Stmt(Node* n,Type return_type){
     }
     else{
         //      -> IF LP Exp RP Stmt ELSE Stmt
+        cout<<"Stmt_IF_ELSE"<<endl;
         Type if_condition=Exp(n->child->next_sib->next_sib);
         if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
             fprintf(stderr,"Error type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
