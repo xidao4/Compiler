@@ -98,6 +98,10 @@ void ExtDefList(Node* n){
 }
 void ExtDef(Node* n){
     //cout<<"ExtDef"<<endl;
+    if(string(n->child->next_sib->name)=="SEMI"){
+        // Specifier SEMI
+        cout<<"ExtDef->Specifier SEMI"<<endl;
+    }
     Type type=Specifier(n->child);
     if(string(n->child->next_sib->name)=="ExtDecList"){
         // Specifier ExtDecList SEMI
