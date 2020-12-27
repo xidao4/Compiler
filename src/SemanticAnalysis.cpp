@@ -89,6 +89,7 @@ bool isStructEqual(Type t1,Type t2);
 
 
 void Program(Node* n){
+    cout<<"Program"<<endl;
     ExtDefList(n->child);
 }
 void ExtDefList(Node* n){
@@ -97,7 +98,7 @@ void ExtDefList(Node* n){
     ExtDefList(n->child->next_sib);
 }
 void ExtDef(Node* n){
-    //cout<<"ExtDef"<<endl;
+    cout<<"ExtDef"<<endl;
     if(string(n->child->next_sib->name)=="ExtDecList"){
         // Specifier ExtDecList SEMI
         cout<<"ExtDef->Specifier ExtDecList SEMI"<<endl;
