@@ -515,9 +515,9 @@ void Stmt(Node* n,Type return_type){
         //      -> IF LP Exp RP Stmt ELSE Stmt
         cout<<"Stmt_IF_ELSE"<<endl;
         Type if_condition=Exp(n->child->next_sib->next_sib);
-        if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
-            fprintf(stderr,"Error type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
-        }
+        // if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
+        //     fprintf(stderr,"Error type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
+        // }
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib,return_type);
         Stmt(n->child->next_sib->next_sib->next_sib->next_sib->next_sib->next_sib,return_type);
     }
@@ -734,6 +734,7 @@ Type Exp_Math(Node* n){
         //（只有BASIC类型可以算数运算）（例如数组（或结构体）变量与数组（或结构体）变量相加减量）
         return genErrType(7);
     }else if (isSameType(opLeft,opRight)){
+        cout<<"a[j+1]:"<<opLeft->kind<<" "<<opRight->kind<<endl;
         return opLeft;
     }else{
         fprintf(stderr,"Error type 7 at Line %d: Type mismatched for operands.\n",n->lineno);      
