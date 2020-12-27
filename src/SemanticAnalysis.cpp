@@ -245,7 +245,9 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
         if(fieldList==NULL){//结构体还没有加入任何的域名
             cout<<"  first field in struct"<<endl;
             fieldList=(FieldList)malloc(sizeof(struct FieldList_));
+            cout<<"3"<<endl;
             fieldList->name=n->child->str_constant;
+            cout<<"4"<<endl;
             fieldList->type=type;
             cout<<"    "<<fieldList->name<<"  kind:"<<fieldList->type->kind<<endl;
             fieldList->tail=NULL;
@@ -269,7 +271,7 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
             fieldList->tail->tail=NULL;
             cout<<"10"<<endl;
             fieldList->tail->name=n->child->str_constant;
-
+            cout<<"11"<<endl;
             
         }
     
