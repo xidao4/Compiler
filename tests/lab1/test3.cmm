@@ -1,8 +1,5 @@
-int main()
+int main() 
 {
-	// line comment
-	/*
-		block comment
-	*/
-	int i=1;
+   int i, j;
+   int i;
 }
