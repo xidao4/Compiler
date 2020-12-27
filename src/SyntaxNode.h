@@ -11,11 +11,11 @@ typedef enum{
 struct Node{
     struct Node* child;
     struct Node* next_sib;
-    char name[32];
+    char* name;
     union{
         int int_constant;
         double float_constant;
-        char str_constant[32];
+        char* str_constant;
     };
     int lineno;
     NODE_TYPE type;
