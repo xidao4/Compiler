@@ -544,6 +544,7 @@ Type Exp(Node* n){
     }
     else if(string(n->child->name)=="INT"){
         //INT
+        cout<<"Exp_INT"<<endl;
         Type t=(Type)malloc(sizeof(struct Type_));
         t->kind=Type_::BASIC;
         t->u.basic=IS_INT;
@@ -551,6 +552,7 @@ Type Exp(Node* n){
     }
     else if(string(n->child->name)=="FLOAT"){
         //FLOAT
+        cout<<"Exp_FLOAT"<<endl;
         Type t=(Type)malloc(sizeof(struct Type_));
         t->kind=Type_::BASIC;
         t->u.basic=IS_FLOAT;
@@ -612,8 +614,8 @@ Type Exp(Node* n){
             fprintf(stderr,"Error type 10 at Line %d: cannot apply [] to non-array.\n",n->lineno);
             return genErrType(10);
         }
-        t=Exp(n->child->next_sib->next_sib);
-        if(t->kind!=Type_::BASIC || t->u.basic!=IS_INT){
+        Type t2=Exp(n->child->next_sib->next_sib);//!
+        if(t2->kind!=Type_::BASIC || t2->u.basic!=IS_INT){
             fprintf(stderr,"Error type 12 at Line %d: num in [] is not an integer.\n",n->lineno);
             return genErrType(12);
         }
@@ -734,7 +736,7 @@ Type Exp_Math(Node* n){
         //（只有BASIC类型可以算数运算）（例如数组（或结构体）变量与数组（或结构体）变量相加减量）
         return genErrType(7);
     }else if (isSameType(opLeft,opRight)){
-        cout<<"a[j+1]:"<<opLeft->kind<<" "<<opRight->kind<<endl;
+        cout<<"  a[j+1]:"<<opLeft->kind<<" "<<opRight->kind<<endl;
         return opLeft;
     }else{
         fprintf(stderr,"Error type 7 at Line %d: Type mismatched for operands.\n",n->lineno);      
