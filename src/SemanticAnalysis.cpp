@@ -623,7 +623,7 @@ Type Exp(Node* n){
             return genErrType(2);
         }
         if(functionMap.find(n->child->str_constant)==functionMap.end()){
-            fprintf(stderr,"Error type 2 at Line %d: 函数在调用时未经定义.\n",n->lineno);
+            fprintf(stderr,"Error type 2 at Line %d: Undefined function.\n",n->lineno);
             return genErrType(2);
         }
         Type f=functionMap[n->child->str_constant];
@@ -667,14 +667,27 @@ Type Exp_ASSIGNOP(Node* n){
     }
 
     //左边是  右值
-    if(left_type->kind==Type_::FUNCTION){
+    // if(left_type->kind==Type_::FUNCTION){
+    //     fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
+    //     return genErrType(6);
+    // }
+    // if(string(n->child->child->name)=="INT"||string(n->child->child->name)=="FLOAT"){
+    //     fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
+    //     return genErrType(6);
+    // }
+
+    //左边是 左值
+    if(n->child->child->next_sib==NULL && string(n->child->child->name)=="ID"){
+        ;
+    }else if(string(n->child->child->next_sib->name)=="DOT"){
+        ;
+    }else if(string(n->child->child->next_sib->name)=="LB"){
+        ;
+    }else{
         fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
         return genErrType(6);
     }
-    if(string(n->child->child->name)=="INT"||string(n->child->child->name)=="FLOAT"){
-        fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
-        return genErrType(6);
-    }
+
     
 
     Type right_type=Exp(n->child->next_sib->next_sib);
