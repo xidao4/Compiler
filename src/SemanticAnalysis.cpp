@@ -702,7 +702,7 @@ Type Exp_ASSIGNOP(Node* n){
     }else if(string(n->child->child->next_sib->name)=="LB"){
         ;
     }else{
-        fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
+        fprintf(stderr,"Error type 6 at Line %d: Assign a value to a right-hand-only expression.\n",n->lineno);
         return genErrType(6);
     }
 

@@ -24,7 +24,7 @@ def analyzeOne():
 
 
 if __name__ == "__main__":
-    pathBase = './tests/myLab/Tests_2_Advanced'
+    pathBase = './tests/myLab/Tests_2_Normal'
 
     li = [i.replace('.cmm', '') for i in os.listdir(pathBase) if i.endswith('.cmm')]
     for i in li:

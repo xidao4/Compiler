@@ -1,0 +1,4 @@
+Error type B at Line 1: syntax error.
+Error type B at Line 3: syntax error.
+Error type B at Line 4: syntax error.
+Segmentation fault

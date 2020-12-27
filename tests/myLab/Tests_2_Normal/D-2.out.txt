@@ -1,0 +1,5 @@
+Error type 3 at Line 4: Redefined variable "res".
+Error type 3 at Line 16: Redefined variable.
+Error type 3 at Line 18: Redefined variable "i".
+Error type 3 at Line 23: Redefined variable "t".
+Segmentation fault
