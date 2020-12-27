@@ -246,6 +246,8 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
             fieldList->type=type;
             cout<<"    "<<fieldList->name<<"  kind:"<<fieldList->type->kind<<endl;
             fieldList->tail=NULL;
+
+            type->u.structure=fieldList;//!
         }else{
             while(fieldList->tail!=NULL){
                 fieldList=fieldList->tail;
