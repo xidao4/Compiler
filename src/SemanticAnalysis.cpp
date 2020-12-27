@@ -585,8 +585,8 @@ Type Exp(Node* n){
         FieldList f=t->u.structure;
         //int found=0;
         char* target=n->child->next_sib->next_sib->str_constant;
-        cout<<"target field:"<<string(target)<<endl;
-        cout<<"field in reality:"<<endl;
+        cout<<"  target field:"<<string(target)<<endl;
+        cout<<"  field in reality:";
         while(f!=NULL){
             cout<<f->name<<endl;
             if(f->name==string(target)) break;
@@ -708,6 +708,8 @@ Type Exp_ASSIGNOP(Node* n){
     }
 
 
+    cout<<"  等号左侧的类型："<<left_type->kind<<endl;
+    cout<<"  等号右侧的类型："<<right_type->kind<<endl;
     if (!isSameType(right_type,left_type)){
         fprintf(stderr,"Error type 5 at Line %d: Type mismatched for assignment.\n",n->lineno);
         return genErrType(5);
