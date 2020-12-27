@@ -306,7 +306,7 @@ void VarDec(Node* n,Type type){
         }else{
             map.insert({string(id->str_constant),type});
             for(auto x:map){
-                cout<<"map:"<<x.first<<" "<<x.second->kind<<endl;
+                cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
                 
         }
@@ -330,9 +330,9 @@ Type FunDec(Node* n,Type return_type){
 
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
 
-    //printf("%s\n",n->child->str_constant);//!
+    
     function->name=n->child->str_constant;
-    cout<<function->name<<endl;//!
+    
 
     function->type=return_type;
     if(string(n->child->next_sib->next_sib->name)=="RP"){
@@ -529,7 +529,7 @@ Type Exp(Node* n){
             string targetID=string(n->child->str_constant);
             
             for(auto x:map){
-                cout<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
+                cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
             }
                 
             return map.at(targetID);
@@ -578,10 +578,14 @@ Type Exp(Node* n){
             fprintf(stderr,"Error type 13 at Line %d: Illegal use of \".\", apply to non-structure.\n",n->lineno);
             return genErrType(13);
         }
+
         FieldList f=t->u.structure;
         //int found=0;
         char* target=n->child->next_sib->next_sib->str_constant;
+        cout<<"target field:"<<string(target)<<endl;
+        cout<<"field in reality:"<<endl;
         while(f!=NULL){
+            cout<<f->name<<endl;
             if(f->name==string(target)) break;
             f=f->tail;
         }
