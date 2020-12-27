@@ -224,11 +224,10 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
 
 
         //1. 将域名加入map中
+        //如果结构体定义中域名重复，则仍然该结构体名加入符号表，但是重复的定义并不加入该结构体域。
         if(map.find(string(n->child->str_constant))!=map.end()){
             fprintf(stderr,"Error type 15 at Line %d: redefined field in struct.\n",n->lineno);
-            return;
-            //不采用：如果结构体定义错误，则该结构体不加入符号表。
-            //采用：如果结构体定义中域名重复，则仍然该结构体名加入符号表，但是重复的定义并不加入该结构体域。
+            return;//method2:如果结构体定义错误，则该结构体不加入符号表。
         }else{
             map.insert({string(n->child->str_constant),type});
             for(auto x:map){
@@ -244,8 +243,8 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
             cout<<"  first field in struct"<<endl;
             fieldList=(FieldList)malloc(sizeof(struct FieldList_));
             fieldList->name=n->child->str_constant;
-            cout<<"    "<<fieldList->name<<"  kind:"<<fieldList->type->kind<<endl;
             fieldList->type=type;
+            cout<<"    "<<fieldList->name<<"  kind:"<<fieldList->type->kind<<endl;
             fieldList->tail=NULL;
         }else{
             while(fieldList->tail!=NULL){
