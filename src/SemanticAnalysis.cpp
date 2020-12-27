@@ -97,18 +97,21 @@ void ExtDefList(Node* n){
     ExtDefList(n->child->next_sib);
 }
 void ExtDef(Node* n){
-    cout<<"ExtDef"<<endl;
+    //cout<<"ExtDef"<<endl;
     Type type=Specifier(n->child);
     if(string(n->child->next_sib->name)=="ExtDecList"){
         // Specifier ExtDecList SEMI
+        cout<<"ExtDef->Specifier ExtDecList SEMI"<<endl;
         ExtDecList(n->child->next_sib,type);
     }
     else if(string(n->child->next_sib->name)=="SEMI"){
         // Specifier SEMI
+        cout<<"ExtDef->Specifier SEMI"<<endl;
         ;
     }
     else if(string(n->child->next_sib->name)=="FunDec"){
         //ExtDef -> Specifier FunDec CompSt
+        cout<<"ExtDef->Specifier FunDec CompSt"<<endl;
         Type t=FunDec(n->child->next_sib,type);//函数定义出问题，后面大括号里的都不检查了
         if(t->kind!=Type_::ERROR)
             CompSt(n->child->next_sib->next_sib,type);
@@ -493,7 +496,6 @@ void StmtList(Node* n,Type return_type){
     // StmtList -> empty
     if(n->type==SYNTACTIC_UNIT_EMPTY) return;
     // StmtList -> Stmt StmtList
-    cout<<"StmtList"<<endl;
     Stmt(n->child,return_type);
     StmtList(n->child->next_sib,return_type);
 }
@@ -509,6 +511,7 @@ void Stmt(Node* n,Type return_type){
     }
     else if(string(n->child->name)=="RETURN"){
         // Stmt -> RETURN Exp SEMI
+        cout<<"Stmt_RETURN"<<endl;
         cout<<"return_type:"<<return_type->kind<<endl;
         Type type_in_reality=Exp(n->child->next_sib);
         cout<<"type_in_reality:"<<type_in_reality->kind<<endl;
@@ -553,7 +556,7 @@ Type Exp(Node* n){
     
     if(n->child->next_sib==NULL && string(n->child->name)=="ID"){
         //ID
-        cout<<"Exp_ID"<<endl;
+        cout<<"  Exp_ID"<<endl;
         if(map.find(string(n->child->str_constant))==map.end()){
             fprintf(stderr,"Error type 1 at Line %d: Undefined variable \"%s\".\n",n->lineno,n->child->str_constant);
             return genErrType(1);
