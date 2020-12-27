@@ -493,7 +493,8 @@ void Stmt(Node* n,Type return_type){
         if(!isSameType(return_type,type_in_reality)){
             fprintf(stderr,"Error type 8 at Line %d: Type mismatched for return.\n",n->lineno);
         }
-    }else if(string(n->child->name)=="WHILE"){
+    }
+    else if(string(n->child->name)=="WHILE"){
         //      -> WHILE LP Exp RP Stmt
         cout<<"Stmt_WHILE"<<endl;
         Type while_condition=Exp(n->child->next_sib->next_sib);
