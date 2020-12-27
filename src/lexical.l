@@ -15,11 +15,11 @@
 	struct Node{
 		struct Node* child;
 		struct Node* next_sib;
-		char* name;
+		char name[32];
 		union{
 			int int_constant;
 			double float_constant;
-			char* str_constant;
+			char str_constant[32];
 		};
 		int lineno;
 		NODE_TYPE type;
