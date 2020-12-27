@@ -113,7 +113,7 @@ void ExtDef(Node* n){
             CompSt(n->child->next_sib->next_sib,type);
     }
     else{
-        //cout<<"wrong with ExtDef"<<endl;
+        cout<<"wrong with ExtDef"<<endl;
     }
 }
 
@@ -121,7 +121,7 @@ void ExtDef(Node* n){
 Type Specifier(Node* n){
     if(string(n->child->name)=="TYPE"){
         //Specifier -> TYPE
-        //cout<<"Specifier"<<endl;
+        cout<<"Specifier"<<endl;
         
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::BASIC;
@@ -134,7 +134,7 @@ Type Specifier(Node* n){
             type->u.basic=IS_FLOAT;
         }else{
             //printf("%s\n",n->child->str_constant);
-            //cout<<"specifier error"<<endl;
+            cout<<"specifier error"<<endl;
         }
             
 
@@ -149,7 +149,7 @@ Type Specifier(Node* n){
 
 
 Type StructSpecifier(Node* n){
-    //cout<<"StructSpecifier"<<endl;
+    cout<<"StructSpecifier"<<endl;
     if(n->child->next_sib->next_sib!=NULL){
         // STRUCT OptTag LC DefList RC
         string optTag=OptTag(n->child->next_sib);
@@ -167,7 +167,7 @@ Type StructSpecifier(Node* n){
             type->u.structure=NULL;
             structureMap.insert({optTag,type});
             for(auto x:structureMap){
-                //cout<<"structureMap:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+                cout<<"structureMap:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
             DefList_in_Struct(n->child->next_sib->next_sib->next_sib,optTag);
             //here could output the fields of struct to check!
@@ -232,7 +232,7 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
         }else{
             map.insert({string(n->child->str_constant),type});
             for(auto x:map){
-                //cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+                cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
         }
 
@@ -296,7 +296,7 @@ void ExtDecList(Node* n,Type type){
 void VarDec(Node* n,Type type){
     if(n->child->next_sib==NULL){
         // VarDec -> ID
-        //cout<<"VarDec"<<endl;
+        cout<<"VarDec"<<endl;
 
         Node* id=n->child;
         if(map.find(string(id->str_constant))!=map.end()){
@@ -306,7 +306,7 @@ void VarDec(Node* n,Type type){
         }else{
             map.insert({string(id->str_constant),type});
             for(auto x:map){
-                //cout<<"map:"<<x.first<<" "<<x.second->kind<<endl;
+                cout<<"map:"<<x.first<<" "<<x.second->kind<<endl;
             }
                 
         }
@@ -325,14 +325,14 @@ void VarDec(Node* n,Type type){
 
 Type FunDec(Node* n,Type return_type){
     //如果函数定义（函数返回参数）有问题，则不将该函数加入函数表
-    //cout<<"FunDec"<<endl;
+    cout<<"FunDec"<<endl;
     if(return_type->kind==Type_::ERROR) return return_type;
 
     FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
 
     //printf("%s\n",n->child->str_constant);//!
     function->name=n->child->str_constant;
-    //cout<<function->name<<endl;//!
+    cout<<function->name<<endl;//!
 
     function->type=return_type;
     if(string(n->child->next_sib->next_sib->name)=="RP"){
@@ -356,7 +356,7 @@ Type FunDec(Node* n,Type return_type){
         type->u.myfunc=function;
         functionMap.insert({function->name,type});
         for(auto x:functionMap){
-            //cout<<"functionMap:"<<x.first<<" "<<x.second->kind<<endl;
+            cout<<"functionMap:"<<x.first<<" "<<x.second->kind<<endl;
             //while(x) output all the params!
         }
         return type;    
@@ -377,7 +377,7 @@ FuncList VarList(Node* n){
 }
 FuncList ParamDec(Node* n){
     //ParamDec -> Specifier VarDec
-    //cout<<"ParamDec"<<endl;
+    cout<<"ParamDec"<<endl;
     Type type=Specifier(n->child);
     return VarDec_in_FuncParams(n->child->next_sib,type);
 }
@@ -402,7 +402,7 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
             funcList->next=NULL;
             map.insert({string(n->child->str_constant),type});
             for(auto x:map){
-                //cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
+                cout<<"map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
             return funcList;
         }
@@ -420,7 +420,7 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
 
 void CompSt(Node *n,Type return_type){
     // CompSt -> LC DefList StmtList RC
-    //cout<<"CompSt"<<endl;
+    cout<<"CompSt"<<endl;
     DefList_in_Function(n->child->next_sib);
     StmtList(n->child->next_sib->next_sib,return_type);
 }
@@ -466,12 +466,12 @@ void StmtList(Node* n,Type return_type){
     // StmtList -> empty
     if(n->type==SYNTACTIC_UNIT_EMPTY) return;
     // StmtList -> Stmt StmtList
-    //cout<<"StmtList"<<endl;
+    cout<<"StmtList"<<endl;
     Stmt(n->child,return_type);
     StmtList(n->child->next_sib,return_type);
 }
 void Stmt(Node* n,Type return_type){
-    //cout<<"Stmt"<<endl;
+    cout<<"Stmt"<<endl;
     if(n->child->next_sib==NULL){
         // Stmt -> CompSt        //?还需要return_type吗
         CompSt(n->child,return_type);
@@ -482,9 +482,9 @@ void Stmt(Node* n,Type return_type){
     }
     else if(string(n->child->name)=="RETURN"){
         // Stmt -> RETURN Exp SEMI
-        //cout<<"return_type:"<<return_type->kind<<endl;
+        cout<<"return_type:"<<return_type->kind<<endl;
         Type type_in_reality=Exp(n->child->next_sib);
-        //cout<<"type_in_reality:"<<type_in_reality->kind<<endl;
+        cout<<"type_in_reality:"<<type_in_reality->kind<<endl;
         if(!isSameType(return_type,type_in_reality)){
             fprintf(stderr,"Error type 8 at Line %d: Type mismatched for return.\n",n->lineno);
         }
@@ -498,7 +498,7 @@ void Stmt(Node* n,Type return_type){
     }
     else if(n->child->next_sib->next_sib->next_sib->next_sib->next_sib==NULL){
         //      -> IF LP Exp RP Stmt
-        //cout<<"Stmt_IF"<<endl;
+        cout<<"Stmt_IF"<<endl;
         Type if_condition=Exp(n->child->next_sib->next_sib);
         // if(if_condition->kind!=Type_::BASIC || if_condition->u.basic!=IS_INT){
         //     fprintf(stderr,"Error type ? at Line %d: 违反假设2：只有INT才能作为if的条件.\n",n->lineno);
@@ -521,15 +521,17 @@ Type Exp(Node* n){
     
     if(n->child->next_sib==NULL && string(n->child->name)=="ID"){
         //ID
-        //cout<<"Exp_ID"<<endl;
+        cout<<"Exp_ID"<<endl;
         if(map.find(string(n->child->str_constant))==map.end()){
             fprintf(stderr,"Error type 1 at Line %d: Undefined variable \"%s\".\n",n->lineno,n->child->str_constant);
             return genErrType(1);
         }else{
             string targetID=string(n->child->str_constant);
             
-            //for(auto x:map)
-                //cout<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
+            for(auto x:map){
+                cout<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
+            }
+                
             return map.at(targetID);
         }
     }
@@ -555,7 +557,7 @@ Type Exp(Node* n){
     }
     else if(string(n->child->next_sib->name)=="PLUS"||string(n->child->next_sib->name)=="MINUS"||string(n->child->next_sib->name)=="STAR"||string(n->child->next_sib->name)=="DIV"){
         //算数运算Exp PLUS|MINUS|STAR|DIV Exp
-        //cout<<"Exp_Math"<<endl;
+        cout<<"Exp_Math"<<endl;
         return Exp_Math(n);
     }
     else if(string(n->child->name)=="LP" || string(n->child->name)=="MINUS"){
@@ -565,12 +567,12 @@ Type Exp(Node* n){
     }
     else if(string(n->child->next_sib->name)=="ASSIGNOP"){
         //Exp ASSIGNOP Exp
-        //cout<<"Exp_ASSIGNOP"<<endl;
+        cout<<"Exp_ASSIGNOP"<<endl;
         return Exp_ASSIGNOP(n);
     }
     else if(string(n->child->next_sib->name)=="DOT"){
         //Exp DOT ID
-        //cout<<"Exp_DOT"<<endl;
+        cout<<"Exp_DOT"<<endl;
         Type t=Exp(n->child);
         if(t->kind!=Type_::STRUCTURE){
             fprintf(stderr,"Error type 13 at Line %d: Illegal use of \".\", apply to non-structure.\n",n->lineno);
@@ -591,7 +593,7 @@ Type Exp(Node* n){
     }
     else if(string(n->child->next_sib->name)=="LB"){
         //Exp LB Exp RB
-        //cout<<"Exp_LB_INT_RB"<<endl;
+        cout<<"Exp_LB_INT_RB"<<endl;
         Type t=Exp(n->child);
         if(t->kind!=Type_::ARRAY){
             fprintf(stderr,"Error type 10 at Line %d: cannot apply [] to non-array.\n",n->lineno);
@@ -737,7 +739,7 @@ Type Exp_Logic(Node* n){
         //     return genErrType(7);
         // }
     }else{
-        //cout<<"Exp_Logic"<<endl;
+        cout<<"Exp_Logic"<<endl;
         Type t1=Exp(n->child);
      
         Type t2=Exp(n->child->next_sib->next_sib);

@@ -1,0 +1,11 @@
+Error type 3 at Line 5: Redefined variable.
+Error type 1 at Line 6: Undefined variable "Vector".
+Error type 13 at Line 6: Illegal use of ".", apply to non-structure.
+Error type 1 at Line 6: Undefined variable "Vector".
+Error type 13 at Line 6: Illegal use of ".", apply to non-structure.
+Error type ? at Line 6: 违反假设2：只有INT才能作为if的条件.
+Error type 14 at Line 14: Non-existent field in struct.
+Error type 14 at Line 14: Non-existent field in struct.
+Error type 14 at Line 14: Non-existent field in struct.
+Error type 14 at Line 14: Non-existent field in struct.
+Error type ? at Line 14: 违反假设2：只有INT才能作为if的条件.
