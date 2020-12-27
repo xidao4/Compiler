@@ -184,8 +184,9 @@ Type StructSpecifier(Node* n){
         cout<<"StructSpecifier_Struct_Tag"<<endl;
         char* tagName=n->child->next_sib->child->str_constant;
         if(structureMap.find(tagName)==structureMap.end()){
-            //理解为这样的形式 struct Complex c;
-            fprintf(stderr,"Error type 17 at Line %d: use Undefined structure to declare others.\n",n->lineno);
+            //struct Complex c;
+            // others？
+            fprintf(stderr,"Error type 17 at Line %d: Undefined structure.\n",n->lineno);
             return genErrType(17);
         }else{
             return structureMap[tagName];
@@ -316,6 +317,7 @@ void ExtDecList(Node* n,Type type){
 //正常的变量声明Variable Declarator    
 //VarDec 既可以是全局的变量，又可以在函数中使用来声明变量
 void VarDec(Node* n,Type type){
+    cout<<"VarDec in function or global"<<endl;
     if(n->child->next_sib==NULL){
         // VarDec -> ID
         cout<<"VarDec"<<endl;
@@ -455,6 +457,7 @@ void DefList_in_Function(Node* n){
 }
 void Def_in_Function(Node* n){
     // Def -> Specifier DecList SEMI
+    cout<<"Def_in_Function"<<endl;
     Type dec_type=Specifier(n->child);
     DecList_in_Function(n->child->next_sib,dec_type);
 }
@@ -469,6 +472,7 @@ void DecList_in_Function(Node* n,Type dec_type){
     }
 }
 void Dec_in_Function(Node* n,Type dec_type){
+    cout<<"Dec_in_Function"<<endl;
     if(n->child->next_sib==NULL){
         // Dec -> VarDec
         VarDec(n->child,dec_type);//VarDec是全局或函数内部
