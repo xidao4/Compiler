@@ -164,7 +164,7 @@ Type StructSpecifier(Node* n){
             return genErrType(16);
 
         }else{
-            cout<<"StructSpecifier_Struct_Tag"<<endl;
+            
             Type type=(Type)malloc(sizeof(struct Type_));
             type->kind=Type_::STRUCTURE;
             type->u.structure=NULL;
@@ -181,6 +181,7 @@ Type StructSpecifier(Node* n){
 
     }else{
         // STRUCT Tag
+        cout<<"StructSpecifier_Struct_Tag"<<endl;
         char* tagName=n->child->next_sib->child->str_constant;
         if(structureMap.find(tagName)==structureMap.end()){
             //理解为这样的形式 struct Complex c;
@@ -254,36 +255,25 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
             cout<<"  first field in struct"<<endl;
             fieldList=(FieldList)malloc(sizeof(struct FieldList_));
           
-            printf("%s\n",n->child->str_constant);
             string test=n->child->str_constant;
-         
             fieldList->name=test;
-           
             fieldList->type=type;
-            cout<<"    "<<fieldList->name<<"  kind:"<<fieldList->type->kind<<endl;
+            cout<<"    第一个域"<<fieldList->name<<"  kind:"<<fieldList->type->kind<<endl;
             fieldList->tail=NULL;
 
             mystruct->u.structure=fieldList;//!
         }else{
-            
+            cout<<"  所有域名fieldList names:";
             while(fieldList->tail!=NULL){
-             
-                cout<<"  fieldList names:"<<fieldList->name<<" "<<fieldList->type<<endl;
-                
+                cout<<fieldList->name<<" ";
                 fieldList=fieldList->tail;
-               
             }
-      
-            fieldList->tail=(FieldList)malloc(sizeof(struct FieldList_));
-      
-        
+            cout<<fieldList->name<<endl;
+            fieldList->tail=(FieldList)malloc(sizeof(struct FieldList_));       
             fieldList->tail->type=type;
-          
             fieldList->tail->tail=NULL;
           
-            fieldList->tail->name=n->child->str_constant;
-        
-            
+            fieldList->tail->name=n->child->str_constant;           
         }
     
 
