@@ -532,7 +532,7 @@ Type Exp(Node* n){
             string targetID=string(n->child->str_constant);
             
             for(auto x:map){
-                cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<" "<<x.second->u.basic<<endl;
+                cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
                 
             return map.at(targetID);
@@ -588,7 +588,7 @@ Type Exp(Node* n){
         cout<<"  target field:"<<string(target)<<endl;
         cout<<"  field in reality:";
         while(f!=NULL){
-            cout<<f->name<<endl;
+            cout<<f->name<<" "<<f->type->kind<<endl;
             if(f->name==string(target)) break;
             f=f->tail;
         }
