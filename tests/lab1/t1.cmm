@@ -1,9 +1,0 @@
-int func(float i,float j)
-{
-	return 4;
-}
-
-int main()
-{
-	func(1.0,2.0);
-}
