@@ -203,6 +203,9 @@ Type StructSpecifier(Node* n){
             Type type=(Type)malloc(sizeof(struct Type_));
             type->kind=Type_::STRUCTURE;
             type->u.structure=NULL;
+            if(optTag==""){
+                structureMap.erase(optTag);
+            }
             structureMap.insert({optTag,type});
             cout<<"insert structureMap:"<<optTag<<endl;
             // for(auto x:structureMap){
@@ -304,12 +307,13 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
                 cout<<fieldList->name<<" ";
                 fieldList=fieldList->tail;
             }
-            cout<<fieldList->name<<endl;
+            cout<<fieldList->name<<" ";
             fieldList->tail=(FieldList)malloc(sizeof(struct FieldList_));       
             fieldList->tail->type=type;
             fieldList->tail->tail=NULL;
           
-            fieldList->tail->name=n->child->str_constant;           
+            fieldList->tail->name=n->child->str_constant; 
+            cout<<fieldList->tail->name<<endl;          
         }
     
 
