@@ -20,6 +20,7 @@ typedef struct FuncList_* FuncList;
 unordered_map<string,Type> map;//放基本类型变量、数组变量、结构体变量、函数形式参数变量、结构体域名变量
 unordered_map<string,Type> structureMap;//只放结构体的定义（结构体名：类型）
 unordered_map<string,Type> functionMap;
+int isEmptyOptTagStruct=0;
 
 struct Type_{
     enum{BASIC,ARRAY,STRUCTURE,FUNCTION,ERROR} kind;
@@ -176,7 +177,11 @@ Type StructSpecifier(Node* n){
         cout<<"StructSpecifier_OptTag_LC_DefList_RC"<<endl;
         // STRUCT OptTag LC DefList RC
         string optTag=OptTag(n->child->next_sib);
-        if(structureMap.find(optTag)!=structureMap.end()){
+        if(optTag==""){
+            isEmptyOptTagStruct=1;
+        }
+
+        if(optTag!="" && structureMap.find(optTag)!=structureMap.end() ){
             fprintf(stderr,"Error type 16 at Line %d: Duplicated name of struct when declaring.\n",n->lineno);
             return genErrType(16);
 
