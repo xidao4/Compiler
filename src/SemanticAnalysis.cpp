@@ -778,6 +778,7 @@ Type Exp_ASSIGNOP(Node* n){
 
     cout<<"  等号左侧的类型："<<left_type->kind<<endl;
     cout<<"  等号右侧的类型："<<right_type->kind<<endl;
+    cout<<"开始比较类型"<<endl;
     if (!isSameType(right_type,left_type)){
         fprintf(stderr,"Error type 5 at Line %d: Type mismatched for assignment.\n",n->lineno);
         return genErrType(5);
@@ -854,14 +855,19 @@ bool isArrayEqual(Type t1,Type t2){
         dimen2++;
         tmp2=tmp2->u.array.elem;
     }
+    cout<<"a:维度"<<dimen1<<"类型"<<tmp1->kind<<" b:维度"<<dimen2<<"类型"<<tmp2->kind<<endl;
     if(dimen1!=dimen2) return false;
+    if(tmp1->kind!=tmp2->kind) return false;
     if(tmp1->kind==Type_::BASIC) return tmp1->u.basic==tmp2->u.basic;
     else return isStructEqual(tmp1,tmp2);//if(tmp1->kind==Type_::STRUCTURE) 
 }
 bool isStructEqual(Type t1,Type t2){
     FieldList f1=t1->u.structure;
     FieldList f2=t2->u.structure;
+    int fieldNO=1;
     while(f1!=NULL && f2!=NULL){
+        cout<<fieldNO<<endl;
+        fieldNO++;
         if(!isSameType(f1->type,f2->type)) return false;
         f1=f1->tail;
         f2=f2->tail;
@@ -883,6 +889,7 @@ bool isSameType(Type t1,Type t2){
     }
     //basic:int|float
     if(t1->kind==Type_::BASIC){
+        cout<<"a:"<<t1->kind<<" b:"<<t2->kind<<endl;
         return t1->u.basic==t2->u.basic;
     }
     fprintf(stderr,"isSameType出错了！");
