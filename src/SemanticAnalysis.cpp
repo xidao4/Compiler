@@ -855,7 +855,7 @@ bool isArrayEqual(Type t1,Type t2){
         dimen2++;
         tmp2=tmp2->u.array.elem;
     }
-    cout<<"a:维度"<<dimen1<<"类型"<<tmp1->kind<<" b:维度"<<dimen2<<"类型"<<tmp2->kind<<endl;
+    //cout<<"a:维度"<<dimen1<<"类型"<<tmp1->kind<<" b:维度"<<dimen2<<"类型"<<tmp2->kind<<endl;
     if(dimen1!=dimen2) return false;
     if(tmp1->kind!=tmp2->kind) return false;
     if(tmp1->kind==Type_::BASIC) return tmp1->u.basic==tmp2->u.basic;
@@ -868,6 +868,8 @@ bool isStructEqual(Type t1,Type t2){
     while(f1!=NULL && f2!=NULL){
         cout<<fieldNO<<endl;
         fieldNO++;
+        cout<<"field of a:"<<f1->type->kind<<" field of b:"<<f2->type->kind<<endl;
+        if(f1->type->kind!=f2->type->kind) return false;
         if(!isSameType(f1->type,f2->type)) return false;
         f1=f1->tail;
         f2=f2->tail;
@@ -889,7 +891,7 @@ bool isSameType(Type t1,Type t2){
     }
     //basic:int|float
     if(t1->kind==Type_::BASIC){
-        cout<<"a:"<<t1->kind<<" b:"<<t2->kind<<endl;
+        //cout<<"a:"<<t1->kind<<" b:"<<t2->kind<<endl;
         return t1->u.basic==t2->u.basic;
     }
     fprintf(stderr,"isSameType出错了！");
