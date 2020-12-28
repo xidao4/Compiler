@@ -1,1 +1,3 @@
-sh: 1: ./parser: not found
+Error type 3 at Line 5: Redefined variable.
+Error type 1 at Line 6: Undefined variable "Vector".
+Error type 1 at Line 6: Undefined variable "Vector".

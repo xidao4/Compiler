@@ -1,1 +1,3 @@
-sh: 1: ./parser: not found
+Error type 13 at Line 11: Illegal use of ".", apply to non-structure.
+Error type 10 at Line 11: cannot apply [] to non-array.
+Error type 7 at Line 11: Type mismatched for operands.

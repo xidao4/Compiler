@@ -1,1 +1,2 @@
-sh: 1: ./parser: not found
+Error type 14 at Line 30: Non-existent field in struct.
+Error type 12 at Line 30: num in [] is not an integer.

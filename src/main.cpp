@@ -34,13 +34,13 @@ int main(int argc,char** argv){
 		fprintf(stderr,"cannot open the file!\n");
 		return 1;
 	}
-	cout<<"1";
+	//cout<<"1";
 	yyrestart(f);
 	yyparse();
 	// if(syntaxErr==0){
 	// 	tree_search(root,0);
 	// }
-	cout<<"2";
+	//cout<<"2";
 	//从ROOT开始调用Program开始符号进行遍历
 	Program(root);
 	return 0;

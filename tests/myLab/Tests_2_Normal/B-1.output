@@ -2,3 +2,4 @@ Error type 14 at Line 15: Non-existent field in struct.
 Error type 11 at Line 25: cannot apply () to non-function.
 Error type 4 at line 32: Redefined function.
 Error type 9 at Line 53: Function is not applicable for the provided arguments.
+

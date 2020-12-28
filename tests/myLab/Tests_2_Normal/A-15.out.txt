@@ -1,1 +1,2 @@
-sh: 1: ./parser: not found
+Error type 15 at line 8: cannot initialize the fields of struct when declaring.
+Segmentation fault

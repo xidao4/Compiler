@@ -10,9 +10,8 @@ struct IntVector {
   int ix, iy;
   int ia[2];
   struct {
-    float ic;
-    struct IntArray10 id;
-    struct IntArray100 ie[38];
+    struct IntArray10 id[10];
+    struct IntArray100 ie;
   } ib;
 };
 
@@ -20,9 +19,8 @@ struct FloatVector {
   int fx, fy;
   int fa[39];
   struct {
-    float fc;
     struct IntArray100 fd;
-    struct IntArray10 fe[38];
+    struct IntArray10 fe[10];
   } fb;
 };
 

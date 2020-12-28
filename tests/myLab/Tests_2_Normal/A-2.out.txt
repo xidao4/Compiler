@@ -1,1 +1,1 @@
-sh: 1: ./parser: not found
+Error type 2 at Line 9: Undefined function.
