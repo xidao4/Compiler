@@ -1,1 +1,1 @@
-Segmentation fault
+Error type 1 at Line 74: Undefined variable "l27".

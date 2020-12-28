@@ -3,7 +3,7 @@ import sys
 from typing import List
 
 if __name__ == "__main__":
-    pathBase = './tests/myLab/Tests_2_Normal'
+    pathBase = './tests/myLab/Tests_2_Advanced'
     paramList: List[str] = sys.argv
     if len(paramList) > 1:
         fileList = [f'{i[i.rfind("/")+1:].replace(".cmm", "")}.cmm' for i in paramList[1:]]

@@ -1,1 +1,1 @@
-Segmentation fault
+Error type 2 at Line 164: Undefined function.

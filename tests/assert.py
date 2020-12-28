@@ -1,4 +1,6 @@
 import os
+import sys
+from typing import List
 
 
 def analyzeOne():
@@ -24,7 +26,14 @@ def analyzeOne():
 
 
 if __name__ == "__main__":
-    pathBase = './tests/myLab/Tests_2_Normal'
+    pathBase = './tests/myLab/Tests_2_Advanced'
+
+    # paramList: List[str] = sys.argv
+    # if len(paramList) > 1:
+    #     li = [f'{i[i.rfind("/")+1:].replace(".cmm", "")}.cmm' for i in paramList[1:]]
+    # else:
+    #     li = [i for i in os.listdir(pathBase) if i.endswith('.cmm')]
+
 
     li = [i.replace('.cmm', '') for i in os.listdir(pathBase) if i.endswith('.cmm')]
     for i in li:
