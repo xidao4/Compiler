@@ -1,1 +1,1 @@
-Error type 3 at Line 20: Redefined variable "Hammer".
+sh: 1: ./parser: not found

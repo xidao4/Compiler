@@ -1,13 +1,1 @@
-Error type 14 at Line 15: Non-existent field in struct.
-Error type 11 at Line 25: cannot apply () to non-function.
-Error type 4 at line 32: Redefined function.
-Error type 9 at Line 53: Function is not applicable for the provided arguments.
-Error type 5 at Line 53: int a=1.1 OR int a=ErrorType.
-Error type 1 at Line 54: Undefined variable "mc".
-Error type 1 at Line 54: Undefined variable "mc".
-Error type 7 at Line 54: Type mismatched for operands.
-Error type 1 at Line 54: Undefined variable "mc".
-Error type 7 at Line 54: Type mismatched for operands.
-Error type 5 at Line 54: int a=1.1 OR int a=ErrorType.
-Error type 1 at Line 55: Undefined variable "my".
-Error type 9 at Line 55: Function is not applicable for the provided arguments.
+sh: 1: ./parser: not found

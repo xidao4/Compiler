@@ -1,1 +1,1 @@
-Error type 4 at line 17: Redefined function.
+sh: 1: ./parser: not found

@@ -1,3 +1,1 @@
-Error type 16 at Line 21: Duplicated name of struct when declaring.
-Error type 9 at Line 39: Function is not applicable for the provided arguments.
-Error type 5 at Line 40: Type mismatched for assignment.
+sh: 1: ./parser: not found

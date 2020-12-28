@@ -1,1 +1,1 @@
-Segmentation fault
+sh: 1: ./parser: not found

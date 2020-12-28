@@ -1,1 +1,1 @@
-Error type 5 at Line 37: Type mismatched for assignment.
+sh: 1: ./parser: not found

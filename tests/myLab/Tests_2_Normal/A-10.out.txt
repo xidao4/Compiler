@@ -1,1 +1,1 @@
-Error type 10 at Line 24: cannot apply [] to non-array.
+sh: 1: ./parser: not found

@@ -1,2 +1,1 @@
-Error type 17 at Line 11: use Undefined structure to declare others.
-Segmentation fault
+sh: 1: ./parser: not found
