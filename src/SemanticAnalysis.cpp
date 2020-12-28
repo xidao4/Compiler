@@ -102,19 +102,25 @@ void ExtDef(Node* n){
     //cout<<"ExtDef"<<endl;
     if(string(n->child->next_sib->name)=="ExtDecList"){
         // Specifier ExtDecList SEMI
-        cout<<"ExtDef->Specifier ExtDecList SEMI"<<endl;
         cout<<endl;
+        cout<<endl;
+        cout<<"ExtDef->Specifier ExtDecList SEMI"<<endl;
+        
     }
     else if(string(n->child->next_sib->name)=="SEMI"){
         // Specifier SEMI
-        cout<<"ExtDef->Specifier SEMI"<<endl;
         cout<<endl;
+        cout<<endl;
+        cout<<"ExtDef->Specifier SEMI"<<endl;
+        
         ;
     }
     else if(string(n->child->next_sib->name)=="FunDec"){
         //ExtDef -> Specifier FunDec CompSt
-        cout<<"ExtDef->Specifier FunDec CompSt"<<endl;
         cout<<endl;
+        cout<<endl;
+        cout<<"ExtDef->Specifier FunDec CompSt"<<endl;
+        
     }
     
 
@@ -123,17 +129,17 @@ void ExtDef(Node* n){
     Type type=Specifier(n->child);
     if(string(n->child->next_sib->name)=="ExtDecList"){
         // Specifier ExtDecList SEMI
-        cout<<"ExtDef->Specifier ExtDecList SEMI"<<endl;
+       
         ExtDecList(n->child->next_sib,type);
     }
     else if(string(n->child->next_sib->name)=="SEMI"){
         // Specifier SEMI
-        cout<<"ExtDef->Specifier SEMI"<<endl;
+        
         ;
     }
     else if(string(n->child->next_sib->name)=="FunDec"){
         //ExtDef -> Specifier FunDec CompSt
-        cout<<"ExtDef->Specifier FunDec CompSt"<<endl;
+        
         Type t=FunDec(n->child->next_sib,type);//函数定义出问题，后面大括号里的都不检查了
         if(t->kind!=Type_::ERROR)
             CompSt(n->child->next_sib->next_sib,type);
