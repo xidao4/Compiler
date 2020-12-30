@@ -1,10 +1,10 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
 #include <unordered_map>
-#include<sstream>
-#include<iostream>
-#include<cstring>
+#include <sstream>
+#include <iostream>
+#include <cstring>
 //include "lex.yy.c"
 #include <cstdlib>
 #include "SyntaxNode.h"
@@ -26,10 +26,10 @@ struct Type_{
     enum{BASIC,ARRAY,STRUCTURE,FUNCTION,ERROR} kind;
     union{
         int basic;
-        struct {Type elem; int size;} array;//元素类型与数组大小
-        FieldList structure;//结构体类型是一个链表（图2-3）
-        FuncList myfunc;//函数名
-        int error_type;//错误类型
+        struct {Type elem; int size;} array;
+        FieldList structure;
+        FuncList myfunc;
+        int error_type;
     }u;
 };
 struct FieldList_{
@@ -100,14 +100,14 @@ void ExtDefList(Node* n){
 }
 void ExtDef(Node* n){
     //cout<<"ExtDef"<<endl;
-    if(string(n->child->next_sib->name)=="ExtDecList"){
+    if(strcmp(n->child->next_sib->name,"ExtDecList")==0){
         // Specifier ExtDecList SEMI
         cout<<endl;
         cout<<endl;
         cout<<"ExtDef->Specifier ExtDecList SEMI"<<endl;
         
     }
-    else if(string(n->child->next_sib->name)=="SEMI"){
+    else if(strcmp(n->child->next_sib->name,"SEMI")==0){
         // Specifier SEMI
         cout<<endl;
         cout<<endl;
@@ -115,7 +115,7 @@ void ExtDef(Node* n){
         
         ;
     }
-    else if(string(n->child->next_sib->name)=="FunDec"){
+    else if(strcmp(n->child->next_sib->name,"FunDec")==0){
         //ExtDef -> Specifier FunDec CompSt
         cout<<endl;
         cout<<endl;
@@ -127,17 +127,17 @@ void ExtDef(Node* n){
 
 
     Type type=Specifier(n->child);
-    if(string(n->child->next_sib->name)=="ExtDecList"){
+    if(strcmp(n->child->next_sib->name,"ExtDecList")==0){
         // Specifier ExtDecList SEMI
        
         ExtDecList(n->child->next_sib,type);
     }
-    else if(string(n->child->next_sib->name)=="SEMI"){
+    else if(strcmp(n->child->next_sib->name,"SEMI")==0){
         // Specifier SEMI
         
         ;
     }
-    else if(string(n->child->next_sib->name)=="FunDec"){
+    else if(strcmp(n->child->next_sib->name,"FunDec")==0){
         //ExtDef -> Specifier FunDec CompSt
         
         Type t=FunDec(n->child->next_sib,type);//函数定义出问题，后面大括号里的都不检查了
@@ -151,17 +151,17 @@ void ExtDef(Node* n){
 
 
 Type Specifier(Node* n){
-    if(string(n->child->name)=="TYPE"){
+    if(strcmp(n->child->name,"TYPE")==0){
         //Specifier -> TYPE
         cout<<"Specifier"<<endl;
         
         Type type=(Type)malloc(sizeof(struct Type_));
         type->kind=Type_::BASIC;
-        if(string(n->child->str_constant)=="int"){
+        if(strcmp(n->child->str_constant,"int")==0){
             
             type->u.basic=IS_INT;
         }
-        else if(string(n->child->str_constant)=="float"){
+        else if(strcmp(n->child->str_constant,"float")==0){
          
             type->u.basic=IS_FLOAT;
         }else{
@@ -398,7 +398,7 @@ Type FunDec(Node* n,Type return_type){
     
 
     function->type=return_type;
-    if(string(n->child->next_sib->next_sib->name)=="RP"){
+    if(strcmp(n->child->next_sib->next_sib->name,"RP")==0){
         //inc()的形式，只有三个子节点
         //FunDec -> ID LP RP
       
@@ -541,11 +541,11 @@ void Stmt(Node* n,Type return_type){
         // Stmt -> CompSt        //?还需要return_type吗
         CompSt(n->child,return_type);
     }
-    else if(string(n->child->next_sib->name)=="SEMI"){
+    else if(strcmp(n->child->next_sib->name,"SEMI")==0){
         // Stmt -> Exp SEMI
         Exp(n->child);
     }
-    else if(string(n->child->name)=="RETURN"){
+    else if(strcmp(n->child->name,"RETURN")==0){
         // Stmt -> RETURN Exp SEMI
         cout<<"Stmt_RETURN"<<endl;
         cout<<"return_type:"<<return_type->kind<<endl;
@@ -557,7 +557,7 @@ void Stmt(Node* n,Type return_type){
             fprintf(stderr,"Error type 8 at Line %d: Type mismatched for return.\n",n->lineno);
         }
     }
-    else if(string(n->child->name)=="WHILE"){
+    else if(strcmp(n->child->name,"WHILE")==0){
         //      -> WHILE LP Exp RP Stmt
         cout<<"Stmt_WHILE"<<endl;
         Type while_condition=Exp(n->child->next_sib->next_sib);
@@ -590,8 +590,9 @@ void Stmt(Node* n,Type return_type){
 
 Type Exp(Node* n){
     
-    if(n->child->next_sib==NULL && string(n->child->name)=="ID"){
+    if(n->child->next_sib==NULL && strcmp(n->child->name,"ID")==0){
         //ID
+
         cout<<"  Exp_ID"<<endl;
         if(map.find(string(n->child->str_constant))==map.end()){
             fprintf(stderr,"Error type 1 at Line %d: Undefined variable \"%s\".\n",n->lineno,n->child->str_constant);
@@ -606,7 +607,7 @@ Type Exp(Node* n){
             return map.at(targetID);
         }
     }
-    else if(string(n->child->name)=="INT"){
+    else if(strcmp(n->child->name,"INT")==0){
         //INT
         cout<<"Exp_INT"<<endl;
         Type t=(Type)malloc(sizeof(struct Type_));
@@ -614,7 +615,7 @@ Type Exp(Node* n){
         t->u.basic=IS_INT;
         return t;
     }
-    else if(string(n->child->name)=="FLOAT"){
+    else if(strcmp(n->child->name,"FLOAT")==0){
         //FLOAT
         cout<<"Exp_FLOAT"<<endl;
         Type t=(Type)malloc(sizeof(struct Type_));
@@ -622,28 +623,28 @@ Type Exp(Node* n){
         t->u.basic=IS_FLOAT;
         return t;
     }
-    else if(string(n->child->name)=="NOT" || string(n->child->next_sib->name)=="AND" || string(n->child->next_sib->name)=="OR" || string(n->child->next_sib->name)=="RELOP" ){
+    else if(strcmp(n->child->name,"NOT")==0 || strcmp(n->child->next_sib->name,"AND")==0 || strcmp(n->child->next_sib->name,"OR")==0 || strcmp(n->child->next_sib->name,"RELOP")==0 ){
         //逻辑运算
         //NOT Exp
         //Exp AND|OR|RELOP Exp
         return Exp_Logic(n);
     }
-    else if(string(n->child->next_sib->name)=="PLUS"||string(n->child->next_sib->name)=="MINUS"||string(n->child->next_sib->name)=="STAR"||string(n->child->next_sib->name)=="DIV"){
+    else if(strcmp(n->child->next_sib->name,"PLUS")==0||strcmp(n->child->next_sib->name,"MINUS")==0||strcmp(n->child->next_sib->name,"STAR")==0||strcmp(n->child->next_sib->name,"DIV")==0){
         //算数运算Exp PLUS|MINUS|STAR|DIV Exp
         cout<<"Exp_Math"<<endl;
         return Exp_Math(n);
     }
-    else if(string(n->child->name)=="LP" || string(n->child->name)=="MINUS"){
+    else if(strcmp(n->child->name,"LP")==0 || strcmp(n->child->name,"MINUS")==0){
         //LP Exp RP
         //Minus Exp
         return Exp(n->child->next_sib);
     }
-    else if(string(n->child->next_sib->name)=="ASSIGNOP"){
+    else if(strcmp(n->child->next_sib->name,"ASSIGNOP")==0){
         //Exp ASSIGNOP Exp
         cout<<"Exp_ASSIGNOP"<<endl;
         return Exp_ASSIGNOP(n);
     }
-    else if(string(n->child->next_sib->name)=="DOT"){
+    else if(strcmp(n->child->next_sib->name,"DOT")==0){
         //Exp DOT ID
         cout<<"Exp_DOT"<<endl;
         Type t=Exp(n->child);
@@ -661,7 +662,7 @@ Type Exp(Node* n){
         cout<<"  field in reality:";
         while(f!=NULL){
             cout<<f->name<<" "<<f->type->kind<<endl;
-            if(f->name==string(target)) break;
+            if(string(target)==f->name) break;
             f=f->tail;
         }
         if(f==NULL){
@@ -670,7 +671,7 @@ Type Exp(Node* n){
         }
         return f->type;
     }
-    else if(string(n->child->next_sib->name)=="LB"){
+    else if(strcmp(n->child->next_sib->name,"LB")==0){
         //Exp LB Exp RB
         cout<<"Exp_LB_INT_RB"<<endl;
         Type t=Exp(n->child);
@@ -685,7 +686,7 @@ Type Exp(Node* n){
         }
         return t->u.array.elem;
     }
-    else if(string(n->child->next_sib->next_sib->name)=="RP"){
+    else if(strcmp(n->child->next_sib->next_sib->name,"RP")==0){
         //ID LP RP
         if(map.find(n->child->str_constant)!=map.end()){
             fprintf(stderr,"Error type 11 at Line %d: cannot apply () to non-function.\n",n->lineno);
@@ -758,11 +759,11 @@ Type Exp_ASSIGNOP(Node* n){
     // }
 
     //左边是 左值
-    if(n->child->child->next_sib==NULL && string(n->child->child->name)=="ID"){
+    if(n->child->child->next_sib==NULL && strcmp(n->child->child->name,"ID")==0){
         ;
-    }else if(string(n->child->child->next_sib->name)=="DOT"){
+    }else if(strcmp(n->child->child->next_sib->name,"DOT")==0){
         ;
-    }else if(string(n->child->child->next_sib->name)=="LB"){
+    }else if(strcmp(n->child->child->next_sib->name,"LB")==0){
         ;
     }else{
         fprintf(stderr,"Error type 6 at Line %d: Assign a value to a right-hand-only expression.\n",n->lineno);
@@ -813,7 +814,7 @@ Type Exp_Logic(Node* n){
     //逻辑运算
     //NOT Exp
     //Exp AND|OR|RELOP Exp
-    if(string(n->child->name)=="NOT"){
+    if(strcmp(n->child->name,"NOT")==0){
         Type t=Exp(n->child->next_sib);
         if(t->kind==Type_::ERROR) return t;
         
