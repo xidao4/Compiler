@@ -1,0 +1,13 @@
+Error type 1 at Line 87: Undefined variable "l726".
+Error type 1 at Line 92: Undefined variable "l730".
+Error type 1 at Line 131: Undefined variable "l765".
+Error type 1 at Line 134: Undefined variable "l767".
+Error type 1 at Line 142: Undefined variable "l773".
+Error type 1 at Line 152: Undefined variable "l783".
+Error type 7 at Line 152: Type mismatched for operands.
+Error type 1 at Line 153: Undefined variable "l786".
+Error type 12 at Line 153: num in [] is not an integer.
+Error type 10 at Line 153: cannot apply [] to non-array.
+Error type 1 at Line 154: Undefined variable "l790".
+Error type 1 at Line 155: Undefined variable "l793".
+Error type 7 at Line 155: Type mismatched for operands.

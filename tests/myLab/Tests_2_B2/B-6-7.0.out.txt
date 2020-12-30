@@ -1,0 +1,10 @@
+Error type 1 at Line 81: Undefined variable "l603".
+Error type 7 at Line 81: Type mismatched for operands.
+Error type 1 at Line 82: Undefined variable "l604".
+Error type 1 at Line 84: Undefined variable "l608".
+Error type 1 at Line 97: Undefined variable "l617".
+Error type 1 at Line 101: Undefined variable "l620".
+Error type 1 at Line 113: Undefined variable "l614".
+Error type 7 at Line 113: Type mismatched for operands.
+Error type 1 at Line 214: Undefined variable "l635".
+Error type 7 at Line 214: Type mismatched for operands.

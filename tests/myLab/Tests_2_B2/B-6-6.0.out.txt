@@ -1,0 +1,9 @@
+Error type 1 at Line 76: Undefined variable "l492".
+Error type 7 at Line 76: Type mismatched for operands.
+Error type 1 at Line 101: Undefined variable "l513".
+Error type 1 at Line 104: Undefined variable "l516".
+Error type 1 at Line 124: Undefined variable "l532".
+Error type 7 at Line 124: Type mismatched for operands.
+Error type 1 at Line 136: Undefined variable "l548".
+Error type 1 at Line 140: Undefined variable "l551".
+Error type 7 at Line 140: Type mismatched for operands.

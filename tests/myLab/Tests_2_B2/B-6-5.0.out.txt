@@ -1,0 +1,7 @@
+Error type 1 at Line 93: Undefined variable "l420".
+Error type 1 at Line 122: Undefined variable "l447".
+Error type 1 at Line 124: Undefined variable "l448".
+Error type 7 at Line 124: Type mismatched for operands.
+Error type 1 at Line 128: Undefined variable "l451".
+Error type 12 at Line 128: num in [] is not an integer.
+Error type 1 at Line 189: Undefined variable "l469".

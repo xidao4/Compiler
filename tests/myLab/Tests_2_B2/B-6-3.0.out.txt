@@ -1,0 +1,4 @@
+Error type 1 at Line 118: Undefined variable "l246".
+Error type 1 at Line 137: Undefined variable "l252".
+Error type 12 at Line 137: num in [] is not an integer.
+Error type 1 at Line 456: Undefined variable "l271".

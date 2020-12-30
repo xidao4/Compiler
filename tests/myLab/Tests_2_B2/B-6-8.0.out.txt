@@ -1,0 +1,16 @@
+Error type 1 at Line 29: Undefined variable "l649".
+Error type 1 at Line 31: Undefined variable "l652".
+Error type 9 at Line 31: Function is not applicable for the provided arguments.
+Error type 1 at Line 38: Undefined variable "l659".
+Error type 12 at Line 38: num in [] is not an integer.
+Error type 1 at Line 40: Undefined variable "l665".
+Error type 7 at Line 40: Type mismatched for operands.
+Error type 1 at Line 70: Undefined variable "l692".
+Error type 7 at Line 70: Type mismatched for operands.
+Error type 9 at Line 70: Function is not applicable for the provided arguments.
+Error type 1 at Line 71: Undefined variable "l695".
+Error type 12 at Line 71: num in [] is not an integer.
+Error type 1 at Line 73: Undefined variable "l704".
+Error type 7 at Line 73: Type mismatched for operands.
+Error type 1 at Line 80: Undefined variable "l713".
+Error type 7 at Line 80: Type mismatched for operands.

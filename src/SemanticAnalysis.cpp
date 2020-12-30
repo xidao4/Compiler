@@ -264,7 +264,7 @@ void Dec_in_Struct(Node* n,string optTag,Type type){
         VarDec_in_Struct(n->child,optTag,type);
     }else{
         //Dec -> VarDec ASSIGNOP Exp
-        fprintf(stderr,"Error type 15 at line %d: cannot initialize the fields of struct when declaring.\n",n->lineno);
+        fprintf(stderr,"Error type 15 at Line %d: cannot initialize the fields of struct when declaring.\n",n->lineno);
     }  
 }
 void VarDec_in_Struct(Node* n,string optTag,Type type){
@@ -421,7 +421,7 @@ Type FunDec(Node* n,Type return_type){
     if(functionMap.find(function->name)!=functionMap.end()){
         //只要函数名重复定义就是错误类型4,参数不同也是错
         //直接丢弃这个函数
-        fprintf(stderr,"Error type 4 at line %d: Redefined function.\n",n->lineno);
+        fprintf(stderr,"Error type 4 at Line %d: Redefined function.\n",n->lineno);
         return genErrType(4);
     }else{
         //Type type=(Type)malloc(sizeof(struct Type_));

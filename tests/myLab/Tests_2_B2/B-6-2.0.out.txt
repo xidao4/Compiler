@@ -1,0 +1,3 @@
+Error type 1 at Line 152: Undefined variable "l214".
+Error type 1 at Line 164: Undefined variable "l229".
+Error type 7 at Line 164: Type mismatched for operands.

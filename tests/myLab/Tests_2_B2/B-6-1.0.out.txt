@@ -1,0 +1,3 @@
+Error type 1 at Line 35: Undefined variable "l94".
+Error type 12 at Line 35: num in [] is not an integer.
+Error type 10 at Line 35: cannot apply [] to non-array.
