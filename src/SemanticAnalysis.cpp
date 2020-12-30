@@ -312,7 +312,7 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
             fieldList->tail->type=type;
             fieldList->tail->tail=NULL;
           
-            fieldList->tail->name=n->child->str_constant; 
+            fieldList->tail->name=string(n->child->str_constant); 
             cout<<fieldList->tail->name<<endl;          
         }
     
