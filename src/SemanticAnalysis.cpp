@@ -155,8 +155,8 @@ Type Specifier(Node* n){
         //Specifier -> TYPE
         cout<<"Specifier"<<endl;
         
-        Type type=(Type)malloc(sizeof(struct Type_));
-        //Type tpe=new struct Type_;
+        //Type type=(Type)malloc(sizeof(struct Type_));
+        Type type=new struct Type_;
         type->kind=Type_::BASIC;
         if(strcmp(n->child->str_constant,"int")==0){
             
@@ -201,7 +201,8 @@ Type StructSpecifier(Node* n){
 
         }else{
             
-            Type type=(Type)malloc(sizeof(struct Type_));
+            //Type type=(Type)malloc(sizeof(struct Type_));
+            Type type=new struct Type_;
             type->kind=Type_::STRUCTURE;
             type->u.structure=NULL;
             if(optTag==""){
@@ -273,12 +274,13 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
 
         //1. 将域名加入map中
         //如果结构体定义中域名重复，则仍然该结构体名加入符号表，但是重复的定义并不加入该结构体域。
-        if(map.find(string(n->child->str_constant))!=map.end()){
+        string target(n->child->str_constant);
+        if(map.find(target)!=map.end()){
             fprintf(stderr,"Error type 15 at Line %d: redefined field in struct.\n",n->lineno);
             return;//method2:如果结构体定义错误，则该结构体不加入符号表。
         }else{
             cout<<"VarDec_in_Struct"<<endl;
-            map.insert({string(n->child->str_constant),type});
+            map.insert({target,type});
             // for(auto x:map){
             //     cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             // }
@@ -293,7 +295,8 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
       
         if(fieldList==NULL){//结构体还没有加入任何的域名
             cout<<"  first field in struct"<<endl;
-            fieldList=(FieldList)malloc(sizeof(struct FieldList_));
+            //fieldList=(FieldList)malloc(sizeof(struct FieldList_));
+            fieldList=new struct FieldList_;
           
             string test=n->child->str_constant;
             fieldList->name=test;
@@ -309,11 +312,12 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
                 fieldList=fieldList->tail;
             }
             cout<<fieldList->name<<" ";
-            fieldList->tail=(FieldList)malloc(sizeof(struct FieldList_));       
+            //fieldList->tail=(FieldList)malloc(sizeof(struct FieldList_));      
+            fieldList->tail=new struct FieldList_; 
             fieldList->tail->type=type;
             fieldList->tail->tail=NULL;
             cout<<"here"<<endl;
-            fieldList->tail->name=string(n->child->str_constant); 
+            //fieldList->tail->name=string(n->child->str_constant); 
             fieldList->tail->name=n->child->str_constant; 
             cout<<fieldList->tail->name<<endl;          
         }
@@ -324,7 +328,8 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
         //VarDec -> VarDec LB INT RB
 
 
-        Type newtype=(Type)malloc(sizeof (struct Type_));
+        //Type newtype=(Type)malloc(sizeof (struct Type_));
+        Type newtype=new struct Type_;
         newtype->kind=Type_::ARRAY;
         newtype->u.array.elem=type;
         VarDec_in_Struct(n->child,optTag,newtype);
@@ -339,7 +344,8 @@ string OptTag(Node* n){
         // *ret='\0';
         return "";
     }else{
-        return string(n->child->str_constant);
+        string ret(n->child->str_constant);
+        return ret;
     }
 }
 
@@ -364,12 +370,13 @@ void VarDec(Node* n,Type type){
         cout<<"VarDec"<<endl;
 
         Node* id=n->child;
-        if(map.find(string(id->str_constant))!=map.end()){
+        string target(id->str_constant);
+        if(map.find(target)!=map.end()){
             fprintf(stderr,"Error type 3 at Line %d: Redefined variable \"%s\".\n",n->lineno,id->str_constant);
-        }else if(structureMap.find(string(id->str_constant))!=structureMap.end()){
+        }else if(structureMap.find(target)!=structureMap.end()){
             fprintf(stderr,"Error type 3 at Line %d: Redefined variable \"%s\".\n",n->lineno,id->str_constant);
         }else{
-            map.insert({string(id->str_constant),type});
+            map.insert({target,type});
             for(auto x:map){
                 cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
@@ -380,7 +387,8 @@ void VarDec(Node* n,Type type){
     }else{
         // VarDec -> VarDec LB INT RB
 
-        Type newtype=(Type)malloc(sizeof (struct Type_));
+        //Type newtype=(Type)malloc(sizeof (struct Type_));
+        Type newtype=new struct Type_;
         newtype->kind=Type_::ARRAY;
         newtype->u.array.elem=type;
         VarDec(n->child,newtype);//VarDec是全局或函数内部
@@ -393,8 +401,8 @@ Type FunDec(Node* n,Type return_type){
     cout<<"FunDec"<<endl;
     if(return_type->kind==Type_::ERROR) return return_type;
 
-    FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
-
+    //FuncList function=(FuncList)malloc(sizeof(struct FuncList_));
+    FuncList function=new struct FuncList_;
     
     function->name=n->child->str_constant;
     
@@ -416,7 +424,8 @@ Type FunDec(Node* n,Type return_type){
         fprintf(stderr,"Error type 4 at line %d: Redefined function.\n",n->lineno);
         return genErrType(4);
     }else{
-        Type type=(Type)malloc(sizeof(struct Type_));
+        //Type type=(Type)malloc(sizeof(struct Type_));
+        Type type=new struct Type_;
         type->kind=Type_::FUNCTION;
         type->u.myfunc=function;
         functionMap.insert({function->name,type});
@@ -454,18 +463,20 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
 
     if(n->child->next_sib==NULL){
         // VarDec -> ID
-        if(map.find(string(n->child->str_constant))!=map.end()){
+        string target(n->child->str_constant);
+        if(map.find(target)!=map.end()){
             fprintf(stderr,"Error type 3 at Line %d: Redefined variable.\n",n->lineno);
             return NULL;
-        }else if(structureMap.find(string(n->child->str_constant))!=structureMap.end()){
+        }else if(structureMap.find(target)!=structureMap.end()){
             fprintf(stderr,"Error type 3 at Line %d: Redefined variable.\n",n->lineno); 
             return NULL;
         }else{
-            FuncList funcList=(FuncList)malloc(sizeof(struct FuncList_));
+            //FuncList funcList=(FuncList)malloc(sizeof(struct FuncList_));
+            FuncList funcList=new struct FuncList_;
             funcList->name=n->child->str_constant;
             funcList->type=type;
             funcList->next=NULL;
-            map.insert({string(n->child->str_constant),type});
+            map.insert({target,type});
             for(auto x:map){
                 cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
             }
@@ -475,7 +486,8 @@ FuncList VarDec_in_FuncParams(Node* n,Type type){
        
     }else{
         // VarDec -> VarDec LB INT RB
-        Type newType=(Type)malloc(sizeof (struct Type_));
+        //Type newType=(Type)malloc(sizeof (struct Type_));
+        Type newType=new struct Type_;
         newType->kind=Type_::ARRAY;
         newType->u.array.elem=type;
         return VarDec_in_FuncParams(n->child,newType);
@@ -596,11 +608,12 @@ Type Exp(Node* n){
         //ID
 
         cout<<"  Exp_ID"<<endl;
-        if(map.find(string(n->child->str_constant))==map.end()){
+        string target(n->child->str_constant);
+        if(map.find(target)==map.end()){
             fprintf(stderr,"Error type 1 at Line %d: Undefined variable \"%s\".\n",n->lineno,n->child->str_constant);
             return genErrType(1);
         }else{
-            string targetID=string(n->child->str_constant);
+            string targetID=target;
             
             // for(auto x:map){
             //     cout<<"  map:"<<x.first<<" "<<x.second<<" "<<x.second->kind<<endl;
@@ -612,7 +625,8 @@ Type Exp(Node* n){
     else if(strcmp(n->child->name,"INT")==0){
         //INT
         cout<<"Exp_INT"<<endl;
-        Type t=(Type)malloc(sizeof(struct Type_));
+        //Type t=(Type)malloc(sizeof(struct Type_));
+        Type t=new struct Type_;
         t->kind=Type_::BASIC;
         t->u.basic=IS_INT;
         return t;
@@ -620,7 +634,8 @@ Type Exp(Node* n){
     else if(strcmp(n->child->name,"FLOAT")==0){
         //FLOAT
         cout<<"Exp_FLOAT"<<endl;
-        Type t=(Type)malloc(sizeof(struct Type_));
+        //Type t=(Type)malloc(sizeof(struct Type_));
+        Type t=new struct Type_;
         t->kind=Type_::BASIC;
         t->u.basic=IS_FLOAT;
         return t;
@@ -728,13 +743,15 @@ Type Exp(Node* n){
 FuncList Args(Node* n){
     if(n->child->next_sib!=NULL){
         //Args -> Exp COMMA Args
-        FuncList left=(FuncList)malloc(sizeof(struct FuncList_));
+        //FuncList left=(FuncList)malloc(sizeof(struct FuncList_));
+        FuncList left=new struct FuncList_;
         left->type=Exp(n->child);
         left->next=Args(n->child->next_sib->next_sib);
         return left;
     }else{
         //Args -> Exp
-        FuncList funcList=(FuncList)malloc(sizeof(struct FuncList_));
+        //FuncList funcList=(FuncList)malloc(sizeof(struct FuncList_));
+        FuncList funcList=new struct FuncList_;
         funcList->type=Exp(n->child);
         funcList->next=NULL;
         return funcList;
@@ -835,7 +852,8 @@ Type Exp_Logic(Node* n){
         //     return genErrType(7);
         // }    
     }
-    Type type=(Type)malloc(sizeof(struct Type_));
+    //Type type=(Type)malloc(sizeof(struct Type_));
+    Type type=new struct Type_;
     type->kind=Type_::BASIC;
     type->u.basic=IS_INT;
     return type;
@@ -843,7 +861,8 @@ Type Exp_Logic(Node* n){
 
 
 Type genErrType(int type){
-    Type err=(Type)malloc(sizeof(struct Type_));
+    //Type err=(Type)malloc(sizeof(struct Type_));
+    Type err=new struct Type_;
     err->kind=Type_::ERROR;
     err->u.error_type=type;
     return err;
