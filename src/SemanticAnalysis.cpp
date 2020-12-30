@@ -535,9 +535,9 @@ void Dec_in_Function(Node* n,Type dec_type){
         Type right=Exp(n->child->next_sib->next_sib);
         if(!isSameType(dec_type,right)){
             fprintf(stderr,"Error type 5 at Line %d: int a=1.1 OR int a=ErrorType.\n",n->lineno);
-        }else{
-            VarDec(n->child,dec_type);//VarDec是全局或函数内部
-        } 
+        }
+        VarDec(n->child,dec_type);//VarDec是全局或函数内部
+        
     }
 }
 
