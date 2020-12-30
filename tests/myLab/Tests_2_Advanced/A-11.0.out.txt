@@ -1,1 +1,1 @@
-Segmentation fault
+Error type 6 at Line 150: Assign a value to a right-hand-only expression.
