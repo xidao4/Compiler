@@ -1,1 +1,1 @@
-Segmentation fault
+Error type 17 at Line 240: Undefined structure.

@@ -1,1 +1,1 @@
-Segmentation fault
+Error type 15 at line 46: cannot initialize the fields of struct when declaring.

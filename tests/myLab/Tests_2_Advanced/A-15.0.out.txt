@@ -1,1 +1,1 @@
-Segmentation fault
+Error type 10 at Line 70: cannot apply [] to non-array.

@@ -634,6 +634,7 @@ Type Exp(Node* n){
     else if(strcmp(n->child->name,"FLOAT")==0){
         //FLOAT
         cout<<"Exp_FLOAT"<<endl;
+        cout<<"  "<<n->lineno<<endl;
         //Type t=(Type)malloc(sizeof(struct Type_));
         Type t=new struct Type_;
         t->kind=Type_::BASIC;
@@ -659,6 +660,7 @@ Type Exp(Node* n){
     else if(strcmp(n->child->next_sib->name,"ASSIGNOP")==0){
         //Exp ASSIGNOP Exp
         cout<<"Exp_ASSIGNOP"<<endl;
+        cout<<"  "<<n->lineno<<endl;
         return Exp_ASSIGNOP(n);
     }
     else if(strcmp(n->child->next_sib->name,"DOT")==0){
@@ -767,22 +769,26 @@ Type Exp_ASSIGNOP(Node* n){
         return left_type;
     }
 
-    //左边是  右值
-    // if(left_type->kind==Type_::FUNCTION){
-    //     fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
-    //     return genErrType(6);
-    // }
-    // if(string(n->child->child->name)=="INT"||string(n->child->child->name)=="FLOAT"){
-    //     fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
-    //     return genErrType(6);
-    // }
-
+/*
+    左边是  右值
+    if(left_type->kind==Type_::FUNCTION){
+        fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
+        return genErrType(6);
+    }
+    if(string(n->child->child->name)=="INT"||string(n->child->child->name)=="FLOAT"){
+        fprintf(stderr,"Error type 6 at Line %d: The left-hand side of an assignment must be a variable.\n",n->lineno);
+        return genErrType(6);
+    }
+*/
     //左边是 左值
     if(n->child->child->next_sib==NULL && strcmp(n->child->child->name,"ID")==0){
+        cout<<"        ID="<<endl;
+        ;   
+    }else if(n->child->child->next_sib!=NULL && strcmp(n->child->child->next_sib->name,"DOT")==0){
+        cout<<"        Exp DOT ID="<<endl;
         ;
-    }else if(strcmp(n->child->child->next_sib->name,"DOT")==0){
-        ;
-    }else if(strcmp(n->child->child->next_sib->name,"LB")==0){
+    }else if(n->child->child->next_sib!=NULL && strcmp(n->child->child->next_sib->name,"LB")==0){
+        cout<<"        Exp LB Exp RB="<<endl;
         ;
     }else{
         fprintf(stderr,"Error type 6 at Line %d: Assign a value to a right-hand-only expression.\n",n->lineno);

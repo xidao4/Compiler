@@ -1,1 +1,1 @@
-Segmentation fault
+Error type 5 at Line 86: Type mismatched for assignment.

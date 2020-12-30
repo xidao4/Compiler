@@ -1,1 +1,1 @@
-Segmentation fault
+Error type 12 at Line 195: num in [] is not an integer.

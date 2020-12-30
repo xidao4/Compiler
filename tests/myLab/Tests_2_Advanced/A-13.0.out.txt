@@ -1,1 +1,1 @@
-Segmentation fault
+Error type 8 at Line 102: Type mismatched for return.

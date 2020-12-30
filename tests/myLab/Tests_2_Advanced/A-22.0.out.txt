@@ -1,1 +1,1 @@
-Segmentation fault
+Error type 16 at Line 70: Duplicated name of struct when declaring.
