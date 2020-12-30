@@ -311,7 +311,7 @@ void VarDec_in_Struct(Node* n,string optTag,Type type){
             fieldList->tail=(FieldList)malloc(sizeof(struct FieldList_));       
             fieldList->tail->type=type;
             fieldList->tail->tail=NULL;
-          
+            cout<<"here"<<endl;
             fieldList->tail->name=string(n->child->str_constant); 
             cout<<fieldList->tail->name<<endl;          
         }
