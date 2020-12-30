@@ -156,6 +156,7 @@ Type Specifier(Node* n){
         cout<<"Specifier"<<endl;
         
         Type type=(Type)malloc(sizeof(struct Type_));
+        //Type tpe=new struct Type_;
         type->kind=Type_::BASIC;
         if(strcmp(n->child->str_constant,"int")==0){
             
