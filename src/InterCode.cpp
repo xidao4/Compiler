@@ -259,7 +259,7 @@ void Trans_DecList_in_Function(Node * n){
 }
 void Trans_Dec_in_Function(Node* n){
     cout<<"Dec_in_Function"<<endl;
-    if(n->child->next_sib!=NULL){
+    if(n->child->next_sib==NULL){
         //Dec -> VarDec
         Trans_VarDec_in_Function(n->child);
     }else{
