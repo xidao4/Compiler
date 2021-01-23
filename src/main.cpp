@@ -24,7 +24,7 @@ InterCode code_tail=NULL;
 int Temp_Num=0;
 int Label_Num=0;
 //FILE* fp;
-string outFileName;
+//string outFileName;
 
 void init_table(){
 	Type retType=new struct Type_;
