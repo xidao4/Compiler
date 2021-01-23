@@ -233,6 +233,7 @@ void Trans_CompSt(Node* n){
     // LC DefList StmtList RC
     cout<<"CompSt"<<endl;
     Trans_DefList_in_Function(n->child->next_sib);
+    
     Trans_StmtList(n->child->next_sib->next_sib);
 }
 void Trans_DefList_in_Function(Node* n){
@@ -280,13 +281,15 @@ void Trans_Dec_in_Function(Node* n){
     } 
 }
 void Trans_VarDec_in_Function(Node* n){
+    cout<<"VarDec in function or global"<<endl;
     //VarDec->ID
     //VarDec->ID LB INT RB
     string tar(n->child->str_constant);//node->name=ID  node->str_constant=n;
-    cout<<tar<<endl;
+    //cout<<tar<<endl;
     Type type=map.at(tar);
-    cout<<type->kind<<endl;
+    //cout<<type->kind<<endl;
     if(type->kind==Type_::ARRAY){
+        cout<<"VarDec->ID LB INT RB    arr[4]"<<endl;
         if(type->u.array.elem->kind!=Type_::BASIC){
             cout<<"数组元素不是基本类型"<<endl;
         }else{
