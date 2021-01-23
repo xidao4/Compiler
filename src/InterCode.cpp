@@ -649,7 +649,8 @@ void Trans_Exp_FuncParams(Node* n,Operand place){
 void Trans_Exp_ASSIGNOP(Node* n,Operand place){
     //exp -> exp1 assignop exp
     //exp1 -> id | id LB exp RB
-    string id(n->child->child->name);
+    cout<<"Exp_ASSIGNOP"<<endl;
+    string id(n->child->child->str_constant);
     Type type=map.at(id);
     if(type->kind==Type_::BASIC){
         //等号左边是ID
