@@ -24,6 +24,7 @@ Operand new_temp(){
     Operand ans=(Operand)malloc(sizeof(struct Operand_));
     ans->kind=Operand_::TMP_VAR;
     ans->u.intVal=Temp_Num;
+    cout<<"Temp_Num"<<Temp_Num<<endl;
     return ans;
 }
 Operand new_label(){
@@ -566,13 +567,13 @@ void Trans_Exp(Node* n, Operand place){
 }
 void Trans_Exp_Func(Node* n,Operand place){
     //ID LP RP
-
+    cout<<"    Exp_Func place:"<<place->kind<<endl;
     string tar(n->child->str_constant);
     Type func=functionMap.at(tar);
     if(func->u.myfunc->name=="read"){
         InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
         code->kind=InterCode_::W_READ;
-        code->u.Single.op->u.intVal=place->u.intVal;
+        code->u.Single.op=place;//seg
         interInsert(code);
     }else{
         Operand op=(Operand)malloc(sizeof(struct Operand_));
