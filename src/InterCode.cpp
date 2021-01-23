@@ -174,7 +174,7 @@ void Trans_ExtDefList(Node* n){
 void Trans_ExtDef(Node* n){
     //Specifier ExtDecList SEMI ？？不考虑全局变量
     //Specifier SEMI            ？？
-    if(strcmp(n->child->name,"FunDec")==0){
+    if(strcmp(n->child->next_sib->name,"FunDec")==0){
         //Specifier FunDec CompSt
         cout<<endl;
         cout<<endl;
