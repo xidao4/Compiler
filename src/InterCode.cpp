@@ -518,12 +518,16 @@ void Trans_Cond(Node* n,int label_true,int label_false){
 void Trans_Exp(Node* n, Operand place){
     if(n->child->next_sib==NULL && strcmp(n->child->name,"ID")==0){   //#include <cstring>
         cout<<"Exp->ID"<<endl;
-        cout<<place->kind<<endl;
-        place->kind=Operand_::VARIABLE;
-        cout<<place->kind<<endl;
+        //cout<<place->kind<<endl;
+        //place->kind=Operand_::VARIABLE;
+        //cout<<place->kind<<endl;
+        Operand newPlace=(Operand)malloc(sizeof(struct Operand_));
+        newPlace->kind=Operand_::VARIABLE;
         string tar(n->child->str_constant);
-        cout<<tar<<endl;
-        place->u.strVal=tar;
+        newPlace->u.strVal=tar;
+        //cout<<tar<<endl;
+        //place->u.strVal=tar;
+        place=newPlace;
         cout<<place->u.strVal<<endl;
     }
     else if(strcmp(n->child->name,"INT")==0){
