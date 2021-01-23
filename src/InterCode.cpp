@@ -24,7 +24,7 @@ Operand new_temp(){
     Operand ans=(Operand)malloc(sizeof(struct Operand_));
     ans->kind=Operand_::TMP_VAR;
     ans->u.intVal=Temp_Num;
-    cout<<"Temp_Num"<<Temp_Num<<endl;
+    cout<<"Temp_Num:"<<Temp_Num<<endl;
     return ans;
 }
 Operand new_label(){
@@ -515,12 +515,15 @@ void Trans_Cond(Node* n,int label_true,int label_false){
 
 void Trans_Exp(Node* n, Operand place){
     if(n->child->next_sib==NULL && strcmp(n->child->name,"ID")==0){   //#include <cstring>
-        
+        cout<<"Exp->ID"<<endl;
+        cout<<place->kind<<endl;
         place->kind=Operand_::VARIABLE;
+        cout<<place->kind<<endl;
         string tar(n->child->str_constant);
         place->u.strVal=tar;
     }
     else if(strcmp(n->child->name,"INT")==0){
+        cout<<"Exp->INT"<<endl;
         //place->kind=Operand_::CONSTANT;
         //place->u.intVal=n->int_constant;
         Operand op=(Operand)malloc(sizeof(struct Operand_));
