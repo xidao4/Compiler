@@ -74,7 +74,7 @@ int main(int argc,char** argv){
 	FILE* f=fopen(argv[1],"r");  //FILE* f=fopen("/root/LAB2-TESTS/Tests_1_Normal/Tests(normal)/Tests/C_1.cmm","r");
 	string tar(argv[2]);
 	outFileName=tar;
-	cout<<"outFileName: "<<outFileName<<endl;
+	//cout<<"outFileName: "<<outFileName<<endl;
 
 	//fp=fopen(argv[2],"w+");
 	if(!f){
@@ -90,11 +90,11 @@ int main(int argc,char** argv){
 	}*/
 	//从ROOT开始调用Program开始符号进行遍历
 	Program(root);
-	cout<<endl<<endl<<endl<<endl;
+	//cout<<endl<<endl<<endl<<endl;
 	Trans_Program(root);
-	cout<<"before"<<endl;
+	//cout<<"before"<<endl;
 	printIR(code_head);//写到out1.ir中
-	cout<<"after"<<endl;
+	//cout<<"after"<<endl;
 	return 0;
 }
 /*

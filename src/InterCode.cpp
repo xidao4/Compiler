@@ -64,20 +64,20 @@ string printOperand(Operand op){
         return "&t"+to_string(op->u.intVal);
         //fprintf(fp,"&t%d",op->u.intVal);
     }else if(op->kind==Operand_::LABEL){
-        return "Label label"+to_string(op->u.intVal);
+        return "label"+to_string(op->u.intVal);
     }else{
         return "printOperand参数传错了吧"+op->kind;
     }
 }
 void printIR(InterCode head){
-    cout<<outFileName<<endl;
+    //cout<<outFileName<<endl;
     if(head==NULL) cout<<"head=NULL!"<<endl;
     ofstream outfile;
 	outfile.open(outFileName);
     
-    if (outfile.is_open()){
-        cout<<"is open"<<endl;
-    }
+    // if (outfile.is_open()){
+    //     cout<<"is open"<<endl;
+    // }
     
     while(head!=NULL){
         if(head->kind==InterCode_::W_LABEL){
@@ -216,7 +216,7 @@ void interInsert(InterCode a){
 
 void Trans_Program(Node* n){
     cout<<"Program"<<endl;
-    cout<<outFileName<<endl;
+    //cout<<outFileName<<endl;
     Trans_ExtDefList(n->child);
 }
 void Trans_ExtDefList(Node* n){
@@ -245,7 +245,7 @@ void Trans_FunDec(Node* n){
     code->kind=InterCode_::W_FUNCTION;
     Operand op=(Operand)malloc(sizeof(struct Operand_));
     //op->kind=Operand_::VARIABLE;
-    string tar(n->child->name);
+    string tar(n->child->str_constant);
     op->u.strVal=tar;
     code->u.Single.op=op;
     interInsert(code);
