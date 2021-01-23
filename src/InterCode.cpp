@@ -567,7 +567,7 @@ void Trans_Exp(Node* n, Operand place){
 void Trans_Exp_Func(Node* n,Operand place){
     //ID LP RP
 
-    string tar(n->child->name);
+    string tar(n->child->str_constant);
     Type func=functionMap.at(tar);
     if(func->u.myfunc->name=="read"){
         InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
@@ -651,9 +651,9 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place){
     //exp1 -> id | id LB exp RB
     cout<<"Exp_ASSIGNOP"<<endl;
     string id(n->child->child->str_constant);
-    cout<<id<<endl;
+    //cout<<id<<endl;
     Type type=map.at(id);
-    cout<<type->kind<<endl;
+    //cout<<type->kind<<endl;
     if(type->kind==Type_::BASIC){
         //等号左边是ID
         
