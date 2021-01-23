@@ -249,7 +249,7 @@ void Trans_Def_in_Function(Node* n){
     Trans_DecList_in_Function(n->child->next_sib);
 }
 void Trans_DecList_in_Function(Node * n){
-    if(n->child->next_sib!=NULL){
+    if(n->child->next_sib==NULL){
         //DecList -> Dec
         Trans_Dec_in_Function(n->child);
     }else{
