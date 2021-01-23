@@ -503,9 +503,9 @@ void Trans_Cond(Node* n,int label_true,int label_false){
         code3->kind=InterCode_::W_IFGOTO;
         code3->u.Three.x=t1;
         code3->u.Three.y=t2;
-        cout<<"************************************************"<<endl;
-        printf("%s\n",n->child->next_sib->str_constant);
-        string tar(n->child->next_sib->name);
+        //cout<<"************************************************"<<endl;
+        //printf("%s\n",n->child->next_sib->str_constant);
+        string tar(n->child->next_sib->str_constant);
         code3->u.Three.relop=tar;
         code3->u.Three.label=create_label(label_true);
         interInsert(code3);
