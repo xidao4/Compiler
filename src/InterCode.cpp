@@ -58,6 +58,7 @@ void printOperand(Operand op){
     }
 }
 void printIR(InterCode head){
+    if(head==NULL) cout<<"head=NULL!"<<endl;
     while(head!=NULL){
         if(head->kind==InterCode_::W_LABEL){
             fprintf(fp,"LABEL label%d :\n",head->u.Single.op->u.intVal);
