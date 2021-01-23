@@ -9,9 +9,7 @@ typedef struct FuncList_* FuncList;
 #define IS_FLOAT 1
 
 
-unordered_map<string,Type> map;//放基本类型变量、数组变量、结构体变量、函数形式参数变量、结构体域名变量
-unordered_map<string,Type> structureMap;//只放结构体的定义（结构体名：类型）
-unordered_map<string,Type> functionMap;
+
 
 struct Type_{
     enum{BASIC,ARRAY,STRUCTURE,FUNCTION,ERROR} kind;

@@ -12,8 +12,8 @@
 using namespace std;
 
 extern FILE* fp;
-//extern unordered_map<string,Type> map;
-//extern unordered_map<string,Type> functionMap;
+extern unordered_map<string,Type> map;
+extern unordered_map<string,Type> functionMap;
 extern InterCode code_head;
 extern InterCode code_tail;
 extern int Temp_Num;
