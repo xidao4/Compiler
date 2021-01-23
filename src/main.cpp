@@ -74,7 +74,8 @@ int main(int argc,char** argv){
 	FILE* f=fopen(argv[1],"r");  //FILE* f=fopen("/root/LAB2-TESTS/Tests_1_Normal/Tests(normal)/Tests/C_1.cmm","r");
 	string tar(argv[2]);
 	string outFileName=tar;
-	
+	cout<<"outFileName"<<outFileName<<endl;
+
 	//fp=fopen(argv[2],"w+");
 	if(!f){
 		perror(argv[1]);
