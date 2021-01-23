@@ -57,6 +57,7 @@ type		"int"|"float"
 			return FLOAT;
 			}  
 {relop}		{createTokenNode("RELOP",LEX_OTHER_TOKEN);
+			strcpy(yylval.node->str_constant,yytext);
 			return RELOP;}
 "+"		{createTokenNode("PLUS",LEX_OTHER_TOKEN);
 		return PLUS;}
