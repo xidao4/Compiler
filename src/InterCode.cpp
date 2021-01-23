@@ -598,7 +598,7 @@ void Trans_Exp_Func(Node* n,Operand place){
         interInsert(code);
     }
 }
-void Trans_Args(Node* n,ArgList arg_list){
+ArgList Trans_Args(Node* n,ArgList arg_list){
     if(n->child->next_sib==NULL){
         //Args->Exp
         //code1
@@ -609,7 +609,7 @@ void Trans_Args(Node* n,ArgList arg_list){
         ArgList arg_t1=(ArgList)malloc(sizeof(struct ArgList_));
         arg_t1->arg=t1;
         arg_t1->next=arg_list;
-        arg_list=arg_t1;
+        return arg_t1;
     }else{
         //Exp COMMA Args
         //code1
@@ -621,13 +621,15 @@ void Trans_Args(Node* n,ArgList arg_list){
         arg_t1->next=arg_list;
         arg_list=arg_t1;
         //code2
-        Trans_Args(n->child->next_sib->next_sib,arg_list);
+        return Trans_Args(n->child->next_sib->next_sib,arg_list);
     }
 }
 void Trans_Exp_FuncParams(Node* n,Operand place){
+    //Exp->ID LP Args RP
+
     //code1
     ArgList arg_list=NULL;
-    Trans_Args(n->child->next_sib->next_sib,arg_list);
+    arg_list=Trans_Args(n->child->next_sib->next_sib,arg_list);
     //write
     string tar(n->child->str_constant);
     Type func=functionMap.at(tar);
@@ -635,7 +637,7 @@ void Trans_Exp_FuncParams(Node* n,Operand place){
         InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
         code->kind=InterCode_::W_WRITE;
         //code->u.Single.op->u.intVal=arg_list->arg->u.intVal;
-        code->u.Single.op=arg_list->arg;
+        code->u.Single.op=arg_list->arg;//bug
         interInsert(code);
         return;
     }
