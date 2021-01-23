@@ -146,6 +146,7 @@ int calculateSize(Type type){
     return 4*type->u.array.size;
 }
 void interInsert(InterCode a){
+    cout<<a->kind<<endl;
     if(code_head==NULL){
         code_head=a;
         code_tail=a;
