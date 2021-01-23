@@ -163,6 +163,7 @@ void interInsert(InterCode a){
 
 
 void Trans_Program(Node* n){
+    cout<<"Program"<<endl;
     Trans_ExtDefList(n->child);
 }
 void Trans_ExtDefList(Node* n){
@@ -393,7 +394,7 @@ void Trans_Stmt(Node* n){
     else{
         //      -> IF LP Exp RP Stmt ELSE Stmt
         cout<<"Stmt_IF_ELSE"<<endl;
-        
+
         Operand label1=new_label();
         Operand label2=new_label();
         Operand label3=new_label();
