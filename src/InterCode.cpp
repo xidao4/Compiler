@@ -26,7 +26,8 @@ Operand new_temp(){
     Temp_Num++;
     Operand ans=(Operand)malloc(sizeof(struct Operand_));
     ans->kind=Operand_::TMP_VAR;
-    ans->u.intVal=Temp_Num;
+    ans->u.strVal="t"+to_string(Temp_Num);
+    //ans->u.intVal=Temp_Num;
     cout<<"Temp_Num:"<<Temp_Num<<endl;
     return ans;
 }
@@ -35,10 +36,11 @@ Operand new_label(){
     Operand ans=(Operand)malloc(sizeof(struct Operand_));
     ans->kind=Operand_::LABEL;
     ans->u.intVal=Label_Num;
+    cout<<"Label_Num:"<<Label_Num<<endl;
     return ans;
 }
 Operand create_label(int x){
-    Label_Num++;
+    //Label_Num++;
     Operand ans=(Operand)malloc(sizeof(struct Operand_));
     ans->kind=Operand_::LABEL;
     ans->u.intVal=x;
@@ -49,7 +51,7 @@ string printOperand(Operand op){
         return "#"+to_string(op->u.intVal);
         //fprintf(fp,"#%d",op->u.intVal);
     }else if(op->kind==Operand_::TMP_VAR){
-        return "t"+to_string(op->u.intVal);
+        return op->u.strVal;
         //fprintf(fp,"t%d",op->u.intVal);
     }else if(op->kind==Operand_::VARIABLE){
         return op->u.strVal;
@@ -268,16 +270,19 @@ void Trans_ParamDec(Node* n){
 void Trans_VarDec_in_FuncParam(Node* n){
     if(strcmp(n->child->name,"ID")==0){
         //VarDec->ID
-        InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
-        code->kind=InterCode_::W_PARAM;
+        //假设：函数参数不能是数组
+
         Operand op=(Operand)malloc(sizeof(struct Operand_));
         //op->kind=Operand_::VARIABLE;
-        string tar(n->child->name);
+        string tar(n->child->str_constant);
         op->u.strVal=tar;
+
+        InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
+        code->kind=InterCode_::W_PARAM;
         code->u.Single.op=op;
         interInsert(code);
     }else{
-        cout<<"函数参数不能是数组哦"<<endl;
+        cout<<"VarDec_in_FuncParams的参数传错了哦"<<endl;
     }
 }
 
@@ -318,17 +323,18 @@ void Trans_Dec_in_Function(Node* n){
         Trans_VarDec_in_Function(n->child);
     }else{
         //Dec -> VarDec ASSIGNOP Exp
+        //not debug
         Operand t1=new_temp();
         Trans_Exp(n->child->next_sib->next_sib,t1);
 
-        InterCode ans=(InterCode)malloc(sizeof(struct InterCode_));
-        ans->kind=InterCode_::W_ASSIGN;
         Operand left=(Operand)malloc(sizeof(struct Operand_));
         left->kind=Operand_::VARIABLE;
-        string tar(n->child->child->name);//Dec->VarDec->ID
+        string tar(n->child->child->str_constant);//Dec->VarDec->ID
         left->u.strVal=tar;
-        ans->u.Assign.left=left;
 
+        InterCode ans=(InterCode)malloc(sizeof(struct InterCode_));
+        ans->kind=InterCode_::W_ASSIGN;
+        ans->u.Assign.left=left;
         ans->u.Assign.right=t1;
         interInsert(ans);
     } 
@@ -338,27 +344,30 @@ void Trans_VarDec_in_Function(Node* n){
     //VarDec->ID
     //VarDec->ID LB INT RB
     string tar(n->child->str_constant);//node->name=ID  node->str_constant=n;
-    //cout<<tar<<endl;
     Type type=map.at(tar);
-    //cout<<type->kind<<endl;
+
     if(type->kind==Type_::ARRAY){
+        //not debug
         cout<<"VarDec->ID LB INT RB    arr[4]"<<endl;
+
         if(type->u.array.elem->kind!=Type_::BASIC){
             cout<<"数组元素不是基本类型"<<endl;
+
         }else{
             int size=calculateSize(type);
             //size=4*INT即可
-            InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
-            code->kind=InterCode_::W_DEC;
+
             Operand op=(Operand)malloc(sizeof(struct Operand_));
             //op->kind=VARIABLE;
-            string tar(n->child->name);
+            string tar(n->child->str_constant);
             op->u.strVal=tar;
+
+            InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
+            code->kind=InterCode_::W_DEC;
             code->u.Dec.op=op;
             code->u.Dec.size=size;
             interInsert(code);
         }
-        
     }       
 }
 
@@ -372,6 +381,8 @@ void Trans_StmtList(Node* n){
 }
 void Trans_Stmt(Node* n){
     cout<<"Stmt"<<endl;
+
+    // Stmt -> CompSt
     if(n->child->next_sib==NULL){
         // Stmt -> CompSt        
         Trans_CompSt(n->child);
@@ -572,22 +583,14 @@ void Trans_Cond(Node* n,int label_true,int label_false){
 void Trans_Exp(Node* n, Operand place){
     if(n->child->next_sib==NULL && strcmp(n->child->name,"ID")==0){   //#include <cstring>
         cout<<"Exp->ID"<<endl;
-        //cout<<place->kind<<endl;
-        //place->kind=Operand_::VARIABLE;
-        //cout<<place->kind<<endl;
-        Operand newPlace=(Operand)malloc(sizeof(struct Operand_));
-        newPlace->kind=Operand_::VARIABLE;
+        
+        place->kind=Operand_::VARIABLE;
         string tar(n->child->str_constant);
-        newPlace->u.strVal=tar;
-        //cout<<tar<<endl;
-        //place->u.strVal=tar;
-        place=newPlace;//bug
-        //cout<<place->u.strVal<<endl;
+        place->u.strVal=tar;
     }
     else if(strcmp(n->child->name,"INT")==0){
         cout<<"Exp->INT"<<endl;
-        //place->kind=Operand_::CONSTANT;
-        //place->u.intVal=n->int_constant;
+        
         Operand op=(Operand)malloc(sizeof(struct Operand_));
         op->kind=Operand_::CONSTANT;
         op->u.intVal=n->int_constant;
@@ -607,19 +610,23 @@ void Trans_Exp(Node* n, Operand place){
     else if(strcmp(n->child->next_sib->name,"PLUS")==0||strcmp(n->child->next_sib->name,"MINUS")==0||strcmp(n->child->next_sib->name,"STAR")==0||strcmp(n->child->next_sib->name,"DIV")==0){
         //算数运算Exp PLUS|MINUS|STAR|DIV Exp
         //Trans_Exp_MATH(n,place);
+        //todo
     }
     else if(strcmp(n->child->name,"LP")==0 || strcmp(n->child->name,"MINUS")==0){
         //LP Exp RP
         //Minus Exp
         Trans_Exp(n->child->next_sib,place);
-    }else if(strcmp(n->child->next_sib->name,"ASSIGNOP")==0){
+    }
+    else if(strcmp(n->child->next_sib->name,"ASSIGNOP")==0){
         Trans_Exp_ASSIGNOP(n,place);
     }
     else if(strcmp(n->child->next_sib->name,"DOT")==0){
         ;
-    }else if(strcmp(n->child->next_sib->name,"LB")==0){
+    }
+    else if(strcmp(n->child->next_sib->name,"LB")==0){
         //Exp LB Exp RB
         //Trans_Exp_Array(n,place);
+        //todo
     }
     else if(strcmp(n->child->next_sib->next_sib->name,"RP")==0){
         //ID LP RP
@@ -735,8 +742,8 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place){
 
         InterCode code21=(InterCode)malloc(sizeof(struct InterCode_));
         code21->kind=InterCode_::W_ASSIGN;
-        code21->u.Assign.right=t1;
         code21->u.Assign.left=op;
+        code21->u.Assign.right=t1;
         interInsert(code21);
         //code2.2
         if(place->kind!=Operand_::NONE){
