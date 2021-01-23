@@ -282,7 +282,7 @@ void Trans_Dec_in_Function(Node* n){
 void Trans_VarDec_in_Function(Node* n){
     //VarDec->ID
     //VarDec->ID LB INT RB
-    string tar(n->child->name);
+    string tar(n->child->str_constant);//node->name=ID  node->str_constant=n;
     Type type=map.at(tar);
     if(type->kind==Type_::ARRAY){
         if(type->u.array.elem->kind!=Type_::BASIC){
