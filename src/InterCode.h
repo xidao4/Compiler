@@ -1,4 +1,5 @@
 #include <string>
+#include <fstream>
 using namespace std;
 
 typedef struct Operand_* Operand;
@@ -43,7 +44,7 @@ Operand new_label();
 Operand create_label(int x);
 
 void printIR(InterCode head);
-void printOperand(Operand op);
+string printOperand(Operand op);
 
 void Trans_Program(Node* n);
 void Trans_ExtDefList(Node* n);
