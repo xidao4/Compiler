@@ -283,7 +283,9 @@ void Trans_VarDec_in_Function(Node* n){
     //VarDec->ID
     //VarDec->ID LB INT RB
     string tar(n->child->str_constant);//node->name=ID  node->str_constant=n;
+    cout<<tar<<endl;
     Type type=map.at(tar);
+    cout<<type->kind<<endl;
     if(type->kind==Type_::ARRAY){
         if(type->u.array.elem->kind!=Type_::BASIC){
             cout<<"数组元素不是基本类型"<<endl;
