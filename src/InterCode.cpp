@@ -70,10 +70,11 @@ string printOperand(Operand op){
     }
 }
 void printIR(InterCode head){
+    cout<<outFileName<<endl;
     if(head==NULL) cout<<"head=NULL!"<<endl;
     ofstream outfile;
 	outfile.open(outFileName);
-    cout<<outFileName<<endl;
+    
     if (outfile.is_open()){
         cout<<"is open"<<endl;
     }
