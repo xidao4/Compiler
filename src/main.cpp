@@ -3,49 +3,105 @@
 #include<sstream>
 #include<iostream>
 //#include "lex.yy.c"
-using namespace std;
-//extern struct Node;
 #include "SyntaxNode.h"
-extern void Program(Node* n);
+#include "InterCode.h"
+#include "SemanticAnalysis.h"
+#include <unordered_map>
+using namespace std;
 
+extern void Program(Node* n);//SemanticAnalysis.cpp
+extern void printIR(InterCode* head);//InterCode.cpp
+extern "C"{
+	int yyparse();//extern from syntax.y Bison
+	int yyrestart(FILE*);
+	void tree_search(struct Node* cur,int depth);//Lab2
+	/*
+	#include "lex.yy.c"
+	#include "syntax.tab.h"
+	*/
+}
 /*
 extern FILE* yyin;
 extern int yylineno;
 extern char* yytext;
 */
+//extern struct Node;
+//extern struct Type_;
+//extern struct Type_* Type;
 extern struct Node* root;//define in lexical.l, used in main.cpp and syntax.y
-extern int syntaxErr;//这次没用
+extern unordered_map<string, Type> functionMap;
 
-extern "C"{
-	int yyparse();//extern from syntax.y Bison
-	int yyrestart(FILE*);
-	void tree_search(struct Node* cur,int depth);//Lab2
-	//#include "lex.yy.c"
-	//#include "syntax.tab.h"
+InterCode code_head=NULL;
+InterCode code_tail=NULL;
+int Temp_Num=0;
+int Label_Num=0;
+FILE* fp;
+
+
+void init_table(){
+	Type retType=new struct Type_;
+	retType->kind=Type_::BASIC;
+	retType->u.basic=IS_INT;
+
+	FuncList myread=new struct FuncList_;
+	myread->name="read";
+	myread->type=retType;
+	myread->next=NULL;
+
+	Type func_read=new struct Type_;
+	func_read->kind=Type_::FUNCTION;
+	func_read->u.myfunc=myread;
+
+	functionMap.insert({"read",func_read});
+
+
+
+	Type retType2=new struct Type_;
+	retType2->kind=Type_::BASIC;
+	retType2->u.basic=IS_INT;
+
+	Type paramType=new struct Type_;
+	paramType->kind=Type_::BASIC;
+	paramType->u.basic=IS_INT;
+
+	FuncList paramFuncList=new struct FuncList_;
+	paramFuncList->name="output";
+	paramFuncList->type=paramType;
+	paramFuncList->next=NULL;
+
+	FuncList mywrite=new struct FuncList_;
+	mywrite->name="write";
+	mywrite->type=retType2;
+	mywrite->next=paramFuncList;
+
+	Type func_write=new struct Type_;
+	func_write->kind=Type_::FUNCTION;
+	func_write->u.myfunc=mywrite;
+
+	functionMap.insert({"write",func_write});
 }
-
-
 int main(int argc,char** argv){
-	if(argc<=1) return 1;//"/root/Lab/src/test.cmm"
-	FILE* f=fopen(argv[1],"r");
-	//FILE* f=fopen("/root/LAB2-TESTS/Tests_1_Normal/Tests(normal)/Tests/C_1.cmm","r");
+	init_table();
+	if(argc<=2) return 1;//"/root/Lab/src/test.cmm"     //./parser test1.cmm out1.ir
+	FILE* f=fopen(argv[1],"r");  //FILE* f=fopen("/root/LAB2-TESTS/Tests_1_Normal/Tests(normal)/Tests/C_1.cmm","r");
+	fp=fopen(argv[2],"w+");
 	if(!f){
 		perror(argv[1]);
 		fprintf(stderr,"cannot open the file!\n");
 		return 1;
 	}
-	//cout<<"1";
 	yyrestart(f);
 	yyparse();
-	// if(syntaxErr==0){
-	// 	tree_search(root,0);
-	// }
-	//cout<<"2";
+	/*
+	if(syntaxErr==0){
+		tree_search(root,0);
+	}*/
 	//从ROOT开始调用Program开始符号进行遍历
 	Program(root);
+	Trans_Program(root);
+	printIR(code_head);//写到out1.ir中
 	return 0;
 }
-
 /*
 string errOut="";
 string corrOut="";
@@ -87,7 +143,6 @@ string getFloat(char* yytext){
 	return to_string(f);
 }
 */
-
 /*
 int main(int argc,char** argv){
 	if(argc<=1) return 1;
