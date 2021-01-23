@@ -84,6 +84,7 @@ int main(int argc,char** argv){
 	}*/
 	//从ROOT开始调用Program开始符号进行遍历
 	Program(root);
+	cout<<endl<<endl<<endl<<endl;
 	Trans_Program(root);
 	printIR(code_head);//写到out1.ir中
 	return 0;

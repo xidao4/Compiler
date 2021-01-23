@@ -175,12 +175,17 @@ void Trans_ExtDef(Node* n){
     //Specifier SEMI            ？？
     if(strcmp(n->child->name,"FunDec")==0){
         //Specifier FunDec CompSt
+        cout<<endl;
+        cout<<endl;
+        cout<<"ExtDef->Specifier FunDec CompSt"<<endl;
+
         Trans_FunDec(n->child->next_sib);
         Trans_CompSt(n->child->next_sib->next_sib);
     }
 }
 
 void Trans_FunDec(Node* n){
+    cout<<"FunDec"<<endl;
     // ID LP RP
     InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
     code->kind=InterCode_::W_FUNCTION;
@@ -225,6 +230,7 @@ void Trans_VarDec_in_FuncParam(Node* n){
 
 void Trans_CompSt(Node* n){
     // LC DefList StmtList RC
+    cout<<"CompSt"<<endl;
     Trans_DefList_in_Function(n->child->next_sib);
     Trans_StmtList(n->child->next_sib->next_sib);
 }
@@ -237,6 +243,7 @@ void Trans_DefList_in_Function(Node* n){
 }
 void Trans_Def_in_Function(Node* n){
     //Specifier DecList SEMI
+    cout<<"Def_in_Function"<<endl;
     Trans_DecList_in_Function(n->child->next_sib);
 }
 void Trans_DecList_in_Function(Node * n){
@@ -250,6 +257,7 @@ void Trans_DecList_in_Function(Node * n){
     }
 }
 void Trans_Dec_in_Function(Node* n){
+    cout<<"Dec_in_Function"<<endl;
     if(n->child->next_sib!=NULL){
         //Dec -> VarDec
         Trans_VarDec_in_Function(n->child);
@@ -294,6 +302,8 @@ void Trans_VarDec_in_Function(Node* n){
         
     }       
 }
+
+
 void Trans_StmtList(Node* n){
     // StmtList -> empty
     if(n->type==SYNTACTIC_UNIT_EMPTY) return;
@@ -302,6 +312,7 @@ void Trans_StmtList(Node* n){
     Trans_StmtList(n->child->next_sib);
 }
 void Trans_Stmt(Node* n){
+    cout<<"Stmt"<<endl;
     if(n->child->next_sib==NULL){
         // Stmt -> CompSt        
         Trans_CompSt(n->child);
@@ -381,6 +392,8 @@ void Trans_Stmt(Node* n){
     }
     else{
         //      -> IF LP Exp RP Stmt ELSE Stmt
+        cout<<"Stmt_IF_ELSE"<<endl;
+        
         Operand label1=new_label();
         Operand label2=new_label();
         Operand label3=new_label();
