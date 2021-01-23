@@ -442,8 +442,10 @@ void Trans_Cond(Node* n,int label_true,int label_false){
         Operand t2=new_temp();
         //code1
         Trans_Exp(n->child,t1);
+        cout<<"done cond code1"<<endl;
         //code2
         Trans_Exp(n->child->next_sib->next_sib,t2);
+        cout<<"done cond code2"<<endl;
         //code3
         InterCode code3=(InterCode)malloc(sizeof(struct InterCode_));//InterCode code3=new struct InterCode_;
         code3->kind=InterCode_::W_IFGOTO;
@@ -520,7 +522,9 @@ void Trans_Exp(Node* n, Operand place){
         place->kind=Operand_::VARIABLE;
         cout<<place->kind<<endl;
         string tar(n->child->str_constant);
+        cout<<tar<<endl;
         place->u.strVal=tar;
+        cout<<place->u.strVal<<endl;
     }
     else if(strcmp(n->child->name,"INT")==0){
         cout<<"Exp->INT"<<endl;
