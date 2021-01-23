@@ -216,6 +216,7 @@ void interInsert(InterCode a){
 
 void Trans_Program(Node* n){
     cout<<"Program"<<endl;
+    cout<<outFileName<<endl;
     Trans_ExtDefList(n->child);
 }
 void Trans_ExtDefList(Node* n){
