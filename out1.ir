@@ -1,8 +1,8 @@
-FUNCTION ID :
+FUNCTION main :
 READ t1
 n := t1
 t3 := #0
-IF t2 RELOP t3 GOTO Label label1
+IF t2 RELOP t3 GOTO label1
 GOTO label2
 LABEL label1 :
 t4 := #0
@@ -10,7 +10,7 @@ WRITE t4
 GOTO label3
 LABEL label2 :
 t6 := #0
-IF t5 RELOP t6 GOTO Label label6
+IF t5 RELOP t6 GOTO label6
 GOTO label7
 LABEL label6 :
 t7 := #0
