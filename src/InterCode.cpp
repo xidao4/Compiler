@@ -72,7 +72,7 @@ string printOperand(Operand op){
 void printIR(InterCode head){
     if(head==NULL) cout<<"head=NULL!"<<endl;
     ofstream outfile;
-	outfile.open(outFileName,ios::trunc);
+	outfile.open(outFileName);
     
     while(head!=NULL){
         if(head->kind==InterCode_::W_LABEL){
