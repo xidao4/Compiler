@@ -73,6 +73,10 @@ void printIR(InterCode head){
     if(head==NULL) cout<<"head=NULL!"<<endl;
     ofstream outfile;
 	outfile.open(outFileName);
+    cout<<outFileName<<endl;
+    if (outfile.is_open()){
+        cout<<"is open"<<endl;
+    }
     
     while(head!=NULL){
         if(head->kind==InterCode_::W_LABEL){
