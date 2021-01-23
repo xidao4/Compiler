@@ -13,7 +13,7 @@ using namespace std;
 
 extern FILE* fp;
 //extern unordered_map<string,Type> map;
-extern unordered_map<string,Type> functionMap;
+//extern unordered_map<string,Type> functionMap;
 extern InterCode code_head;
 extern InterCode code_tail;
 extern int Temp_Num;
@@ -515,11 +515,11 @@ void Trans_Exp(Node* n, Operand place){
         //逻辑运算
         //NOT Exp
         //Exp AND|OR|RELOP Exp
-        Trans_Exp_Logic(n,place);
+        //Trans_Exp_Logic(n,place);
     }
     else if(strcmp(n->child->next_sib->name,"PLUS")==0||strcmp(n->child->next_sib->name,"MINUS")==0||strcmp(n->child->next_sib->name,"STAR")==0||strcmp(n->child->next_sib->name,"DIV")==0){
         //算数运算Exp PLUS|MINUS|STAR|DIV Exp
-        Trans_Exp_MATH(n,place);
+        //Trans_Exp_MATH(n,place);
     }
     else if(strcmp(n->child->name,"LP")==0 || strcmp(n->child->name,"MINUS")==0){
         //LP Exp RP
@@ -532,7 +532,7 @@ void Trans_Exp(Node* n, Operand place){
         ;
     }else if(strcmp(n->child->next_sib->name,"LB")==0){
         //Exp LB Exp RB
-        Trans_Exp_Array(n,place);
+        //Trans_Exp_Array(n,place);
     }
     else if(strcmp(n->child->next_sib->next_sib->name,"RP")==0){
         //ID LP RP
