@@ -527,8 +527,8 @@ void Trans_Exp(Node* n, Operand place){
         newPlace->u.strVal=tar;
         //cout<<tar<<endl;
         //place->u.strVal=tar;
-        place=newPlace;
-        cout<<place->u.strVal<<endl;
+        place=newPlace;//bug
+        //cout<<place->u.strVal<<endl;
     }
     else if(strcmp(n->child->name,"INT")==0){
         cout<<"Exp->INT"<<endl;
@@ -629,7 +629,7 @@ void Trans_Exp_FuncParams(Node* n,Operand place){
     ArgList arg_list=NULL;
     Trans_Args(n->child->next_sib->next_sib,arg_list);
     //write
-    string tar(n->child->name);
+    string tar(n->child->str_constant);
     Type func=functionMap.at(tar);
     if(func->u.myfunc->name=="write"){
         InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
