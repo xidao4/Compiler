@@ -2,6 +2,7 @@
 #include<string>
 #include<sstream>
 #include<iostream>
+#include<fstream>
 #include "SyntaxNode.h"
 #include "InterCode.h"
 #include "SemanticAnalysis.h"
@@ -22,7 +23,8 @@ InterCode code_head=NULL;
 InterCode code_tail=NULL;
 int Temp_Num=0;
 int Label_Num=0;
-FILE* fp;
+//FILE* fp;
+string outFileName;
 
 void init_table(){
 	Type retType=new struct Type_;
@@ -70,7 +72,10 @@ int main(int argc,char** argv){
 	init_table();
 	if(argc<=2) return 1;//"/root/Lab/src/test.cmm"     //./parser test1.cmm out1.ir
 	FILE* f=fopen(argv[1],"r");  //FILE* f=fopen("/root/LAB2-TESTS/Tests_1_Normal/Tests(normal)/Tests/C_1.cmm","r");
-	fp=fopen(argv[2],"w+");
+	string tar(argv[2]);
+	string outFileName=tar;
+	
+	//fp=fopen(argv[2],"w+");
 	if(!f){
 		perror(argv[1]);
 		fprintf(stderr,"cannot open the file!\n");

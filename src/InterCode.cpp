@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <sstream>
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include <cstdlib>
 #include "SyntaxNode.h"
@@ -11,7 +12,9 @@
 #include "SemanticAnalysis.h"
 using namespace std;
 
-extern FILE* fp;
+//extern FILE* fp;
+//extern ofstream outfile;
+extern string outFileName;
 extern unordered_map<string,Type> map;
 extern unordered_map<string,Type> functionMap;
 extern InterCode code_head;
@@ -43,103 +46,144 @@ Operand create_label(int x){
 }
 void printOperand(Operand op){
     if(op->kind==Operand_::CONSTANT){
-        fprintf(fp,"#%d",op->u.intVal);
+        cout<<"#"<<op->u.intVal;
+        //fprintf(fp,"#%d",op->u.intVal);
     }else if(op->kind==Operand_::TMP_VAR){
-        fprintf(fp,"t%d",op->u.intVal);
+        cout<<"t"<<op->u.intVal;
+        //fprintf(fp,"t%d",op->u.intVal);
     }else if(op->kind==Operand_::VARIABLE){
-        fprintf(fp,"v_%s",op->u.strVal);
+        cout<<op->u.strVal;
+        //fprintf(fp,"v_%s",op->u.strVal);
     }else if(op->kind==Operand_::MYSTAR){
-        fprintf(fp,"*t%d",op->u.intVal);
+        cout<<"*t"<<op->u.intVal;
+        //fprintf(fp,"*t%d",op->u.intVal);
     }else if(op->kind==Operand_::VAR_ADDR){
-        fprintf(fp,"&v%d",op->u.intVal);
+        cout<<"&v"<<op->u.intVal;
+        //fprintf(fp,"&v%d",op->u.intVal);
     }else if(op->kind==Operand_::TMP_ADDR){
-        fprintf(fp,"&t%d",op->u.intVal);
+        cout<<"&t"<<op->u.intVal;
+        //fprintf(fp,"&t%d",op->u.intVal);
     }else{
-        cout<<"printOperand参数传错了吧"<<endl;
+        cout<<"printOperand参数传错了吧"<<op->kind<<endl;
     }
 }
 void printIR(InterCode head){
     if(head==NULL) cout<<"head=NULL!"<<endl;
+    ofstream outfile;
+	outfile.open(outFileName,ios::trunc);
+    
     while(head!=NULL){
         if(head->kind==InterCode_::W_LABEL){
-            fprintf(fp,"LABEL label%d :\n",head->u.Single.op->u.intVal);
+            cout<<"LABEL label"<<head->u.Single.op->u.intVal<<" :"<<endl;
+            //fprintf(fp,"LABEL label%d :\n",head->u.Single.op->u.intVal);
         }
         else if(head->kind==InterCode_::W_FUNCTION){
-            fprintf(fp,"FUNCTION %s :\n",head->u.Single.op->u.strVal);
+            cout<<"FUNCTION "<<head->u.Single.op->u.strVal<<" :"<<endl;
+            //fprintf(fp,"FUNCTION %s :\n",head->u.Single.op->u.strVal);
         }
         else if(head->kind==InterCode_::W_ASSIGN){
             printOperand(head->u.Assign.left);
-            fprintf(fp," := ");
+            cout<<" := ";
+            //fprintf(fp," := ");
             printOperand(head->u.Assign.right);
-            fprintf(fp,"\n");
+            cout<<endl;
+            //fprintf(fp,"\n");
         }
         else if(head->kind==InterCode_::W_ADD||head->kind==InterCode_::W_SUB||head->kind==InterCode_::W_MUL||head->kind==InterCode_::W_DIV){
             printOperand(head->u.Double.result);
-            fprintf(fp," := ");
+            cout<<" := ";
+            //fprintf(fp," := ");
             printOperand(head->u.Double.op1);
             if(head->kind==InterCode_::W_ADD)
-                fprintf(fp," + ");
+                cout<<" + ";
+                //fprintf(fp," + ");
             else if(head->kind==InterCode_::W_SUB)
-                fprintf(fp," - ");
+                cout<<" - ";
+                //fprintf(fp," - ");
             else if(head->kind==InterCode_::W_MUL)
-                fprintf(fp," * ");
+                cout<<" * ";
+                //fprintf(fp," * ");
             else if(head->kind==InterCode_::W_DIV)
-                fprintf(fp," / ");
+                cout<<" / ";
+                //fprintf(fp," / ");
             printOperand(head->u.Double.op2);
-            fprintf(fp,"\n");
+            //fprintf(fp,"\n");
+            cout<<endl;
         }
         else if(head->kind==InterCode_::W_GOTO){
-            fprintf(fp,"GOTO label%d\n",head->u.Single.op->u.intVal);
+            cout<<"GOTO label"<<head->u.Single.op->u.intVal<<endl;
+            //fprintf(fp,"GOTO label%d\n",head->u.Single.op->u.intVal);
         }
         else if(head->kind==InterCode_::W_IFGOTO){
-            fprintf(fp,"IF ");
+            //fprintf(fp,"IF ");
+            cout<<"IF ";
             printOperand(head->u.Three.x);
-            fprintf(fp," %s ",head->u.Three.relop);
+            cout<<head->u.Three.relop<<" ";
+            //fprintf(fp," %s ",head->u.Three.relop);
             printOperand(head->u.Three.y);
-            fprintf(fp," GOTO ");
+            cout<<" GOTO ";
+            //fprintf(fp," GOTO ");
             printOperand(head->u.Three.label);
-            fprintf(fp,"\n");
+            //fprintf(fp,"\n");
+            cout<<endl;
         }
         else if(head->kind==InterCode_::W_RETURN){
-            fprintf(fp,"RETURN ");
+            //fprintf(fp,"RETURN ");
+            cout<<"RETURN ";
             printOperand(head->u.Single.op);
-            fprintf(fp,"\n");
+            //fprintf(fp,"\n");
+            cout<<endl;
         }
         else if(head->kind==InterCode_::W_DEC){
-            fprintf(fp,"DEC ");
+            //fprintf(fp,"DEC ");
+            cout<<"DEC ";
             //printOperand(head->u.Dec.op);
-            fprintf(fp,"v_%s",head->u.Dec.op->u.strVal);
-            fprintf(fp," %d\n",head->u.Dec.size);
+            //fprintf(fp,"v_%s",head->u.Dec.op->u.strVal);
+            cout<<head->u.Dec.op->u.strVal;
+            //fprintf(fp," %d\n",head->u.Dec.size);
+            cout<<" "<<head->u.Dec.size<<endl;
         }
         else if(head->kind==InterCode_::W_ARG){
-            fprintf(fp,"ARG ");
+            cout<<"ARG ";
+            //fprintf(fp,"ARG ");
             printOperand(head->u.Single.op);
-            fprintf(fp,"\n");
+            cout<<endl;
+            //fprintf(fp,"\n");
         }
         else if(head->kind==InterCode_::W_CALL){
             printOperand(head->u.Assign.left);
-            fprintf(fp," := CALL ");
+            cout<<" := CALL ";
+            //fprintf(fp," := CALL ");
             //printOperand(head->u.Assign.right);
-            fprintf(fp,"%s",head->u.Assign.right->u.strVal);
-            fprintf(fp,"\n");
+            //fprintf(fp,"%s",head->u.Assign.right->u.strVal);
+            cout<<head->u.Assign.right->u.strVal<<endl;
+            //fprintf(fp,"\n");
         }
         else if(head->kind==InterCode_::W_PARAM){
-            fprintf(fp,"PARAM ");
+            //fprintf(fp,"PARAM ");
+            cout<<"PARAM ";
             //printOperand(head->u.Single.op);
-            fprintf(fp,"%s",head->u.Single.op->u.strVal);
-            fprintf(fp,"\n");
+            //fprintf(fp,"%s",head->u.Single.op->u.strVal);
+            cout<<head->u.Single.op->u.strVal<<endl;
+            //fprintf(fp,"\n");
         }
         else if(head->kind==InterCode_::W_READ){
-            fprintf(fp,"READ ");
+            //fprintf(fp,"READ ");
+            cout<<"READ ";
             //printOperand(head->u.Single.op);
-            fprintf(fp,"t%d",head->u.Single.op->u.intVal);
-            fprintf(fp,"\n");
+            //fprintf(fp,"t%d",head->u.Single.op->u.intVal);
+            cout<<"t"<<head->u.Single.op->u.intVal;
+            cout<<endl;
+            //fprintf(fp,"\n");
         }
         else if(head->kind==InterCode_::W_WRITE){
-            fprintf(fp,"WRITE ");
+            //fprintf(fp,"WRITE ");
+            cout<<"WRITE ";
             //printOperand(head->u.Single.op);
-            fprintf(fp,"t%d",head->u.Single.op->u.intVal);
-            fprintf(fp,"\n");
+            //fprintf(fp,"t%d",head->u.Single.op->u.intVal);
+            cout<<"t"<<head->u.Single.op->u.intVal;
+            cout<<endl;
+            //fprintf(fp,"\n");
         }
         head=head->next;
     }
