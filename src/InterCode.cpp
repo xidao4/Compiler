@@ -385,10 +385,8 @@ void Trans_Stmt(Node* n){
     }
     else if(strcmp(n->child->next_sib->name,"SEMI")==0){
         // Stmt -> Exp SEMI
-        cout<<"Stmt"<<endl;
         Operand place=new_operand();
         place->kind=Operand_::NONE;
-        Trans_Exp(n->child,place);
         Trans_Exp(n->child,place);
     }
     else if(strcmp(n->child->name,"RETURN")==0){
