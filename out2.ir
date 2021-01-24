@@ -8,3 +8,27 @@ RETURN n
 GOTO label3
 LABEL label2 :
 t9 := #1
+t9 := n - 
+ARG t7
+t6 := CALL fact
+t6 := n * 
+RETURN t4
+LABEL label3 :
+FUNCTION main :
+READ t10
+m := t10
+t12 := #1
+IF m > t12 GOTO label4
+GOTO label5
+LABEL label4 :
+ARG m
+t13 := CALL fact
+result := t13
+GOTO label6
+LABEL label5 :
+t15 := #1
+result := t15
+LABEL label6 :
+WRITE result
+t17 := #0
+RETURN t17

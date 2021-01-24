@@ -49,7 +49,8 @@ Operand create_label(int x){
 }
 string printOperand(Operand op){
     if(op->kind==Operand_::CONSTANT){
-        return "#"+to_string(op->u.intVal);
+        //return "#"+to_string(op->u.intVal);
+        return "#"+op->u.strVal;
         //fprintf(fp,"#%d",op->u.intVal);
     }else if(op->kind==Operand_::TMP_VAR){
         return op->u.strVal;
@@ -77,11 +78,9 @@ void printIR(InterCode head){
     if(head==NULL) cout<<"head=NULL!"<<endl;
     ofstream outfile;
 	outfile.open(outFileName);
-    
     // if (outfile.is_open()){
     //     cout<<"is open"<<endl;
     // }
-    
     while(head!=NULL){
         if(head->kind==InterCode_::W_LABEL){
             outfile<<"LABEL label"<<head->u.Single.op->u.intVal<<" :"<<endl;
@@ -94,30 +93,22 @@ void printIR(InterCode head){
         else if(head->kind==InterCode_::W_ASSIGN){
             outfile<<printOperand(head->u.Assign.left);
             outfile<<" := ";
-            //fprintf(fp," := ");
             outfile<<printOperand(head->u.Assign.right);
             outfile<<endl;
-            //fprintf(fp,"\n");
         }
         else if(head->kind==InterCode_::W_ADD||head->kind==InterCode_::W_SUB||head->kind==InterCode_::W_MUL||head->kind==InterCode_::W_DIV){
             outfile<<printOperand(head->u.Double.result);
             outfile<<" := ";
-            //fprintf(fp," := ");
             outfile<<printOperand(head->u.Double.op1);
             if(head->kind==InterCode_::W_ADD)
                 outfile<<" + ";
-                //fprintf(fp," + ");
             else if(head->kind==InterCode_::W_SUB)
                 outfile<<" - ";
-                //fprintf(fp," - ");
             else if(head->kind==InterCode_::W_MUL)
                 outfile<<" * ";
-                //fprintf(fp," * ");
             else if(head->kind==InterCode_::W_DIV)
                 outfile<<" / ";
-                //fprintf(fp," / ");
-            //outfile<<printOperand(head->u.Double.op2);
-            //fprintf(fp,"\n");
+            outfile<<printOperand(head->u.Double.op2);
             outfile<<endl;
         }
         else if(head->kind==InterCode_::W_GOTO){
@@ -138,10 +129,8 @@ void printIR(InterCode head){
             outfile<<endl;
         }
         else if(head->kind==InterCode_::W_RETURN){
-            //fprintf(fp,"RETURN ");
             outfile<<"RETURN ";
             outfile<<printOperand(head->u.Single.op);
-            //fprintf(fp,"\n");
             outfile<<endl;
         }
         else if(head->kind==InterCode_::W_DEC){
@@ -178,22 +167,18 @@ void printIR(InterCode head){
             //fprintf(fp,"\n");
         }
         else if(head->kind==InterCode_::W_READ){
-            //fprintf(fp,"READ ");
             outfile<<"READ ";
             //printOperand(head->u.Single.op);
             //fprintf(fp,"t%d",head->u.Single.op->u.intVal);
             outfile<<head->u.Single.op->u.strVal;
             outfile<<endl;
-            //fprintf(fp,"\n");
         }
         else if(head->kind==InterCode_::W_WRITE){
-            //fprintf(fp,"WRITE ");
             outfile<<"WRITE ";
             //printOperand(head->u.Single.op);
             //fprintf(fp,"t%d",head->u.Single.op->u.intVal);
             outfile<<head->u.Single.op->u.strVal;
             outfile<<endl;
-            //fprintf(fp,"\n");
         }
         head=head->next;
     }
@@ -592,15 +577,18 @@ void Trans_Exp(Node* n, Operand place){
     else if(strcmp(n->child->name,"INT")==0){
         cout<<"Exp->INT"<<endl;
         
-        Operand op=(Operand)malloc(sizeof(struct Operand_));
-        op->kind=Operand_::CONSTANT;
-        op->u.intVal=n->child->int_constant;
+        // Operand op=(Operand)malloc(sizeof(struct Operand_));
+        // op->kind=Operand_::CONSTANT;
+        // op->u.intVal=n->child->int_constant;
 
-        InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
-        code->kind=InterCode_::W_ASSIGN;
-        code->u.Assign.left=place;
-        code->u.Assign.right=op;
-        interInsert(code);
+        // InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
+        // code->kind=InterCode_::W_ASSIGN;
+        // code->u.Assign.left=place;
+        // code->u.Assign.right=op;
+        // interInsert(code);
+
+        place->kind=Operand_::CONSTANT;
+        place->u.strVal=to_string(n->child->int_constant);
     }
     else if(strcmp(n->child->name,"NOT")==0 || strcmp(n->child->next_sib->name,"AND")==0 || strcmp(n->child->next_sib->name,"OR")==0 || strcmp(n->child->next_sib->name,"RELOP")==0 ){
         //逻辑运算
