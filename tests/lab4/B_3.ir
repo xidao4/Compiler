@@ -87,3 +87,6 @@ WRITE t61
 GOTO label20
 LABEL label19 :
 ARG N
+t64 := CALL Joseph
+LABEL label20 :
+RETURN #0
