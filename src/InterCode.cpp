@@ -26,7 +26,8 @@ Operand new_temp(){
     Temp_Num++;
     Operand ans=(Operand)malloc(sizeof(struct Operand_));
     ans->kind=Operand_::TMP_VAR;
-    ans->u.strVal="t"+to_string(Temp_Num);
+    string tmp="t"+to_string(Temp_Num);
+    ans->u.strVal=tmp;//bug
     //ans->u.intVal=Temp_Num;
     cout<<"Temp_Num:"<<Temp_Num<<endl;
     return ans;
