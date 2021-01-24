@@ -11,13 +11,12 @@ struct ArgList_{
     ArgList next;
 };
 struct Operand_{
-    enum{TMP_VAR, VARIABLE, CONSTANT, LABEL, MYFUNCTION, VAR_ADDR, TMP_ADDR, MYSTAR, NONE}kind;
+    //enum{TMP_VAR, VARIABLE, CONSTANT, LABEL, MYFUNCTION, VAR_ADDR, TMP_ADDR, MYSTAR, NONE}kind;
+    enum{TMP_VAR, VARIABLE, CONSTANT, LABEL, VAR_ADDR, TMP_ADDR, MYSTAR}kind;
     union{
-        //int var_no;
-        //string value;
         Operand addr;
-        int intVal;//标签序号 常数的值
-        string strVal;//函数名称
+        int intVal;//标签序号 
+        string strVal;//函数名称 常数的字符串 变量名 临时变量名t4
     }u;//操作数的属性不同
 };
 struct InterCode_{//单条中间代码。将中间代码划分为19种。
@@ -73,10 +72,8 @@ void Trans_Exp_Func(Node* n,Operand place);
 void Trans_Exp_FuncParams(Node* n,Operand place);
 ArgList Trans_Args(Node* n,ArgList arg_list);
 void Trans_Exp_MATH(Node* n,Operand place);
-//void Trans_Exp_Logic(Node* n,Operand place);// and or not relop
-//void Trans_Exp_AND_OR(Node* n,Operand place);
-//void Trans_Exp_RELOP_AND_MATH(Node* n,Operand place);
+void Trans_Exp_Logic(Node* n,Operand place);  // and or not relop
+void Trans_Exp_MINUS(Node* n,Operand place);
 //void Trans_Exp_LP_RP(Node* n,Operand place);
-//void Trans_Exp_MINUS(Node* n,Operand place);
 //void Trans_Exp_NOT(Node* n,Operand place);
 //void Trans_Exp_Array(Node* n,Operand place);
