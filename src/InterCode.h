@@ -11,10 +11,8 @@ struct ArgList_{
     ArgList next;
 };
 struct Operand_{
-    //enum{TMP_VAR, VARIABLE, CONSTANT, LABEL, MYFUNCTION, VAR_ADDR, TMP_ADDR, MYSTAR, NONE}kind;
     enum{TMP_VAR, VARIABLE, CONSTANT, LABEL, NONE}kind;
     union{
-        Operand addr;
         int intVal;//标签序号 
         string strVal;//函数名称 常数的字符串 变量名 临时变量名t4
     }u;//操作数的属性不同
