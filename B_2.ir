@@ -1,0 +1,68 @@
+FUNCTION main :
+DEC primes 40
+N := #10
+t4 := #0 * #4
+t5 := &primes + t4
+*t5 := #2
+pc := #1
+m := #3
+LABEL label1 :
+IF pc < N GOTO label2
+GOTO label3
+LABEL label2 :
+k := #0
+LABEL label4 :
+t16 := k * #4
+t17 := &primes + t16
+t13 := *t17
+t19 := k * #4
+t20 := &primes + t19
+t14 := *t20
+t11 := t13 * t14
+IF t11 <= m GOTO label5
+GOTO label6
+LABEL label5 :
+t26 := k * #4
+t27 := &primes + t26
+t23 := *t27
+t31 := k * #4
+t32 := &primes + t31
+t29 := *t32
+t24 := m / t29
+t22 := t23 * t24
+IF m == t22 GOTO label7
+GOTO label8
+LABEL label7 :
+t33 := m + #2
+m := t33
+k := #1
+GOTO label9
+LABEL label8 :
+t37 := k + #1
+k := t37
+LABEL label9 :
+GOTO label4
+LABEL label6 :
+t42 := pc * #4
+t43 := &primes + t42
+*t43 := m
+t44 := pc + #1
+pc := t44
+t47 := m + #2
+m := t47
+GOTO label1
+LABEL label3 :
+k := #0
+LABEL label10 :
+IF k < pc GOTO label11
+GOTO label12
+LABEL label11 :
+t55 := k * #4
+t56 := &primes + t55
+t53 := *t56
+WRITE t53
+t57 := k + #1
+k := t57
+GOTO label10
+LABEL label12 :
+RETURN #0

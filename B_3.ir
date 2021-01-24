@@ -1,0 +1,89 @@
+FUNCTION Joseph :
+PARAM LEN
+DEC a 400
+i := #0
+leftCount := LEN
+index := #0
+count := #0
+LABEL label1 :
+IF i < LEN GOTO label2
+GOTO label3
+LABEL label2 :
+t9 := i * #4
+t10 := &a + t9
+*t10 := #1
+t11 := i + #1
+i := t11
+GOTO label1
+LABEL label3 :
+LABEL label4 :
+IF leftCount > #2 GOTO label5
+GOTO label6
+LABEL label5 :
+t19 := index * #4
+t20 := &a + t19
+t16 := *t20
+IF t16 == #1 GOTO label7
+GOTO label8
+LABEL label7 :
+t21 := count + #1
+count := t21
+IF #3 == count GOTO label9
+GOTO label10
+LABEL label9 :
+t28 := index * #4
+t29 := &a + t28
+*t29 := #0
+count := #0
+t31 := leftCount - #1
+leftCount := t31
+LABEL label10 :
+LABEL label8 :
+t34 := index + #1
+index := t34
+IF index == LEN GOTO label11
+GOTO label12
+LABEL label11 :
+index := #0
+LABEL label12 :
+GOTO label4
+LABEL label6 :
+i := #0
+LABEL label13 :
+IF i < LEN GOTO label14
+GOTO label15
+LABEL label14 :
+t46 := i * #4
+t47 := &a + t46
+t44 := *t47
+IF #1 == t44 GOTO label16
+GOTO label17
+LABEL label16 :
+t48 := i + #1
+WRITE t48
+LABEL label17 :
+t51 := i + #1
+i := t51
+GOTO label13
+LABEL label15 :
+RETURN #0
+FUNCTION main :
+READ t55
+N := t55
+t56 := #0
+IF N > #3 GOTO label23
+GOTO label22
+LABEL label23 :
+IF N <= #100 GOTO label21
+GOTO label22
+LABEL label21 :
+t56 := #1
+LABEL label22 :
+IF t56 != #0 GOTO label19
+GOTO label18
+LABEL label18 :
+t61 := #0 - #1
+WRITE t61
+GOTO label20
+LABEL label19 :
+ARG N

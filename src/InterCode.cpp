@@ -886,7 +886,8 @@ void Trans_Exp_Func(Node* n,Operand place){
 
         InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
         code->kind=InterCode_::W_CALL;
-        code->u.Assign.left=place;
+        if(place==NULL)code->u.Assign.left=new_temp();
+        else code->u.Assign.left=place;
         code->u.Assign.right=op;
         interInsert(code);
     }
@@ -948,7 +949,8 @@ void Trans_Exp_FuncParams(Node* n,Operand place){
 
     InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
     code->kind=InterCode_::W_CALL;
-    code->u.Assign.left=place;
+    if(place==NULL)code->u.Assign.left=new_temp();
+    else code->u.Assign.left=place;
     code->u.Assign.right=funcName;
     interInsert(code);
 }
