@@ -1,0 +1,209 @@
+FUNCTION process :
+PARAM x
+y := #4
+t2 := x + #12
+z := t2
+t5 := x + #12
+z := t5
+y := y
+t10 := y + #0
+t9 := t10 - #0
+y := t9
+t15 := y * #1
+t14 := t15 / #1
+y := t14
+t20 := y + #32
+t24 := #4 * #7
+t21 := t24 / #10
+t19 := t20 - t21
+y := t19
+t43 := x * y
+t44 := x * y
+t41 := t43 + t44
+t42 := y * x
+t39 := t41 - t42
+t37 := t39 - x
+t38 := y * x
+t35 := t37 + t38
+t36 := y * y
+t33 := t35 + t36
+t34 := x / x
+t31 := t33 + t34
+t29 := t31 - #12
+t30 := #59 / #2
+t28 := t29 + t30
+y := t28
+t68 := y * #3
+t69 := #14 * #24
+t66 := t68 + t69
+t74 := x * #12
+t67 := t74 / #4
+t64 := t66 - t67
+t65 := #4 * #5
+t62 := t64 + t65
+t63 := #10 * #2
+t60 := t62 - t63
+t61 := #5 / #6
+t59 := t60 - t61
+y := t59
+RETURN y
+FUNCTION mod :
+PARAM a1
+PARAM b1
+t88 := a1 / b1
+t87 := t88 * b1
+t85 := a1 - t87
+RETURN t85
+FUNCTION main :
+t97 := #0 - #4
+t95 := t97 * #2
+t93 := t95 + #108
+t92 := t93 / #17
+a := t92
+t103 := #32 / #8
+t101 := t103 * #2
+t100 := t101 - #1
+b := t100
+t110 := #1 * #4
+t109 := t110 / #2
+t107 := #13 - t109
+c := t107
+t114 := a + b
+d := t114
+t118 := a + b
+t119 := c / #1
+t117 := t118 + t119
+e := t117
+t125 := a * b
+t124 := t125 - c
+f := t124
+g1 := #42
+g2 := #4
+i := #0
+j := #0
+DEC array 16
+t138 := a + b
+t136 := t138 + c
+t134 := t136 + #1500
+t133 := t134 - f
+f := t133
+LABEL label1 :
+IF i < #4 GOTO label2
+GOTO label3
+LABEL label2 :
+t144 := #15 * i
+j := t144
+t149 := i * #4
+t150 := &array + t149
+*t150 := j
+t151 := i + #1
+i := t151
+GOTO label1
+LABEL label3 :
+LABEL label4 :
+IF i < f GOTO label5
+GOTO label6
+LABEL label5 :
+t156 := g2 * g2
+k := t156
+t166 := g1 + k
+t167 := i * #12
+t164 := t166 + t167
+t165 := #4 * g2
+t162 := t164 - t165
+t160 := t162 + #5
+t161 := #7 / #3
+t159 := t160 + t161
+g1 := t159
+ARG f
+t181 := CALL process
+t182 := #2 * a
+t179 := t181 + t182
+t177 := t179 - f
+t178 := c * d
+t176 := t177 + t178
+g := t176
+ARG #2
+ARG f
+t188 := CALL mod
+IF t188 > #0 GOTO label7
+GOTO label8
+LABEL label7 :
+t192 := i + #3
+h := t192
+t195 := h - #1
+h := t195
+t198 := h + #3
+h := t198
+t203 := #3 * #2
+t201 := h - t203
+h := t201
+LABEL label8 :
+ARG a
+t206 := CALL process
+t212 := a + #3
+t210 := t212 - #2
+t209 := t210 - #1
+ARG t209
+t207 := CALL process
+IF t206 == t207 GOTO label9
+GOTO label10
+LABEL label9 :
+t217 := f - #2
+t216 := t217 + #1
+f := t216
+ARG #4
+ARG f
+t228 := CALL mod
+t231 := t228 * #4
+t232 := &array + t231
+t226 := *t232
+t224 := t226 + h
+t222 := t224 + g
+t221 := t222 - e
+ARG #4
+ARG f
+t233 := CALL mod
+t236 := t233 * #4
+t237 := &array + t236
+*t237 := t221
+LABEL label10 :
+t239 := a + #2
+t238 := t239 + #1
+a := t238
+t243 := i + #1
+i := t243
+t246 := i + #1
+i := t246
+GOTO label4
+LABEL label6 :
+t249 := a + b
+a := t249
+t252 := a + b
+b := t252
+t255 := a + b
+c := t255
+t258 := a + b
+f := t258
+t261 := a + b
+g := t261
+t265 := c + f
+t264 := t265 + g
+WRITE t264
+t271 := #0 * #4
+t272 := &array + t271
+t269 := *t272
+WRITE t269
+t275 := #1 * #4
+t276 := &array + t275
+t273 := *t276
+WRITE t273
+t279 := #2 * #4
+t280 := &array + t279
+t277 := *t280
+WRITE t277
+t283 := #3 * #4
+t284 := &array + t283
+t281 := *t284
+WRITE t281
+RETURN #0

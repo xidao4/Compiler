@@ -825,7 +825,8 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place){
             code22->u.Assign.right=op;     
             interInsert(code22);
         }
-    }else{
+    }
+    else{
         //等号左边是一维数组类型
         //exp -> exp1 assignop exp
         //exp1 -> Exp LB Exp RB 
@@ -866,6 +867,14 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place){
         code5->u.Assign.left=t4;
         code5->u.Assign.right=t1;
         interInsert(code5);
+        //6
+        if(place!=NULL){
+            InterCode code6=(InterCode)malloc(sizeof(struct InterCode_));
+            code6->kind=InterCode_::W_GET_VAL;
+            code6->u.Assign.left=place;
+            code6->u.Assign.right=t4;
+            interInsert(code6);
+        } 
     }
 }
 

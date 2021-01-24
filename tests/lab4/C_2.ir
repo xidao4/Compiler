@@ -1,0 +1,106 @@
+FUNCTION mod :
+PARAM a
+PARAM b
+t4 := a / b
+t3 := t4 * b
+t1 := a - t3
+RETURN t1
+FUNCTION IsLeap :
+PARAM y
+ARG #400
+ARG y
+t8 := CALL mod
+IF t8 == #0 GOTO label1
+GOTO label4
+LABEL label4 :
+ARG #4
+ARG y
+t12 := CALL mod
+IF t12 == #0 GOTO label5
+GOTO label2
+LABEL label5 :
+ARG #100
+ARG y
+t16 := CALL mod
+IF t16 != #0 GOTO label1
+GOTO label2
+LABEL label1 :
+RETURN #1
+GOTO label3
+LABEL label2 :
+RETURN #0
+LABEL label3 :
+FUNCTION main :
+days := #0
+leap := #0
+DEC monthdays 20
+t26 := #0 * #4
+t27 := &monthdays + t26
+*t27 := #0
+t30 := #1 * #4
+t31 := &monthdays + t30
+*t31 := #31
+t34 := #2 * #4
+t35 := &monthdays + t34
+*t35 := #28
+t38 := #3 * #4
+t39 := &monthdays + t38
+*t39 := #31
+t42 := #4 * #4
+t43 := &monthdays + t42
+*t43 := #30
+READ t44
+year := t44
+i := #1900
+LABEL label6 :
+IF i < year GOTO label7
+GOTO label8
+LABEL label7 :
+ARG i
+t48 := CALL IsLeap
+IF t48 != #0 GOTO label9
+GOTO label10
+LABEL label9 :
+t50 := days + #366
+days := t50
+GOTO label11
+LABEL label10 :
+t53 := days + #365
+days := t53
+LABEL label11 :
+t56 := i + #1
+i := t56
+GOTO label6
+LABEL label8 :
+ARG year
+t59 := CALL IsLeap
+IF t59 != #0 GOTO label12
+GOTO label13
+LABEL label12 :
+t63 := #2 * #4
+t64 := &monthdays + t63
+*t64 := #29
+LABEL label13 :
+i := #1
+LABEL label14 :
+IF i < #5 GOTO label15
+GOTO label16
+LABEL label15 :
+t72 := i * #4
+t73 := &monthdays + t72
+t70 := *t73
+t68 := days + t70
+days := t68
+t74 := i + #1
+i := t74
+GOTO label14
+LABEL label16 :
+ARG #7
+ARG days
+t77 := CALL mod
+dayofweek := t77
+t80 := #14 - dayofweek
+motherday := t80
+WRITE #5
+WRITE motherday
+RETURN #0
