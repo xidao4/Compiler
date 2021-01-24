@@ -114,13 +114,15 @@ void printIR(InterCode head){
         }
         else if(head->kind==InterCode_::W_GET_ADDR){
             //[x := &y + z]
-
+            outfile<<printOperand(head->u.Double.result)<<" := &"<<printOperand(head->u.Double.op1)<<" + "<<printOperand(head->u.Double.op2)<<endl;
         }
         else if(head->kind==InterCode_::W_GET_VAL){
             //[x := *y]
+            outfile<<printOperand(head->u.Assign.left)<<" := *"<<printOperand(head->u.Assign.right)<<endl;
         }
         else if(head->kind==InterCode_::W_VAL_GOT){
             //[*x := y]
+            outfile<<"*"<<printOperand(head->u.Assign.left)<<" := "<<printOperand(head->u.Assign.right)<<endl;
         }
         else if(head->kind==InterCode_::W_GOTO){
             outfile<<"GOTO label"<<head->u.Single.op->u.intVal<<endl;
