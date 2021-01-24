@@ -1,0 +1,39 @@
+FUNCTION mod :
+PARAM x
+PARAM n
+t4 := x / n
+t3 := t4 * n
+t1 := x - t3
+RETURN t1
+FUNCTION main :
+READ t8
+year := t8
+ARG #400
+ARG year
+t9 := CALL mod
+IF t9 == #0 GOTO label1
+GOTO label2
+LABEL label1 :
+a := #1
+GOTO label3
+LABEL label2 :
+ARG #4
+ARG year
+t14 := CALL mod
+IF t14 == #0 GOTO label7
+GOTO label5
+LABEL label7 :
+ARG #100
+ARG year
+t18 := CALL mod
+IF t18 != #0 GOTO label4
+GOTO label5
+LABEL label4 :
+a := #1
+GOTO label6
+LABEL label5 :
+a := #0
+LABEL label6 :
+LABEL label3 :
+WRITE a
+RETURN #0
