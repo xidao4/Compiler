@@ -342,14 +342,14 @@ void Trans_VarDec_in_Function(Node* n){
     //VarDec->VarDec LB INT RB
     if(strcmp(n->child->name,"ID")==0) return;
 
-    
+
     string tar(n->child->child->str_constant);//node->name=ID  node->str_constant=n;
     Type type=map.at(tar);
 
     //类型为ARR才需要输出一些内容
     if(type->kind==Type_::ARRAY){
         //not debug
-        cout<<"VarDec->ID LB INT RB    arr[4]"<<endl;
+        cout<<"VarDec->VarDec LB INT RB    arr[4]"<<endl;
 
         if(type->u.array.elem->kind!=Type_::BASIC){
             cout<<"数组元素不是基本类型"<<endl;
@@ -361,7 +361,6 @@ void Trans_VarDec_in_Function(Node* n){
 
             Operand op=(Operand)malloc(sizeof(struct Operand_));
             //op->kind=VARIABLE;
-            string tar(n->child->str_constant);
             op->u.strVal=tar;
 
             InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
