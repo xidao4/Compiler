@@ -632,6 +632,7 @@ void Trans_Exp(Node* n, Operand place){
         code->u.Double.result=place;
         code->u.Double.op1=op1;
         code->u.Double.op2=t1;
+        interInsert(code);
     }
     else if(strcmp(n->child->next_sib->name,"ASSIGNOP")==0){
         Trans_Exp_ASSIGNOP(n,place);

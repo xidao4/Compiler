@@ -13,13 +13,13 @@ t6 := #0
 IF n < t6 GOTO label4
 GOTO label5
 LABEL label4 :
-t7 := #1
+t8 := #1
 WRITE t7
 GOTO label6
 LABEL label5 :
-t8 := #0
-WRITE t8
+t9 := #0
+WRITE t9
 LABEL label6 :
 LABEL label3 :
-t9 := #0
-RETURN t9
+t10 := #0
+RETURN t10
