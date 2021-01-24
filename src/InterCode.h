@@ -12,7 +12,7 @@ struct ArgList_{
 };
 struct Operand_{
     //enum{TMP_VAR, VARIABLE, CONSTANT, LABEL, MYFUNCTION, VAR_ADDR, TMP_ADDR, MYSTAR, NONE}kind;
-    enum{TMP_VAR, VARIABLE, CONSTANT, LABEL, VAR_ADDR, TMP_ADDR, MYSTAR}kind;
+    enum{TMP_VAR, VARIABLE, CONSTANT, LABEL, NONE}kind;
     union{
         Operand addr;
         int intVal;//标签序号 

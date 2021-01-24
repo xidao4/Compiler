@@ -62,22 +62,11 @@ string printOperand(Operand op){
     else if(op->kind==Operand_::VARIABLE){
         return op->u.strVal;
     }
-    else if(op->kind==Operand_::MYSTAR){
-        return "*"+op->u.strVal;    //TMP_VAR
-    }
-    else if(op->kind==Operand_::VAR_ADDR){
-        return "&v"+to_string(op->u.intVal);
-        //fprintf(fp,"&v%d",op->u.intVal);
-    }
-    else if(op->kind==Operand_::TMP_ADDR){
-        return "&t"+to_string(op->u.intVal);
-        //fprintf(fp,"&t%d",op->u.intVal);
-    }
     else if(op->kind==Operand_::LABEL){
         return "label"+to_string(op->u.intVal);
     }
     else{
-        return "printOperand参数传错了吧"+op->kind;
+        return "Operand的类型是NONE";
     }
 }
 void printIR(InterCode head){
@@ -396,10 +385,10 @@ void Trans_Stmt(Node* n){
     }
     else if(strcmp(n->child->next_sib->name,"SEMI")==0){
         // Stmt -> Exp SEMI
-        // Operand place=new_operand();
-        // place->kind=Operand_::NONE;
-        // Trans_Exp(n->child,place);
-        Trans_Exp(n->child,NULL);
+        Operand place=new_operand();
+        place->kind=Operand_::NONE;
+        Trans_Exp(n->child,place);
+        Trans_Exp(n->child,place);
     }
     else if(strcmp(n->child->name,"RETURN")==0){
         // Stmt -> RETURN Exp SEMI
@@ -749,7 +738,7 @@ void Trans_Exp_MINUS(Node* n,Operand place){
     //code1
     Trans_Exp(n->child->next_sib,t1);
     //[place := #0 - t1]
-    if(place==NULL) return;
+    if(place->kind==Operand_::NONE) return;
 
     Operand op1=(Operand)malloc(sizeof(struct Operand_));
     op1->kind=Operand_::CONSTANT;
@@ -757,7 +746,8 @@ void Trans_Exp_MINUS(Node* n,Operand place){
 
     InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
     code->kind=InterCode_::W_SUB;
-    code->u.Double.result=place;
+    if(place->kind==Operand_::NONE) code->u.Double.result=new_temp();
+    else code->u.Double.result=place;
     code->u.Double.op1=op1;
     code->u.Double.op2=t1;
     interInsert(code);
@@ -814,7 +804,7 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place){
         code21->u.Assign.right=t1;
         interInsert(code21);
         //[place:=variable.name]
-        if(place!=NULL){
+        if(place->kind!=Operand_::NONE){
             // Operand op2=(Operand)malloc(sizeof(struct Operand_));
             // op2->kind=Operand_::VARIABLE;
             // op2->u.strVal=id;
@@ -868,7 +858,7 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place){
         code5->u.Assign.right=t1;
         interInsert(code5);
         //6
-        if(place!=NULL){
+        if(place->kind!=Operand_::NONE){
             InterCode code6=(InterCode)malloc(sizeof(struct InterCode_));
             code6->kind=InterCode_::W_GET_VAL;
             code6->u.Assign.left=place;
@@ -895,7 +885,7 @@ void Trans_Exp_Func(Node* n,Operand place){
 
         InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
         code->kind=InterCode_::W_CALL;
-        if(place==NULL)code->u.Assign.left=new_temp();
+        if(place->kind==Operand_::NONE)code->u.Assign.left=new_temp();
         else code->u.Assign.left=place;
         code->u.Assign.right=op;
         interInsert(code);
@@ -958,7 +948,7 @@ void Trans_Exp_FuncParams(Node* n,Operand place){
 
     InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
     code->kind=InterCode_::W_CALL;
-    if(place==NULL)code->u.Assign.left=new_temp();
+    if(place->kind==Operand_::NONE)code->u.Assign.left=new_temp();
     else code->u.Assign.left=place;
     code->u.Assign.right=funcName;
     interInsert(code);
