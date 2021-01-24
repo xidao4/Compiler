@@ -492,8 +492,8 @@ void Trans_Stmt(Node* n){
 void Trans_Cond(Node* n,int label_true,int label_false){
     if(strcmp(n->child->next_sib->name,"RELOP")==0){
         // Exp1 RELOP Exp2
-        Operand t1=new_operand();
-        Operand t2=new_operand();
+        Operand t1=new_temp();
+        Operand t2=new_temp();
         //code1
         Trans_Exp(n->child,t1);
         cout<<"done cond code1"<<endl;
@@ -502,11 +502,6 @@ void Trans_Cond(Node* n,int label_true,int label_false){
         cout<<"done cond code2"<<endl;
 
         //[IF t1 op t2 GOTO label_true]
-        if(t1->kind!=Operand_::CONSTANT||t1->kind!=Operand_::VARIABLE)
-            t1=new_temp();
-        if(t2->kind!=Operand_::CONSTANT||t2->kind!=Operand_::VARIABLE)
-            t2=new_temp();
-
         InterCode code3=(InterCode)malloc(sizeof(struct InterCode_));//InterCode code3=new struct InterCode_;
         code3->kind=InterCode_::W_IFGOTO;
         code3->u.Three.x=t1;
@@ -604,7 +599,7 @@ void Trans_Exp(Node* n, Operand place){
         string tmp=to_string(n->child->int_constant);
         place->u.strVal=tmp;
     }
-    else if(strcmp(n->child->name,"NOT")==0 || strcmp(n->child->next_sib->name,"AND")==0 || strcmp(n->child->next_sib->name,"OR")==0 || strcmp(n->child->next_sib->name,"RELOP")==0 ){
+    else if(strcmp(n->child->name,"NOT")==0 ){
         //逻辑运算
         //NOT Exp
         //Exp AND|OR|RELOP Exp
@@ -698,13 +693,11 @@ void Trans_Exp_Logic(Node* n,Operand place){
 }
 void Trans_Exp_MINUS(Node* n,Operand place){
     //Minus Exp
-    Operand t1=new_operand();
+    Operand t1=new_temp();
     //code1
     Trans_Exp(n->child->next_sib,t1);
     //[place := #0 - t1]
     if(place==NULL) return;
-    if(t1->kind!=Operand_::CONSTANT||t1->kind!=Operand_::VARIABLE)
-        t1=new_temp();
 
     Operand op1=(Operand)malloc(sizeof(struct Operand_));
     op1->kind=Operand_::CONSTANT;
@@ -719,18 +712,13 @@ void Trans_Exp_MINUS(Node* n,Operand place){
 }
 void Trans_Exp_MATH(Node* n,Operand place){
     // Exp PLUS Exp
-    Operand t1=new_operand();
-    Operand t2=new_operand();
+    Operand t1=new_temp();
+    Operand t2=new_temp();
     //code1
     Trans_Exp(n->child,t1);
     //code2
     Trans_Exp(n->child->next_sib->next_sib,t2);
     //[place := t1 op t2]
-    if(t1->kind!=Operand_::CONSTANT||t1->kind!=Operand_::VARIABLE)
-        t1=new_temp();
-    if(t2->kind!=Operand_::CONSTANT||t2->kind!=Operand_::VARIABLE)
-        t2=new_temp();
-
     if(place==NULL) return;
     InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
     if(strcmp(n->child->next_sib->name,"PLUS")==0)
@@ -762,13 +750,10 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place){
         //exp1 -> id
         
         //code1
-        Operand t1=new_operand();
+        Operand t1=new_temp();
         Trans_Exp(n->child->next_sib->next_sib,t1);
 
         //[variable.name:=t1]
-        if(t1->kind!=Operand_::CONSTANT||t1->kind!=Operand_::VARIABLE)
-            t1=new_temp();
-
         Operand op=(Operand)malloc(sizeof(struct Operand_));
         op->kind=Operand_::VARIABLE;
         op->u.strVal=id;
