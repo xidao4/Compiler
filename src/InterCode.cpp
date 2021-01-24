@@ -660,16 +660,12 @@ void Trans_Exp_Logic(Node* n,Operand place){
 
     //code1
     Trans_Cond(n,x1,x2);
-    // if(strcmp(n->child->name,"NOT")==0){
-    //     Trans_Cond(n->child->next_sib,x1,x2);
-    // }else{
-    //     Trans_Cond(n->child,x1,x2);
-    // }
 
     //[LABEL label1]
     InterCode codeLabel=(InterCode)malloc(sizeof(struct InterCode_));
     codeLabel->kind=InterCode_::W_LABEL;
-    codeLabel->u.Single.op->u.intVal=x1;
+    //codeLabel->u.Single.op->u.intVal=x1;  //bug
+    codeLabel->u.Single.op=create_label(x1);
     interInsert(codeLabel);
 
     //[place:=#1]
@@ -686,7 +682,7 @@ void Trans_Exp_Logic(Node* n,Operand place){
     //[LABEL label2]
     InterCode codeLabel2=(InterCode)malloc(sizeof(struct InterCode_));
     codeLabel2->kind=InterCode_::W_LABEL;
-    codeLabel2->u.Single.op->u.intVal=x1;
+    codeLabel2->u.Single.op=create_label(x2);
     interInsert(codeLabel2);
 }
 void Trans_Exp_MINUS(Node* n,Operand place){
