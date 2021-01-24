@@ -6,3 +6,24 @@ LABEL label1 :
 RETURN n
 GOTO label3
 LABEL label2 :
+t7 := n - #1
+ARG t7
+t6 := CALL fact
+t4 := n * t6
+RETURN t4
+LABEL label3 :
+FUNCTION main :
+READ t10
+m := t10
+IF m > #1 GOTO label4
+GOTO label5
+LABEL label4 :
+ARG m
+t13 := CALL fact
+result := t13
+GOTO label6
+LABEL label5 :
+result := #1
+LABEL label6 :
+WRITE result
+RETURN #0

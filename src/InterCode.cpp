@@ -597,7 +597,7 @@ void Trans_Exp(Node* n, Operand place){
         string tmp="#"+to_string(n->child->int_constant);
         place->u.strVal=tmp;
     }
-    else if(strcmp(n->child->name,"NOT")==0 ){
+    else if(strcmp(n->child->name,"NOT")==0|| strcmp(n->child->next_sib->name,"RELOP")==0|| strcmp(n->child->next_sib->name,"AND")==0|| strcmp(n->child->next_sib->name,"OR")==0){
         //逻辑运算
         //NOT Exp
         //Exp AND|OR|RELOP Exp
