@@ -54,7 +54,7 @@ Operand create_label(int x){
 string printOperand(Operand op){
     if(op->kind==Operand_::CONSTANT){
         //return "#"+to_string(op->u.intVal);
-        return "#"+op->u.strVal;
+        return op->u.strVal;
     }
     else if(op->kind==Operand_::TMP_VAR){
         return op->u.strVal;
@@ -384,12 +384,10 @@ void Trans_Stmt(Node* n){
     else if(strcmp(n->child->name,"RETURN")==0){
         // Stmt -> RETURN Exp SEMI
 
-        Operand t1=new_operand();
+        Operand t1=new_temp();
         //code1
         Trans_Exp(n->child->next_sib,t1);
         //code2
-        if(t1->kind!=Operand_::CONSTANT||t1->kind!=Operand_::VARIABLE)
-            t1=new_temp();
         InterCode ret=(InterCode)malloc(sizeof(struct InterCode_));
         ret->kind=InterCode_::W_RETURN;
         ret->u.Single.op=t1;
@@ -560,7 +558,7 @@ void Trans_Cond(Node* n,int label_true,int label_false){
 
         Operand t2=(Operand)malloc(sizeof(struct Operand_));
         t2->kind=Operand_::CONSTANT;
-        t2->u.strVal="0";
+        t2->u.strVal="#0";
         code3->u.Three.y=t2;
  
         code3->u.Three.relop="!=";
@@ -596,7 +594,7 @@ void Trans_Exp(Node* n, Operand place){
         interInsert(code);
         */
         place->kind=Operand_::CONSTANT;
-        string tmp=to_string(n->child->int_constant);
+        string tmp="#"+to_string(n->child->int_constant);
         place->u.strVal=tmp;
     }
     else if(strcmp(n->child->name,"NOT")==0 ){
@@ -652,7 +650,7 @@ void Trans_Exp_Logic(Node* n,Operand place){
     //[place := #0]
     Operand op=(Operand)malloc(sizeof(struct Operand_));
     op->kind=Operand_::CONSTANT;
-    op->u.strVal="0";
+    op->u.strVal="#0";
 
     InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
     code->kind=InterCode_::W_ASSIGN;
@@ -677,7 +675,7 @@ void Trans_Exp_Logic(Node* n,Operand place){
     //[place:=#1]
     Operand op1=(Operand)malloc(sizeof(struct Operand_));
     op1->kind=Operand_::CONSTANT;
-    op1->u.strVal="1";
+    op1->u.strVal="#1";
 
     InterCode code2=(InterCode)malloc(sizeof(struct InterCode_));
     code2->kind=InterCode_::W_ASSIGN;
@@ -701,7 +699,7 @@ void Trans_Exp_MINUS(Node* n,Operand place){
 
     Operand op1=(Operand)malloc(sizeof(struct Operand_));
     op1->kind=Operand_::CONSTANT;
-    op1->u.strVal="0";
+    op1->u.strVal="#0";
 
     InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
     code->kind=InterCode_::W_SUB;
