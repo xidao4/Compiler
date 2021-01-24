@@ -116,7 +116,7 @@ void printIR(InterCode head){
             else if(head->kind==InterCode_::W_DIV)
                 outfile<<" / ";
                 //fprintf(fp," / ");
-            outfile<<printOperand(head->u.Double.op2);
+            //outfile<<printOperand(head->u.Double.op2);
             //fprintf(fp,"\n");
             outfile<<endl;
         }
