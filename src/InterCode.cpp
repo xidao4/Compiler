@@ -262,7 +262,7 @@ void Trans_VarList(Node* n){
     }else{
         //ParamDec COMMA VarList
         Trans_ParamDec(n->child);
-        Trans_VarList(n->next_sib->next_sib);
+        Trans_VarList(n->child->next_sib->next_sib);
     }
 }
 void Trans_ParamDec(Node* n){
