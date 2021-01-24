@@ -72,10 +72,10 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place);
 void Trans_Exp_Func(Node* n,Operand place);
 void Trans_Exp_FuncParams(Node* n,Operand place);
 ArgList Trans_Args(Node* n,ArgList arg_list);
+void Trans_Exp_MATH(Node* n,Operand place);
 //void Trans_Exp_Logic(Node* n,Operand place);// and or not relop
 //void Trans_Exp_AND_OR(Node* n,Operand place);
 //void Trans_Exp_RELOP_AND_MATH(Node* n,Operand place);
-//void Trans_Exp_MATH(Node* n,Operand place);
 //void Trans_Exp_LP_RP(Node* n,Operand place);
 //void Trans_Exp_MINUS(Node* n,Operand place);
 //void Trans_Exp_NOT(Node* n,Operand place);

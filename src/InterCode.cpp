@@ -610,12 +610,11 @@ void Trans_Exp(Node* n, Operand place){
     }
     else if(strcmp(n->child->next_sib->name,"PLUS")==0||strcmp(n->child->next_sib->name,"MINUS")==0||strcmp(n->child->next_sib->name,"STAR")==0||strcmp(n->child->next_sib->name,"DIV")==0){
         //算数运算Exp PLUS|MINUS|STAR|DIV Exp
-        //Trans_Exp_MATH(n,place);
-        //todo
+        Trans_Exp_MATH(n,place);
     }
     else if(strcmp(n->child->name,"LP")==0 ){
         //LP Exp RP
-        
+        cout<<"Exp->LP Exp RP"<<endl;
         Trans_Exp(n->child->next_sib,place);
     }else if(strcmp(n->child->name,"MINUS")==0){
         //Minus Exp
@@ -653,6 +652,30 @@ void Trans_Exp(Node* n, Operand place){
         //ID LP Args RP
         Trans_Exp_FuncParams(n,place);
     } 
+}
+void Trans_Exp_MATH(Node* n,Operand place){
+    Operand t1=new_temp();
+    Operand t2=new_temp();
+    //code1
+    Trans_Exp(n->child,t1);
+    //code2
+    Trans_Exp(n->child->next_sib->next_sib,t2);
+    //[place := t1 op t2]
+    InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
+    if(strcmp(n->child->next_sib->name,"PLUS")==0)
+        code->kind=InterCode_::W_ADD;
+    else if(strcmp(n->child->next_sib->name,"MINUS")==0)
+        code->kind=InterCode_::W_SUB;
+    else if(strcmp(n->child->next_sib->name,"STAR")==0)
+        code->kind=InterCode_::W_MUL;
+    else if(strcmp(n->child->next_sib->name,"DIV")==0)
+        code->kind=InterCode_::W_DIV;
+    else
+        cout<<"Exp_Math的操作符错了"<<endl;
+    code->u.Double.result=place;
+    code->u.Double.op1=t1;
+    code->u.Double.result=t2;
+    interInsert(code);
 }
 void Trans_Exp_Func(Node* n,Operand place){
     //ID LP RP
