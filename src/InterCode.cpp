@@ -594,7 +594,7 @@ void Trans_Exp(Node* n, Operand place){
         
         Operand op=(Operand)malloc(sizeof(struct Operand_));
         op->kind=Operand_::CONSTANT;
-        op->u.intVal=n->int_constant;
+        op->u.intVal=n->child->int_constant;
 
         InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
         code->kind=InterCode_::W_ASSIGN;
