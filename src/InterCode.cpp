@@ -385,6 +385,7 @@ void Trans_Stmt(Node* n){
     }
     else if(strcmp(n->child->next_sib->name,"SEMI")==0){
         // Stmt -> Exp SEMI
+        cout<<"Stmt"<<endl;
         Operand place=new_operand();
         place->kind=Operand_::NONE;
         Trans_Exp(n->child,place);
@@ -870,7 +871,7 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place){
 
 void Trans_Exp_Func(Node* n,Operand place){
     //ID LP RP
-    cout<<"    Exp_Func place:"<<place->kind<<endl;
+    cout<<"Exp_Func"<<endl;
     string tar(n->child->str_constant);
     Type func=functionMap.at(tar);
     if(func->u.myfunc->name=="read"){
