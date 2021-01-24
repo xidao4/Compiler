@@ -550,7 +550,7 @@ void Trans_Cond(Node* n,int label_true,int label_false){
 
         Operand t1=new_temp();
         //code1
-        Trans_Exp(n->child,t1);
+        Trans_Exp(n,t1);
         //code2  IF t1!=#0 GOTO label_true
         InterCode code3=(InterCode)malloc(sizeof(struct InterCode_));
         code3->kind=InterCode_::W_IFGOTO;
