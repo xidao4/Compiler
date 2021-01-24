@@ -613,10 +613,25 @@ void Trans_Exp(Node* n, Operand place){
         //Trans_Exp_MATH(n,place);
         //todo
     }
-    else if(strcmp(n->child->name,"LP")==0 || strcmp(n->child->name,"MINUS")==0){
+    else if(strcmp(n->child->name,"LP")==0 ){
         //LP Exp RP
-        //Minus Exp
+        
         Trans_Exp(n->child->next_sib,place);
+    }else if(strcmp(n->child->name,"MINUS")==0){
+        //Minus Exp
+        Operand t1=new_temp();
+        //code1
+        Trans_Exp(n->child->next_sib,t1);
+        //[place := #0 - t1]
+        Operand op1=(Operand)malloc(sizeof(struct Operand_));
+        op1->kind=Operand_::CONSTANT;
+        op1->u.intVal=0;
+
+        InterCode code=(InterCode)malloc(sizeof(struct InterCode_));
+        code->kind=InterCode_::W_SUB;
+        code->u.Double.result=place;
+        code->u.Double.op1=op1;
+        code->u.Double.op2=t1;
     }
     else if(strcmp(n->child->next_sib->name,"ASSIGNOP")==0){
         Trans_Exp_ASSIGNOP(n,place);

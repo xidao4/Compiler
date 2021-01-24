@@ -5,7 +5,7 @@ t3 := #0
 IF n > t3 GOTO label1
 GOTO label2
 LABEL label1 :
-t4 := #0
+t4 := #1
 WRITE t4
 GOTO label3
 LABEL label2 :
@@ -13,7 +13,7 @@ t6 := #0
 IF n < t6 GOTO label4
 GOTO label5
 LABEL label4 :
-t7 := #0
+t7 := #1
 WRITE t7
 GOTO label6
 LABEL label5 :
