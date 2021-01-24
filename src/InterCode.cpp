@@ -508,7 +508,7 @@ void Trans_Stmt(Node* n){
 }
 
 void Trans_Cond(Node* n,int label_true,int label_false){
-    if(strcmp(n->child->next_sib->name,"RELOP")==0){
+    if(n->child->next_sib!=NULL && strcmp(n->child->next_sib->name,"RELOP")==0){
         // Exp1 RELOP Exp2
         Operand t1=new_temp();
         Operand t2=new_temp();
@@ -539,7 +539,7 @@ void Trans_Cond(Node* n,int label_true,int label_false){
     else if(strcmp(n->child->name,"NOT")==0){
         Trans_Cond(n->child->next_sib,label_false,label_true);
     }
-    else if(strcmp(n->child->next_sib->name,"AND")==0){
+    else if(n->child->next_sib!=NULL && strcmp(n->child->next_sib->name,"AND")==0){
         Operand label1=new_label();
         int x1=label1->u.intVal;
         //code1
@@ -552,7 +552,7 @@ void Trans_Cond(Node* n,int label_true,int label_false){
         //code2
         Trans_Cond(n->child->next_sib->next_sib,label_true,label_false);
     }
-    else if(strcmp(n->child->next_sib->name,"OR")==0){
+    else if(n->child->next_sib!=NULL && strcmp(n->child->next_sib->name,"OR")==0){
         Operand label1=new_label();
         int x1=label1->u.intVal;
         //code1
