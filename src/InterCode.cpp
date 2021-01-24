@@ -339,8 +339,11 @@ void Trans_Dec_in_Function(Node* n){
 void Trans_VarDec_in_Function(Node* n){
     cout<<"VarDec in function or global"<<endl;
     //VarDec->ID
-    //VarDec->ID LB INT RB
-    string tar(n->child->str_constant);//node->name=ID  node->str_constant=n;
+    //VarDec->VarDec LB INT RB
+    if(strcmp(n->child->name,"ID")==0) return;
+
+    
+    string tar(n->child->child->str_constant);//node->name=ID  node->str_constant=n;
     Type type=map.at(tar);
 
     //类型为ARR才需要输出一些内容
