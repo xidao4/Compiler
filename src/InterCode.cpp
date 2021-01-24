@@ -357,8 +357,8 @@ void Trans_VarDec_in_Function(Node* n){
             cout<<"数组元素不是基本类型"<<endl;
 
         }else{
-            int size=calculateSize(type);
-        
+            //int size=calculateSize(type);
+            int size=4*n->child->next_sib->next_sib->int_constant;
             //size=4*INT即可
 
             Operand op=(Operand)malloc(sizeof(struct Operand_));

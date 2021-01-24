@@ -1,12 +1,14 @@
 FUNCTION main :
 i := #0
-DEC a 890606016
+DEC a 2048430528
 LABEL label1 :
 IF i < #5 GOTO label2
 GOTO label3
 LABEL label2 :
 READ t4
 t6 := i * #4
+t7 := &a + t6
+*t7 := t4
 t8 := i + #1
 i := t8
 GOTO label1
@@ -23,15 +25,27 @@ IF j < #5 GOTO label8
 GOTO label9
 LABEL label8 :
 t22 := i * #4
+t23 := &a + t22
+t19 := *t23
 t25 := j * #4
+t26 := &a + t25
+t20 := *t26
 IF t19 > t20 GOTO label10
 GOTO label11
 LABEL label10 :
 t29 := i * #4
+t30 := &a + t29
+t27 := *t30
 t := t27
 t33 := j * #4
+t34 := &a + t33
+t31 := *t34
 t36 := i * #4
+t37 := &a + t36
+*t37 := t31
 t40 := j * #4
+t41 := &a + t40
+*t41 := t
 LABEL label11 :
 t42 := j + #1
 j := t42
@@ -47,6 +61,8 @@ IF i < #5 GOTO label13
 GOTO label14
 LABEL label13 :
 t53 := i * #4
+t54 := &a + t53
+t51 := *t54
 WRITE t51
 t55 := i + #1
 i := t55
