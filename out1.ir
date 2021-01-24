@@ -1,25 +1,25 @@
 FUNCTION main :
-READ t1
+READ t-59642288
 n := t1
 t3 := #0
-IF t2 > t3 GOTO label1
+IF n > t3 GOTO label1
 GOTO label2
 LABEL label1 :
 t4 := #0
-WRITE t4
+WRITE t-59641024
 GOTO label3
 LABEL label2 :
 t6 := #0
-IF t5 < t6 GOTO label6
-GOTO label7
-LABEL label6 :
+IF n < t6 GOTO label4
+GOTO label5
+LABEL label4 :
 t7 := #0
-WRITE t7
-GOTO label8
-LABEL label7 :
+WRITE t-59639568
+GOTO label6
+LABEL label5 :
 t8 := #0
-WRITE t8
-LABEL label8 :
+WRITE t-59638976
+LABEL label6 :
 LABEL label3 :
 t9 := #0
 RETURN t9

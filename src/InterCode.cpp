@@ -182,7 +182,7 @@ void printIR(InterCode head){
             outfile<<"READ ";
             //printOperand(head->u.Single.op);
             //fprintf(fp,"t%d",head->u.Single.op->u.intVal);
-            outfile<<"t"<<head->u.Single.op->u.intVal;
+            outfile<<head->u.Single.op->u.strVal;
             outfile<<endl;
             //fprintf(fp,"\n");
         }
@@ -191,7 +191,7 @@ void printIR(InterCode head){
             outfile<<"WRITE ";
             //printOperand(head->u.Single.op);
             //fprintf(fp,"t%d",head->u.Single.op->u.intVal);
-            outfile<<"t"<<head->u.Single.op->u.intVal;
+            outfile<<head->u.Single.op->u.strVal;
             outfile<<endl;
             //fprintf(fp,"\n");
         }
