@@ -1,6 +1,6 @@
 FUNCTION main :
 i := #0
-DEC a 2048430528
+DEC a 20
 LABEL label1 :
 IF i < #5 GOTO label2
 GOTO label3

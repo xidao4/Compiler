@@ -256,11 +256,14 @@ void Trans_FunDec(Node* n){
     }
 }
 void Trans_VarList(Node* n){
-    //ParamDec
-    Trans_ParamDec(n->child);
-    //ParamDec COMMA VarList
-    if(n->child->next_sib!=NULL)
+    if(n->child->next_sib==NULL){
+        //ParamDec
+        Trans_ParamDec(n->child);
+    }else{
+        //ParamDec COMMA VarList
+        Trans_ParamDec(n->child);
         Trans_VarList(n->next_sib->next_sib);
+    }
 }
 void Trans_ParamDec(Node* n){
     //Specifier VarDec
@@ -281,7 +284,8 @@ void Trans_VarDec_in_FuncParam(Node* n){
         code->u.Single.op=op;
         interInsert(code);
     }else{
-        cout<<"VarDec_in_FuncParams的参数传错了哦"<<endl;
+        //VarDec->VarDec LB INT RB
+        cout<<"VarDec_in_FuncParams：函数参数不可以是数组哦"<<endl;
     }
 }
 
