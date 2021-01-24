@@ -1,0 +1,97 @@
+FUNCTION main :
+READ t1
+a := t1
+READ t2
+b := t2
+READ t3
+c := t3
+t4 := a + b
+IF t4 > c GOTO label5
+GOTO label2
+LABEL label5 :
+t8 := b + c
+IF t8 > a GOTO label4
+GOTO label2
+LABEL label4 :
+t12 := a + c
+IF t12 > b GOTO label1
+GOTO label2
+LABEL label1 :
+t17 := a + b
+t16 := t17 + c
+cirf := t16
+IF a == b GOTO label9
+GOTO label7
+LABEL label9 :
+IF a == c GOTO label6
+GOTO label7
+LABEL label6 :
+type := #1
+GOTO label8
+LABEL label7 :
+IF a == b GOTO label10
+GOTO label14
+LABEL label14 :
+IF a == c GOTO label10
+GOTO label13
+LABEL label13 :
+IF b == c GOTO label10
+GOTO label11
+LABEL label10 :
+type := #2
+GOTO label12
+LABEL label11 :
+t33 := #0
+t36 := a * a
+t37 := b * b
+t34 := t36 + t37
+t35 := c * c
+IF t34 == t35 GOTO label20
+GOTO label21
+LABEL label20 :
+t33 := #1
+LABEL label21 :
+IF t33 != #0 GOTO label15
+GOTO label19
+LABEL label19 :
+t44 := #0
+t47 := a * a
+t48 := c * c
+t45 := t47 + t48
+t46 := b * b
+IF t45 == t46 GOTO label22
+GOTO label23
+LABEL label22 :
+t44 := #1
+LABEL label23 :
+IF t44 != #0 GOTO label15
+GOTO label18
+LABEL label18 :
+t55 := #0
+t58 := b * b
+t59 := c * c
+t56 := t58 + t59
+t57 := a * a
+IF t56 == t57 GOTO label24
+GOTO label25
+LABEL label24 :
+t55 := #1
+LABEL label25 :
+IF t55 != #0 GOTO label15
+GOTO label16
+LABEL label15 :
+type := #3
+GOTO label17
+LABEL label16 :
+type := #0
+LABEL label17 :
+LABEL label12 :
+LABEL label8 :
+WRITE type
+WRITE cirf
+GOTO label3
+LABEL label2 :
+t70 := #0 - #1
+WRITE t70
+LABEL label3 :
+RETURN #0

@@ -112,6 +112,16 @@ void printIR(InterCode head){
             outfile<<printOperand(head->u.Double.op2);
             outfile<<endl;
         }
+        else if(head->kind==InterCode_::W_GET_ADDR){
+            //[x := &y + z]
+
+        }
+        else if(head->kind==InterCode_::W_GET_VAL){
+            //[x := *y]
+        }
+        else if(head->kind==InterCode_::W_VAL_GOT){
+            //[*x := y]
+        }
         else if(head->kind==InterCode_::W_GOTO){
             outfile<<"GOTO label"<<head->u.Single.op->u.intVal<<endl;
             //fprintf(fp,"GOTO label%d\n",head->u.Single.op->u.intVal);
@@ -343,6 +353,7 @@ void Trans_VarDec_in_Function(Node* n){
 
         }else{
             int size=calculateSize(type);
+        
             //size=4*INT即可
 
             Operand op=(Operand)malloc(sizeof(struct Operand_));
@@ -368,6 +379,7 @@ void Trans_StmtList(Node* n){
 }
 void Trans_Stmt(Node* n){
     cout<<"Stmt"<<endl;
+
 
     // Stmt -> CompSt
     if(n->child->next_sib==NULL){
@@ -570,6 +582,7 @@ void Trans_Cond(Node* n,int label_true,int label_false){
         code4->u.Single.op=create_label(label_false);
         interInsert(code4);
     }
+    // Cond: other cases
 }
 
 void Trans_Exp(Node* n, Operand place){
@@ -624,8 +637,7 @@ void Trans_Exp(Node* n, Operand place){
     }
     else if(strcmp(n->child->next_sib->name,"LB")==0){
         //Exp LB Exp RB
-        //Trans_Exp_Array(n,place);
-        //todo
+        Trans_Exp_Array(n,place);
     }
     else if(strcmp(n->child->next_sib->next_sib->name,"RP")==0){
         //ID LP RP
@@ -637,6 +649,44 @@ void Trans_Exp(Node* n, Operand place){
     } 
 }
 
+void Trans_Exp_Array(Node* n,Operand place){
+    // Exp -> Exp1 LB Exp RB      
+    //Exp1 -> ID
+    //1
+    Operand t1=new_temp();
+    Trans_Exp(n->child->next_sib->next_sib,t1);
+    //2
+    Operand cons4=(Operand)malloc(sizeof(struct Operand_));
+    cons4->kind=Operand_::CONSTANT;
+    cons4->u.strVal="#4";
+
+    Operand t2=new_temp();
+    InterCode code2=(InterCode)malloc(sizeof(struct InterCode_));
+    code2->kind=InterCode_::W_MUL;
+    code2->u.Double.result=t2;
+    code2->u.Double.op1=t1;
+    code2->u.Double.op2=cons4;
+    interInsert(code2);
+    //3
+    Operand arrID=(Operand)malloc(sizeof(struct Operand_));
+    arrID->kind=Operand_::VARIABLE;
+    string tar(n->child->child->str_constant);
+    arrID->u.strVal=tar;
+
+    Operand t3=new_temp();
+    InterCode code3=(InterCode)malloc(sizeof(struct InterCode_));
+    code3->kind=InterCode_::W_GET_ADDR;
+    code3->u.Double.result=t3;
+    code3->u.Double.op1=arrID;
+    code3->u.Double.op2=t2;
+    interInsert(code3);
+    //4
+    InterCode code4=(InterCode)malloc(sizeof(struct InterCode_));
+    code4->kind=InterCode_::W_GET_VAL;
+    code4->u.Assign.left=place;
+    code4->u.Assign.right=t3;
+    interInsert(code4);
+}
 void Trans_Exp_Logic(Node* n,Operand place){
     //NOT Exp
     //Exp AND|OR|RELOP Exp
@@ -732,21 +782,19 @@ void Trans_Exp_MATH(Node* n,Operand place){
 }
 void Trans_Exp_ASSIGNOP(Node* n,Operand place){
     //exp -> exp1 assignop exp
-    //exp1 -> id | id LB exp RB
+    //exp1 -> id | Exp LB exp RB
     cout<<"Exp_ASSIGNOP"<<endl;
 
-    string id(n->child->child->str_constant);
-    Type type=map.at(id);
- 
-    if(type->kind==Type_::BASIC){
+    //Type type=map.at(id);
+    //if(type->kind==Type_::BASIC){
+    if(strcmp(n->child->child->name,"ID")==0){
         //等号左边是ID
         //exp -> exp1 assignop exp
         //exp1 -> id
-        
+        string id(n->child->child->str_constant);
         //code1
         Operand t1=new_temp();
         Trans_Exp(n->child->next_sib->next_sib,t1);
-
         //[variable.name:=t1]
         Operand op=(Operand)malloc(sizeof(struct Operand_));
         op->kind=Operand_::VARIABLE;
@@ -757,7 +805,6 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place){
         code21->u.Assign.left=op;
         code21->u.Assign.right=t1;
         interInsert(code21);
-
         //[place:=variable.name]
         if(place!=NULL){
             // Operand op2=(Operand)malloc(sizeof(struct Operand_));
@@ -772,6 +819,45 @@ void Trans_Exp_ASSIGNOP(Node* n,Operand place){
         }
     }else{
         //等号左边是一维数组类型
+        //exp -> exp1 assignop exp
+        //exp1 -> Exp LB Exp RB 
+        //1
+        Operand t1=new_temp();
+        Trans_Exp(n->child->next_sib->next_sib,t1);
+        //2
+        Operand t2=new_temp();
+        Trans_Exp(n->child->child->next_sib->next_sib,t2);
+        //3
+        Operand cons4=(Operand)malloc(sizeof(struct Operand_));
+        cons4->kind=Operand_::CONSTANT;
+        cons4->u.strVal="#4";
+
+        Operand t3=new_temp();
+        InterCode code3=(InterCode)malloc(sizeof(struct InterCode_));
+        code3->kind=InterCode_::W_MUL;
+        code3->u.Double.result=t3;
+        code3->u.Double.op1=t2;
+        code3->u.Double.op2=cons4;
+        interInsert(code3);
+        //4
+        Operand arrID=(Operand)malloc(sizeof(struct Operand_));
+        arrID->kind=Operand_::VARIABLE;
+        string tar(n->child->child->child->str_constant);
+        arrID->u.strVal=tar;
+
+        Operand t4=new_temp();
+        InterCode code4=(InterCode)malloc(sizeof(struct InterCode_));
+        code4->kind=InterCode_::W_GET_ADDR;
+        code4->u.Double.result=t4;
+        code4->u.Double.op1=arrID;
+        code4->u.Double.op2=t3;
+        interInsert(code4);
+        //5
+        InterCode code5=(InterCode)malloc(sizeof(struct InterCode_));
+        code5->kind=InterCode_::W_VAL_GOT;
+        code5->u.Assign.left=t4;
+        code5->u.Assign.right=t1;
+        interInsert(code5);
     }
 }
 
